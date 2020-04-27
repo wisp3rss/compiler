@@ -1,7 +1,14 @@
 package com.asia.compiler.common.utils;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@AllArgsConstructor
 public enum Type {
-    INT,
-    FLOAT,
-    STRING
+    INT("i32"),
+    FLOAT("float"),
+    STRING("str");
+
+    @Getter
+    private String value;
 }

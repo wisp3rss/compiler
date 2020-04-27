@@ -1,1 +1,1 @@
-PRINT V_0;
+READ V_0; PRINT V_0;

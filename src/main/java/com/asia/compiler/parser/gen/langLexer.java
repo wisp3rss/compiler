@@ -2,9 +2,12 @@ package com.asia.compiler.parser.gen;
 
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
+import org.antlr.v4.runtime.misc.*;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class langLexer extends Lexer {
@@ -116,7 +119,7 @@ public class langLexer extends Lexer {
 	}
 	private void FLOAT_action(RuleContext _localctx, int actionIndex) {
 		switch (actionIndex) {
-		case 0:
+			case 0:
 			break;
 		}
 	}

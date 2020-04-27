@@ -10,7 +10,7 @@ statement
 
 def_var: define NAME SEMI_COLON;
 assign_var: NAME ASSIGN operation SEMI_COLON;
-read: READ NAME numeric_value SEMI_COLON;
+read: READ NAME SEMI_COLON;
 print: PRINT NAME SEMI_COLON;
 
 define: (DEF_INT|DEF_FLOAT);
