@@ -9,5 +9,5 @@ public enum Instructions {
     DIV,
     MOD,
     ASSIGN,
-    DECLAR
+    DECLARE
 }

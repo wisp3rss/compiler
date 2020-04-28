@@ -21,6 +21,9 @@ public class Generator {
                     case READ:
                         result += generateRead(o);
                         break;
+                    case DECLARE:
+                        result += generateDefine(o);
+                        break;
                 }
             }
         );
@@ -42,6 +45,12 @@ public class Generator {
             "%" + reg + " = call " + obj.getType().getValue() + " (i8*, ...) @__isoc99_scanf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @strs, " + obj
                 .getType().getValue() + " 0, " + obj.getType().getValue() + " 0), " + obj.getType().getValue() + "* %" + obj.getV1() + ")\n";
         reg++;
+        return main_text;
+    }
+
+    private String generateDefine(IntermediateObject obj){
+        String main_text = "%"+obj.getV1()+" = alloca "+ obj.getType().getValue() +"\n";
+
         return main_text;
     }
 
