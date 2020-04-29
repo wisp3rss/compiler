@@ -15,6 +15,13 @@ public class Generator {
 
     public String generate(List<IntermediateObject> intermediateObjectList) {
 
+        result += "declare i32 @printf(i8*, ...)\n";
+        result += "declare i32 @__isoc99_scanf(i8*, ...)\n";
+        result += "@strp = constant [4 x i8] c\"%d\\0A\\00\"\n";
+        result += "@strs = constant [3 x i8] c\"%d\\00\"\n";
+        result += header_text;
+        result += "define i32 @main() nounwind{\n";
+
         intermediateObjectList.forEach(o -> {
                 switch (o.getInstructions()) {
                     case PRINT:
@@ -48,6 +55,7 @@ public class Generator {
                 }
             }
         );
+        result += "ret i32 0 }\n";
         return result;
     }
 

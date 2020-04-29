@@ -21,7 +21,7 @@ public class Controller {
         List<IntermediateObject> intermediateCode = new Parser().parse(code);
         String result = Generator.instance().generate(intermediateCode);
         System.out.println(result);
-        whenWriteStringUsingBufferedWritter_thenCorrect("src/main/resources/result.txt", result);
+        whenWriteStringUsingBufferedWritter_thenCorrect("src/main/resources/result.ll", result);
     }
 
     private static String readFileAsString(String filePath) {
