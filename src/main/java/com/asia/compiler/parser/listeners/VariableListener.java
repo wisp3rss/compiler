@@ -42,10 +42,12 @@ public class VariableListener extends langBaseListener {
         if (ctx.operation().init_var() != null) {
             if (ctx.operation().init_var().value().NAME() != null) {
                 handleAssignVariable(ctx);
-            } else if (ctx.operation().init_var().value().numeric_value().INT() != null) {
-                handleAssignConstant(ctx, Type.INT);
-            } else if (ctx.operation().init_var().value().numeric_value().FLOAT() != null) {
-                handleAssignConstant(ctx, Type.FLOAT);
+            } else if (ctx.operation().init_var().value().numeric_value() != null) {
+                if (ctx.operation().init_var().value().numeric_value().INT() != null) {
+                    handleAssignConstant(ctx, Type.INT);
+                } else if (ctx.operation().init_var().value().numeric_value().FLOAT() != null) {
+                    handleAssignConstant(ctx, Type.FLOAT);
+                }
             } else if (ctx.operation().init_var().value().STRING() != null) {
                 handleAssignConstant(ctx, Type.STRING);
             }
@@ -83,10 +85,11 @@ public class VariableListener extends langBaseListener {
         String value = "";
 
         if (ctx.operation().init_var().value().numeric_value() != null) {
-            if (ctx.operation().init_var().value().numeric_value().INT() != null)
+            if (ctx.operation().init_var().value().numeric_value().INT() != null) {
                 value = ctx.operation().init_var().value().numeric_value().INT().getText();
-            else if (ctx.operation().init_var().value().numeric_value().FLOAT() != null)
+            } else if (ctx.operation().init_var().value().numeric_value().FLOAT() != null) {
                 value = ctx.operation().init_var().value().numeric_value().FLOAT().getText();
+            }
         } else if (ctx.operation().init_var().value().STRING() != null) {
             value = ctx.operation().init_var().value().STRING().getText();
         }
