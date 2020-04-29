@@ -8,7 +8,7 @@ import java.util.List;
 public class Controller {
 
     public static void main(String[] args) {
-        String code = "READ V_0; PRINT V_0";
+        String code = "INT V_0; V_0 = V_0 - 5;";
         List<IntermediateObject> intermediateCode = new Parser().parse(code);
         String result = Generator.instance().generate(intermediateCode);
         System.out.println(result);

@@ -1,1 +1,2 @@
-READ V_0; PRINT V_0;
+STRING V_0;
+V_0 = "ASDF";

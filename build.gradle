@@ -22,4 +22,7 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
 
     antlr "org.antlr:antlr4:4.8-1"
+
+    compile group: 'io.vavr', name: 'vavr', version: '0.10.0'
+
 }

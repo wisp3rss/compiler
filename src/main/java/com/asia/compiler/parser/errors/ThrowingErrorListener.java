@@ -1,4 +1,4 @@
-package com.asia.compiler.parser;
+package com.asia.compiler.parser.errors;
 
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.RecognitionException;
