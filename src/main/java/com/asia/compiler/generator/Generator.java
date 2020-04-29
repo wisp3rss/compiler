@@ -21,8 +21,6 @@ public class Generator {
         result += "declare i32 @__isoc99_scanf(i8*, ...)\n";
         result += "@strp = constant [4 x i8] c\"%d\\0A\\00\"\n";
         result += "@strs = constant [3 x i8] c\"%d\\00\"\n";
-        result += "%String = type { i8*, i32, i32, i32 }\n";
-
         result += header_text;
         result += "define i32 @main() nounwind{\n";
 
@@ -104,12 +102,12 @@ public class Generator {
                 + " %" + varRegistry.get(obj.getMathArgs()._1().toString())
                 + ", %" + varRegistry.get(obj.getMathArgs()._2().toString()) + "\n";
             reg++;
-            main_text += "store "+ obj.getType().getValue() + " "+ reg +", "+ obj.getType().getValue() + "* %"+ obj.getV1() +"\n";
+            main_text += "store "+ obj.getType().getValue() + " %"+ (reg-1) +", "+ obj.getType().getValue() + "* %"+ obj.getV1() +"\n";
         }
         else if(obj.getMathArgType().equals(MathArgType.NUM_NUM)){
             main_text += "%" + reg + " = " + operation + " " + obj.getType().getValue() + " " + obj.getMathArgs()._1() + ", " + obj.getMathArgs()._2() + "\n";
             reg++;
-            main_text += "store "+ obj.getType().getValue() + " "+ reg +", "+ obj.getType().getValue() + "* %"+ obj.getV1() +"\n";
+            main_text += "store "+ obj.getType().getValue() + " %"+ (reg-1) +", "+ obj.getType().getValue() + "* %"+ obj.getV1() +"\n";
         }
 
         else if(obj.getMathArgType().equals(MathArgType.NUM_VAR)){
@@ -120,9 +118,8 @@ public class Generator {
                 + operation + " " + obj.getType().getValue()
                 + " " + obj.getMathArgs()._1()
                 + ", %" + varRegistry.get(obj.getMathArgs()._2().toString()) + "\n";
-            main_text += "store "+ obj.getType().getValue() + " "+ reg +", "+ obj.getType().getValue() + "* %"+ obj.getV1() +"\n";
             reg++;
-            main_text += "store "+ obj.getType().getValue() + " "+ reg +", "+ obj.getType().getValue() + "* %"+ obj.getV1() +"\n";
+            main_text += "store "+ obj.getType().getValue() + " %"+ (reg-1) +", "+ obj.getType().getValue() + "* %"+ obj.getV1() +"\n";
 
         }
         else if(obj.getMathArgType().equals(MathArgType.VAR_NUM)){
@@ -134,7 +131,7 @@ public class Generator {
                 + " %" + varRegistry.get(obj.getMathArgs()._1().toString())
                 + ", " + obj.getMathArgs()._2() + "\n";
             reg++;
-            main_text += "store "+ obj.getType().getValue() + " "+ reg +", "+ obj.getType().getValue() + "* %"+ obj.getV1() +"\n";
+            main_text += "store "+ obj.getType().getValue() + " %"+ (reg-1) +", "+ obj.getType().getValue() + "* %"+ obj.getV1() +"\n";
         }
         return main_text;
     }
@@ -182,13 +179,12 @@ public class Generator {
         } else if (obj.getType().equals(Type.FLOAT)) {
             main_text += generateMathOperationResult(obj, "fsub");
         }
-        main_text += "store "+ obj.getType().getValue() + " "+ obj.getVal() +", "+ obj.getType().getValue() + "* %"+ obj.getV1() +"\n";
         return main_text;
     }
 
     private String generateAssign(IntermediateObject obj) {
 
-        String main_text = "store "+ obj.getType().getValue() + " "+ obj.getVal() +", "+ obj.getType().getValue() + "* %"+ obj.getV1() +"\n";
+        String main_text = "store "+ obj.getType().getValue() + " " + obj.getVal() +", "+ obj.getType().getValue() + "* %"+ obj.getV1() +"\n";
         return main_text;
     }
 }

@@ -5,26 +5,26 @@
 _main:                                  ## @main
 ## %bb.0:
 	pushq	%rbx
-	subq	$48, %rsp
-	movl	$9, 12(%rsp)
-	movl	$11, 8(%rsp)
-	movabsq	$4616414798036126925, %rax ## imm = 0x4010CCCCCCCCCCCD
-	movq	%rax, 16(%rsp)
+	subq	$16, %rsp
+	movl	$3, (%rsp)
+	movl	$-1, 4(%rsp)
+	movabsq	$4611911198408756429, %rax ## imm = 0x4000CCCCCCCCCCCD
+	movq	%rax, 8(%rsp)
 	leaq	_strp(%rip), %rbx
 	movq	%rbx, %rdi
-	movl	$11, %esi
+	movl	$3, %esi
 	xorl	%eax, %eax
 	callq	_printf
 	leaq	_strs(%rip), %rdi
-	leaq	8(%rsp), %rsi
+	movq	%rsp, %rsi
 	xorl	%eax, %eax
 	callq	___isoc99_scanf
-	movl	8(%rsp), %esi
+	movl	(%rsp), %esi
 	movq	%rbx, %rdi
 	xorl	%eax, %eax
 	callq	_printf
 	xorl	%eax, %eax
-	addq	$48, %rsp
+	addq	$16, %rsp
 	popq	%rbx
 	retq
                                         ## -- End function
