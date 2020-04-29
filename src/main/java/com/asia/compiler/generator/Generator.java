@@ -23,32 +23,6 @@ public class Generator {
         result += "@strs = constant [3 x i8] c\"%d\\00\"\n";
         result += "%String = type { i8*, i32, i32, i32 }\n";
 
-//        result += "define fastcc void @String_Add_Char(%String* %this, i8 %value) {\n"
-//            + "    %1 = getelementptr %String* %this, i32 0, i32 1\n"
-//            + "    %length = load i32* %1\n"
-//            + "    %2 = getelementptr %String* %this, i32 0, i32 2\n"
-//            + "    %maxlen = load i32* %2\n"
-//            + "    %3 = icmp eq i32 %length, %maxlen\n"
-//            + "    br i1 %3, label %grow_begin, label %grow_close\n"
-//            + "\n"
-//            + "grow_begin:\n"
-//            + "    %4 = getelementptr %String* %this, i32 0, i32 3\n"
-//            + "    %factor = load i32* %4\n"
-//            + "    %5 = add i32 %maxlen, %factor\n"
-//            + "    call void @String_Resize(%String* %this, i32 %5)\n"
-//            + "    br label %grow_close\n"
-//            + "\n"
-//            + "grow_close:\n"
-//            + "    %6 = getelementptr %String* %this, i32 0, i32 0\n"
-//            + "    %buffer = load i8** %6\n"
-//            + "    %7 = getelementptr i8* %buffer, i32 %length\n"
-//            + "    store i8 %value, i8* %7\n"
-//            + "    %8 = add i32 %length, 1\n"
-//            + "    store i32 %8, i32* %1\n"
-//            + "\n"
-//            + "    ret void\n"
-//            + "}";
-
         result += header_text;
         result += "define i32 @main() nounwind{\n";
 

@@ -6,7 +6,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum Type {
     INT("i32"),
-    FLOAT("float"),
+    FLOAT("double"),
     STRING("%String");
 
     @Getter

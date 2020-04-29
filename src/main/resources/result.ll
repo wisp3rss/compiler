@@ -24,7 +24,8 @@ store i32 9, i32* %V_1
 %10 = sdiv i32 10, %9
 store i32 10, i32* %V_0
 store i32 11, i32* %V_0
-%V_2 = alloca float
+%V_2 = alloca double
+store double 4.2, double* %V_2
 %V_3 = alloca %String
 %11 = load i32, i32* %V_0
 %12 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @strp, i32 0, i32 0), i32 %11)

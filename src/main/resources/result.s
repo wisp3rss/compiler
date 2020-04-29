@@ -8,6 +8,8 @@ _main:                                  ## @main
 	subq	$48, %rsp
 	movl	$9, 12(%rsp)
 	movl	$11, 8(%rsp)
+	movabsq	$4616414798036126925, %rax ## imm = 0x4010CCCCCCCCCCCD
+	movq	%rax, 16(%rsp)
 	leaq	_strp(%rip), %rbx
 	movq	%rbx, %rdi
 	movl	$11, %esi
