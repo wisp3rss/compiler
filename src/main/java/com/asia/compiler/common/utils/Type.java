@@ -7,7 +7,7 @@ import lombok.Getter;
 public enum Type {
     INT("i32"),
     FLOAT("float"),
-    STRING("str");
+    STRING("%String");
 
     @Getter
     private String value;

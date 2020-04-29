@@ -3,7 +3,9 @@ package com.asia.compiler.generator;
 import com.asia.compiler.common.model.IntermediateObject;
 import com.asia.compiler.common.utils.MathArgType;
 import com.asia.compiler.common.utils.Type;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(staticName = "instance")
@@ -19,6 +21,34 @@ public class Generator {
         result += "declare i32 @__isoc99_scanf(i8*, ...)\n";
         result += "@strp = constant [4 x i8] c\"%d\\0A\\00\"\n";
         result += "@strs = constant [3 x i8] c\"%d\\00\"\n";
+        result += "%String = type { i8*, i32, i32, i32 }\n";
+
+//        result += "define fastcc void @String_Add_Char(%String* %this, i8 %value) {\n"
+//            + "    %1 = getelementptr %String* %this, i32 0, i32 1\n"
+//            + "    %length = load i32* %1\n"
+//            + "    %2 = getelementptr %String* %this, i32 0, i32 2\n"
+//            + "    %maxlen = load i32* %2\n"
+//            + "    %3 = icmp eq i32 %length, %maxlen\n"
+//            + "    br i1 %3, label %grow_begin, label %grow_close\n"
+//            + "\n"
+//            + "grow_begin:\n"
+//            + "    %4 = getelementptr %String* %this, i32 0, i32 3\n"
+//            + "    %factor = load i32* %4\n"
+//            + "    %5 = add i32 %maxlen, %factor\n"
+//            + "    call void @String_Resize(%String* %this, i32 %5)\n"
+//            + "    br label %grow_close\n"
+//            + "\n"
+//            + "grow_close:\n"
+//            + "    %6 = getelementptr %String* %this, i32 0, i32 0\n"
+//            + "    %buffer = load i8** %6\n"
+//            + "    %7 = getelementptr i8* %buffer, i32 %length\n"
+//            + "    store i8 %value, i8* %7\n"
+//            + "    %8 = add i32 %length, 1\n"
+//            + "    store i32 %8, i32* %1\n"
+//            + "\n"
+//            + "    ret void\n"
+//            + "}";
+
         result += header_text;
         result += "define i32 @main() nounwind{\n";
 
@@ -84,26 +114,54 @@ public class Generator {
 
     private String generateMathOperationResult(IntermediateObject obj, String operation) {
         String main_text = "";
+        Map<String, Integer> varRegistry = new HashMap<>();
+
         if(obj.getMathArgType().equals(MathArgType.VAR_VAR)){
             main_text += "%" + reg + " = load " + obj.getType().getValue() + ", " + obj.getType().getValue() + "* %" + obj.getMathArgs()._1() + "\n";
+            varRegistry.put(obj.getMathArgs()._1().toString(), reg);
             reg++;
+
             main_text += "%" + reg + " = load " + obj.getType().getValue() + ", " + obj.getType().getValue() + "* %" + obj.getMathArgs()._2() + "\n";
+            varRegistry.put(obj.getMathArgs()._2().toString(), reg);
             reg++;
+
+            main_text += "%" + reg + " = "
+                + operation + " " + obj.getType().getValue()
+                + " %" + varRegistry.get(obj.getMathArgs()._1().toString())
+                + ", %" + varRegistry.get(obj.getMathArgs()._2().toString()) + "\n";
+            reg++;
+            main_text += "store "+ obj.getType().getValue() + " "+ reg +", "+ obj.getType().getValue() + "* %"+ obj.getV1() +"\n";
+        }
+        else if(obj.getMathArgType().equals(MathArgType.NUM_NUM)){
+            main_text += "%" + reg + " = " + operation + " " + obj.getType().getValue() + " " + obj.getMathArgs()._1() + ", " + obj.getMathArgs()._2() + "\n";
+            reg++;
+            main_text += "store "+ obj.getType().getValue() + " "+ reg +", "+ obj.getType().getValue() + "* %"+ obj.getV1() +"\n";
         }
 
         else if(obj.getMathArgType().equals(MathArgType.NUM_VAR)){
             main_text += "%" + reg + " = load " + obj.getType().getValue() + ", " + obj.getType().getValue() + "* %" + obj.getMathArgs()._2() + "\n";
+            varRegistry.put(obj.getMathArgs()._2().toString(), reg);
             reg++;
+            main_text += "%" + reg + " = "
+                + operation + " " + obj.getType().getValue()
+                + " " + obj.getMathArgs()._1()
+                + ", %" + varRegistry.get(obj.getMathArgs()._2().toString()) + "\n";
+            main_text += "store "+ obj.getType().getValue() + " "+ reg +", "+ obj.getType().getValue() + "* %"+ obj.getV1() +"\n";
+            reg++;
+            main_text += "store "+ obj.getType().getValue() + " "+ reg +", "+ obj.getType().getValue() + "* %"+ obj.getV1() +"\n";
+
         }
         else if(obj.getMathArgType().equals(MathArgType.VAR_NUM)){
             main_text += "%" + reg + " = load " + obj.getType().getValue() + ", " + obj.getType().getValue() + "* %" + obj.getMathArgs()._1() + "\n";
+            varRegistry.put(obj.getMathArgs()._1().toString(), reg);
             reg++;
-            main_text += "%" + reg + " = load " + obj.getType().getValue() + ", " + obj.getType().getValue() + "* %" + obj.getMathArgs()._2() + "\n";
+            main_text += "%" + reg + " = "
+                + operation + " " + obj.getType().getValue()
+                + " %" + varRegistry.get(obj.getMathArgs()._1().toString())
+                + ", " + obj.getMathArgs()._2() + "\n";
             reg++;
+            main_text += "store "+ obj.getType().getValue() + " "+ reg +", "+ obj.getType().getValue() + "* %"+ obj.getV1() +"\n";
         }
-
-        main_text += "%" + reg + " = " + operation + " " + obj.getType().getValue() + " " + obj.getMathArgs()._1() + ", " + obj.getMathArgs()._2() + "\n";
-        main_text += "store "+ obj.getType().getValue() + " "+ reg +", "+ obj.getType().getValue() + "* %"+ obj.getV1() +"\n";
         return main_text;
     }
 
