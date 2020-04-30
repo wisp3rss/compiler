@@ -47,6 +47,12 @@ public interface langVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitPrint(langParser.PrintContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link langParser#comment}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitComment(langParser.CommentContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link langParser#define}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

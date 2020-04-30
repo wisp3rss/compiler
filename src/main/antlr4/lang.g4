@@ -6,12 +6,14 @@ statement
     :def_var
     |assign_var
     |read
-    |print;
+    |print
+    |comment;
 
 def_var: define NAME SEMI_COLON;
 assign_var: NAME ASSIGN operation SEMI_COLON;
 read: READ NAME SEMI_COLON;
 print: PRINT NAME SEMI_COLON;
+comment: COMMENT;
 
 define: (DEF_INT|DEF_FLOAT|DEF_STRING);
 operation: init_var|math_module;
@@ -58,7 +60,10 @@ DEF_STRING:  'STRING';
 NAME: NAME_PREFIX [0-9]+;
 NAME_PREFIX: 'V_';
 BLANK: [ \t]+ -> channel(HIDDEN);
+//COMMENT: '#'[a-z]* NEXT_LINE;
+COMMENT : '#' ~[\r\n\f]* NEXT_LINE -> skip;
+//COMMENT: '#'[^\n]* NEXT_LINE;
 
-NEXT_LINE : [\n]+; // -> skip;
+NEXT_LINE : [\n]+ -> skip;
 
 UNKNOWN_CHAR : . ;
