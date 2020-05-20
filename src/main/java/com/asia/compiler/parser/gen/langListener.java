@@ -1,5 +1,4 @@
-package com.asia.compiler.parser.gen;
-
+package com.asia.compiler.parser.gen;// Generated from /Users/annakonieczna/IdeaProjects/compiler/src/main/antlr4/lang.g4 by ANTLR 4.8
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
@@ -77,6 +76,66 @@ public interface langListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitComment(langParser.CommentContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link langParser#if_statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterIf_statement(langParser.If_statementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link langParser#if_statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitIf_statement(langParser.If_statementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link langParser#condition_block}.
+	 * @param ctx the parse tree
+	 */
+	void enterCondition_block(langParser.Condition_blockContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link langParser#condition_block}.
+	 * @param ctx the parse tree
+	 */
+	void exitCondition_block(langParser.Condition_blockContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link langParser#statement_block}.
+	 * @param ctx the parse tree
+	 */
+	void enterStatement_block(langParser.Statement_blockContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link langParser#statement_block}.
+	 * @param ctx the parse tree
+	 */
+	void exitStatement_block(langParser.Statement_blockContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link langParser#while_statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterWhile_statement(langParser.While_statementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link langParser#while_statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitWhile_statement(langParser.While_statementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link langParser#block}.
+	 * @param ctx the parse tree
+	 */
+	void enterBlock(langParser.BlockContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link langParser#block}.
+	 * @param ctx the parse tree
+	 */
+	void exitBlock(langParser.BlockContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link langParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterExpr(langParser.ExprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link langParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitExpr(langParser.ExprContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link langParser#define}.
 	 * @param ctx the parse tree

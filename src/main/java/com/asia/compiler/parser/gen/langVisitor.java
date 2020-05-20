@@ -1,5 +1,4 @@
-package com.asia.compiler.parser.gen;
-
+package com.asia.compiler.parser.gen;// Generated from /Users/annakonieczna/IdeaProjects/compiler/src/main/antlr4/lang.g4 by ANTLR 4.8
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
@@ -52,6 +51,42 @@ public interface langVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitComment(langParser.CommentContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link langParser#if_statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIf_statement(langParser.If_statementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link langParser#condition_block}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCondition_block(langParser.Condition_blockContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link langParser#statement_block}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStatement_block(langParser.Statement_blockContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link langParser#while_statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitWhile_statement(langParser.While_statementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link langParser#block}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBlock(langParser.BlockContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link langParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExpr(langParser.ExprContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link langParser#define}.
 	 * @param ctx the parse tree

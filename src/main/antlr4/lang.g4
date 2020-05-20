@@ -2,18 +2,40 @@ grammar lang;
 
 program : statement+ |;
 
+
+
 statement
     :def_var
     |assign_var
     |read
     |print
-    |comment;
+    |comment
+    |if_statement
+    |while_statement;
 
 def_var: define NAME SEMI_COLON;
 assign_var: NAME ASSIGN operation SEMI_COLON;
 read: READ NAME SEMI_COLON;
 print: PRINT NAME SEMI_COLON;
 comment: COMMENT;
+
+if_statement: IF condition_block (ELSE IF condition_block)* (ELSE statement_block);
+
+condition_block: expr statement_block;
+
+statement_block: OBRACE block CBRACE | statement;
+
+while_statement: WHILE expr statement_block;
+
+block: statement*;
+
+expr
+    : NOT expr
+    | expr op=(MULT | DIV | MOD) expr
+    | expr op=(PLUS | MINUS) expr
+    | expr op=(EQ|NEQ) expr
+    | expr AND expr
+    | expr OR expr;
 
 define: (DEF_INT|DEF_FLOAT|DEF_STRING);
 operation: init_var|math_module;
@@ -36,6 +58,24 @@ math_module
 
 READ: 'READ';
 PRINT: 'PRINT';
+
+// ==== IF ELSE ====
+IF: 'IF';
+ELSE: 'ELSE';
+OBRACE: '{';
+CBRACE: '}';
+
+// ==== LOOPS ====
+WHILE: 'WHILE';
+
+// ==== LOGIC ====
+NOT: '!';
+EQ: '==';
+NEQ: '!=';
+AND: '&&';
+OR: '||';
+TRUE:  'TRUE';
+FALSE: 'FALSE';
 
 // ==== SYMBOLS ====
 ASSIGN: '=';
