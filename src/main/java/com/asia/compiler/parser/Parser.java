@@ -7,14 +7,14 @@ import com.asia.compiler.parser.gen.langLexer;
 import com.asia.compiler.parser.gen.langParser;
 import com.asia.compiler.parser.listeners.IOListener;
 import com.asia.compiler.parser.listeners.VariableListener;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Parser {
 
@@ -32,6 +32,7 @@ public class Parser {
         } catch (Exception e) {
             System.out.println("Message: " + e.getMessage());
         }
+//        System.out.println(intermediateObjectList);
         return intermediateObjectList;
     }
 

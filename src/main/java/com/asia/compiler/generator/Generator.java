@@ -3,10 +3,10 @@ package com.asia.compiler.generator;
 import com.asia.compiler.common.model.IntermediateObject;
 import com.asia.compiler.common.utils.MathArgType;
 import com.asia.compiler.common.utils.Type;
+import lombok.NoArgsConstructor;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(staticName = "instance")
 public class Generator {
@@ -59,7 +59,13 @@ public class Generator {
                     case MOD:
                         result += generateMod(o);
                         break;
-
+                    case IF:
+                        break;
+                    case ELSE:
+                        break;
+                    case WHILE:
+                        result += generateWhile(o);
+                        break;
                 }
             }
         );
@@ -237,10 +243,19 @@ public class Generator {
         declarations += "@.strAssignString_" + obj.getV1() + " = private unnamed_addr constant [ "+ (obj.getVal().toString().length()-1) + " x i8] c\"" + obj.getVal().toString().substring(1, obj.getVal().toString().length()-1) + "\\00\"\n";
         String main_text = "";
         main_text += "%" + reg + " = getelementptr inbounds [256 x i8], [256 x i8]* %tmp_" + obj
-            .getV1()+ ", i64 0, i64 0\n";
+                .getV1()+ ", i64 0, i64 0\n";
         reg++;
         main_text += "%" + reg + " = call i8* @__strcpy_chk(i8* %" + (reg-1) + ", i8* getelementptr inbounds ([ "+ (obj.getVal().toString().length()-1) + " x i8], [ "+ (obj.getVal().toString().length()-1) + " x i8]* @.strAssignString_" + obj.getV1() + ", i64 0, i64 0), i64 256)\n";
         reg++;
         return main_text;
+    }
+
+    private String generateWhile(IntermediateObject obj){
+//        System.out.println("Im in generateWhile!!!");
+        return "";
+    }
+
+    private String generateIfElse(IntermediateObject obj){
+        return "";
     }
 }

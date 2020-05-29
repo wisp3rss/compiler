@@ -14,7 +14,7 @@ public class langLexer extends Lexer {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		READ=1, PRINT=2, IF=3, ELSE=4, OBRACE=5, CBRACE=6, WHILE=7, NOT=8, EQ=9, 
+		READ=1, PRINT=2, IF=3, ELSE=4, LBRACE=5, RBRACE=6, WHILE=7, NOT=8, EQ=9, 
 		NEQ=10, AND=11, OR=12, TRUE=13, FALSE=14, ASSIGN=15, SEMI_COLON=16, INT=17, 
 		FLOAT=18, STRING=19, PLUS=20, MINUS=21, DIV=22, MULT=23, MOD=24, DEF_INT=25, 
 		DEF_FLOAT=26, DEF_STRING=27, NAME=28, NAME_PREFIX=29, BLANK=30, COMMENT=31, 
@@ -29,7 +29,7 @@ public class langLexer extends Lexer {
 
 	private static String[] makeRuleNames() {
 		return new String[] {
-			"READ", "PRINT", "IF", "ELSE", "OBRACE", "CBRACE", "WHILE", "NOT", "EQ", 
+			"READ", "PRINT", "IF", "ELSE", "LBRACE", "RBRACE", "WHILE", "NOT", "EQ", 
 			"NEQ", "AND", "OR", "TRUE", "FALSE", "ASSIGN", "SEMI_COLON", "INT", "FLOAT", 
 			"STRING", "PLUS", "MINUS", "DIV", "MULT", "MOD", "DEF_INT", "DEF_FLOAT", 
 			"DEF_STRING", "NAME", "NAME_PREFIX", "BLANK", "COMMENT", "NEXT_LINE", 
@@ -49,7 +49,7 @@ public class langLexer extends Lexer {
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
-			null, "READ", "PRINT", "IF", "ELSE", "OBRACE", "CBRACE", "WHILE", "NOT", 
+			null, "READ", "PRINT", "IF", "ELSE", "LBRACE", "RBRACE", "WHILE", "NOT", 
 			"EQ", "NEQ", "AND", "OR", "TRUE", "FALSE", "ASSIGN", "SEMI_COLON", "INT", 
 			"FLOAT", "STRING", "PLUS", "MINUS", "DIV", "MULT", "MOD", "DEF_INT", 
 			"DEF_FLOAT", "DEF_STRING", "NAME", "NAME_PREFIX", "BLANK", "COMMENT", 

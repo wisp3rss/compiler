@@ -23,7 +23,7 @@ if_statement: IF condition_block (ELSE IF condition_block)* (ELSE statement_bloc
 
 condition_block: expr statement_block;
 
-statement_block: OBRACE block CBRACE | statement;
+statement_block: LBRACE block RBRACE | statement;
 
 while_statement: WHILE expr statement_block;
 
@@ -35,7 +35,9 @@ expr
     | expr op=(PLUS | MINUS) expr
     | expr op=(EQ|NEQ) expr
     | expr AND expr
-    | expr OR expr;
+    | expr OR expr
+    | TRUE
+    | FALSE;
 
 define: (DEF_INT|DEF_FLOAT|DEF_STRING);
 operation: init_var|math_module;
@@ -62,8 +64,8 @@ PRINT: 'PRINT';
 // ==== IF ELSE ====
 IF: 'IF';
 ELSE: 'ELSE';
-OBRACE: '{';
-CBRACE: '}';
+LBRACE: '{';
+RBRACE: '}';
 
 // ==== LOOPS ====
 WHILE: 'WHILE';

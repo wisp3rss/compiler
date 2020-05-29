@@ -1,13 +1,5 @@
 package com.asia.compiler.parser.listeners;
 
-import static com.asia.compiler.common.utils.Instructions.ADD;
-import static com.asia.compiler.common.utils.Instructions.ASSIGN;
-import static com.asia.compiler.common.utils.Instructions.DECLARE;
-import static com.asia.compiler.common.utils.Instructions.DIV;
-import static com.asia.compiler.common.utils.Instructions.MOD;
-import static com.asia.compiler.common.utils.Instructions.MUL;
-import static com.asia.compiler.common.utils.Instructions.SUB;
-
 import com.asia.compiler.common.model.IntermediateObject;
 import com.asia.compiler.common.utils.Instructions;
 import com.asia.compiler.common.utils.MathArgType;
@@ -19,9 +11,12 @@ import com.asia.compiler.parser.utils.CancellationExceptionFactory;
 import com.asia.compiler.parser.visitors.MathArgsVisitor;
 import io.vavr.Tuple2;
 import io.vavr.Tuple3;
+import lombok.AllArgsConstructor;
+
 import java.util.List;
 import java.util.Map;
-import lombok.AllArgsConstructor;
+
+import static com.asia.compiler.common.utils.Instructions.*;
 
 @AllArgsConstructor
 public class VariableListener extends langBaseListener {
@@ -159,6 +154,10 @@ public class VariableListener extends langBaseListener {
                 createMathIntermediateObject(arguments, MOD, varName, type);
                 break;
         }
+    }
+
+    private void handleWhile(Assign_varContext ctx){
+
     }
 
     private void createMathIntermediateObject(Tuple3<Object, Object, MathArgType> arguments, Instructions instruction, String varName, Type type) {

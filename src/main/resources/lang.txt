@@ -62,3 +62,7 @@ V_4 = "abcABCabc";
 V_5 = "aa";
 PRINT V_4;
 PRINT V_5;
+# ==== WHILE TEST ====
+WHILE TRUE {
+    PRINT V_5;
+};

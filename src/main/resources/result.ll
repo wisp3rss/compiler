@@ -94,4 +94,7 @@ store i32 0, i32* %V_5
 %56 = load i32, i32* %V_5
 %57 = getelementptr inbounds [256 x i8], [256 x i8]* %tmp_V_5, i64 0, i64 0
 %58 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.stringPrint, i64 0, i64 0), i8* %57)
+%59 = load i32, i32* %V_5
+%60 = getelementptr inbounds [256 x i8], [256 x i8]* %tmp_V_5, i64 0, i64 0
+%61 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.stringPrint, i64 0, i64 0), i8* %60)
 ret i32 0 }
