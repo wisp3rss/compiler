@@ -12,5 +12,7 @@ public enum Instructions {
     DECLARE,
     IF,
     ELSE,
-    WHILE
+    WHILE,
+    TRUE,
+    FALSE
 }

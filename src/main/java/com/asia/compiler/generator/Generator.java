@@ -66,6 +66,9 @@ public class Generator {
                     case WHILE:
                         result += generateWhile(o);
                         break;
+                    case TRUE:
+                        result += generateTrue(o);
+                        break;
                 }
             }
         );
@@ -251,8 +254,14 @@ public class Generator {
     }
 
     private String generateWhile(IntermediateObject obj){
-//        System.out.println("Im in generateWhile!!!");
+        System.out.println("Im in generateWhile!!!");
         return "";
+    }
+
+    private String generateTrue(IntermediateObject obj){
+        String main_text = "";
+        System.out.println("Im in generate TRUE");
+        return main_text;
     }
 
     private String generateIfElse(IntermediateObject obj){

@@ -20,10 +20,12 @@ public class ControlFlowListener extends langBaseListener {
     private List<IntermediateObject> intermediateObjectList;
     private Map<String, Type> variableTypesMap;
 
+//    while_statement: WHILE expr statement_block;
     @Override
     public void exitWhile_statement(While_statementContext ctx) {
         Type expr = variableTypesMap.get(ctx.expr().getText());
-        Type block = variableTypesMap.get(ctx.statement_block().getText());
+        Type statementBlock = variableTypesMap.get(ctx.statement_block().getText());
+
         if (expr != null){
             intermediateObjectList.add(new IntermediateObject<>(WHILE, expr, ctx.expr().getText(), "", 0, MathArgType.NULL, new Tuple2<>(null, null)));
         } else {
@@ -31,8 +33,8 @@ public class ControlFlowListener extends langBaseListener {
             throw new ParseCancellationException("Statement " + ctx.expr().getText() + " not found.");
         }
 
-        if (block != null){
-            intermediateObjectList.add(new IntermediateObject<>(WHILE, block, ctx.statement_block().getText(), "", 0, MathArgType.NULL, new Tuple2<>(null, null)));
+        if (statementBlock != null){
+            intermediateObjectList.add(new IntermediateObject<>(WHILE, statementBlock, ctx.statement_block().getText(), "", 0, MathArgType.NULL, new Tuple2<>(null, null)));
         } else {
             ctx.exception = new RecognitionException("Statement " + ctx.statement_block().getText() + " missing", null, null, ctx);
             throw new ParseCancellationException("Statement " + ctx.statement_block().getText() + " not found.");
@@ -41,5 +43,8 @@ public class ControlFlowListener extends langBaseListener {
 
     @Override
     public void exitIf_statement(If_statementContext ctx) {
+//        if_statement: IF condition_block (ELSE IF condition_block)* (ELSE statement_block);
+//        Type conditionBlock = variableTypesMap.get(ctx.condition_block().getText());
+
     }
 }

@@ -156,7 +156,7 @@ public class VariableListener extends langBaseListener {
         }
     }
 
-    private void handleWhile(Assign_varContext ctx){
+    private void handleLogic(Assign_varContext ctx){
 
     }
 

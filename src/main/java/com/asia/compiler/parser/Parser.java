@@ -5,6 +5,8 @@ import com.asia.compiler.common.utils.Type;
 import com.asia.compiler.parser.errors.ThrowingErrorListener;
 import com.asia.compiler.parser.gen.langLexer;
 import com.asia.compiler.parser.gen.langParser;
+import com.asia.compiler.parser.listeners.ControlFlowListener;
+import com.asia.compiler.parser.listeners.ExprListener;
 import com.asia.compiler.parser.listeners.IOListener;
 import com.asia.compiler.parser.listeners.VariableListener;
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -32,7 +34,7 @@ public class Parser {
         } catch (Exception e) {
             System.out.println("Message: " + e.getMessage());
         }
-//        System.out.println(intermediateObjectList);
+        System.out.println(intermediateObjectList);
         return intermediateObjectList;
     }
 
@@ -55,6 +57,8 @@ public class Parser {
 
         parser.addParseListener(new IOListener(list, variableTypesMap));
         parser.addParseListener(new VariableListener(list, variableTypesMap));
+        parser.addParseListener(new ControlFlowListener(list, variableTypesMap));
+        parser.addParseListener(new ExprListener(list, variableTypesMap));
 
         return parser;
     }
