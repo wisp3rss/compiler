@@ -22,7 +22,7 @@ public class Parser {
         Map<String, Type> variableTypesMap = new HashMap<>();
         List<IntermediateObject> intermediateObjectList = new ArrayList<>();
 
-        CharStream input = (CharStream) new ANTLRInputStream(code);
+        CharStream input = new ANTLRInputStream(code);
 
         langLexer lexer = prepareLexer(input);
         langParser parser = prepareParser(lexer, intermediateObjectList, variableTypesMap);
