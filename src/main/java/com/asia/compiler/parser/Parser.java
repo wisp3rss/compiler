@@ -6,13 +6,14 @@ import com.asia.compiler.parser.errors.ThrowingErrorListener;
 import com.asia.compiler.parser.gen.langLexer;
 import com.asia.compiler.parser.gen.langParser;
 import com.asia.compiler.parser.listeners.ControlFlowListener;
-import com.asia.compiler.parser.listeners.ExprListener;
 import com.asia.compiler.parser.listeners.IOListener;
 import com.asia.compiler.parser.listeners.VariableListener;
+import com.asia.compiler.parser.utils.Value;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
+import java.util.Stack;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,6 +51,7 @@ public class Parser {
             langLexer lexer,
             List<IntermediateObject> list,
             Map<String, Type> variableTypesMap) {
+        Stack<Value> stack = new Stack<Value>();
         langParser parser = new langParser(new CommonTokenStream(lexer));
         parser.removeErrorListeners();
         parser.addErrorListener(ThrowingErrorListener.INSTANCE);
@@ -57,9 +59,7 @@ public class Parser {
 
         parser.addParseListener(new IOListener(list, variableTypesMap));
         parser.addParseListener(new VariableListener(list, variableTypesMap));
-        parser.addParseListener(new ControlFlowListener(list, variableTypesMap));
-        parser.addParseListener(new ExprListener(list, variableTypesMap));
-
+        parser.addParseListener(new ControlFlowListener(list, variableTypesMap, stack));
         return parser;
     }
 

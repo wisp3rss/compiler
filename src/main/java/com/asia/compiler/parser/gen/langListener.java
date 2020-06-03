@@ -87,35 +87,15 @@ public interface langListener extends ParseTreeListener {
 	 */
 	void exitIf_statement(langParser.If_statementContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link langParser#condition_block}.
+	 * Enter a parse tree produced by {@link langParser#blockif}.
 	 * @param ctx the parse tree
 	 */
-	void enterCondition_block(langParser.Condition_blockContext ctx);
+	void enterBlockif(langParser.BlockifContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link langParser#condition_block}.
+	 * Exit a parse tree produced by {@link langParser#blockif}.
 	 * @param ctx the parse tree
 	 */
-	void exitCondition_block(langParser.Condition_blockContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link langParser#statement_block}.
-	 * @param ctx the parse tree
-	 */
-	void enterStatement_block(langParser.Statement_blockContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link langParser#statement_block}.
-	 * @param ctx the parse tree
-	 */
-	void exitStatement_block(langParser.Statement_blockContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link langParser#while_statement}.
-	 * @param ctx the parse tree
-	 */
-	void enterWhile_statement(langParser.While_statementContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link langParser#while_statement}.
-	 * @param ctx the parse tree
-	 */
-	void exitWhile_statement(langParser.While_statementContext ctx);
+	void exitBlockif(langParser.BlockifContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link langParser#block}.
 	 * @param ctx the parse tree
@@ -126,6 +106,16 @@ public interface langListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitBlock(langParser.BlockContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link langParser#repeat_statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterRepeat_statement(langParser.Repeat_statementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link langParser#repeat_statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitRepeat_statement(langParser.Repeat_statementContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link langParser#expr}.
 	 * @param ctx the parse tree
@@ -206,4 +196,24 @@ public interface langListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitMath_module(langParser.Math_moduleContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link langParser#equal}.
+	 * @param ctx the parse tree
+	 */
+	void enterEqual(langParser.EqualContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link langParser#equal}.
+	 * @param ctx the parse tree
+	 */
+	void exitEqual(langParser.EqualContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link langParser#repeatitions}.
+	 * @param ctx the parse tree
+	 */
+	void enterRepeatitions(langParser.RepeatitionsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link langParser#repeatitions}.
+	 * @param ctx the parse tree
+	 */
+	void exitRepeatitions(langParser.RepeatitionsContext ctx);
 }

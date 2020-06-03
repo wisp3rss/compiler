@@ -111,37 +111,13 @@ public class langBaseListener implements langListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterCondition_block(langParser.Condition_blockContext ctx) { }
+	@Override public void enterBlockif(langParser.BlockifContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitCondition_block(langParser.Condition_blockContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterStatement_block(langParser.Statement_blockContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitStatement_block(langParser.Statement_blockContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterWhile_statement(langParser.While_statementContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitWhile_statement(langParser.While_statementContext ctx) { }
+	@Override public void exitBlockif(langParser.BlockifContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -154,6 +130,18 @@ public class langBaseListener implements langListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitBlock(langParser.BlockContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterRepeat_statement(langParser.Repeat_statementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitRepeat_statement(langParser.Repeat_statementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -250,6 +238,30 @@ public class langBaseListener implements langListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitMath_module(langParser.Math_moduleContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterEqual(langParser.EqualContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitEqual(langParser.EqualContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterRepeatitions(langParser.RepeatitionsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitRepeatitions(langParser.RepeatitionsContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

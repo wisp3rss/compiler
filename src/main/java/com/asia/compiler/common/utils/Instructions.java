@@ -11,8 +11,8 @@ public enum Instructions {
     ASSIGN,
     DECLARE,
     IF,
-    ELSE,
-    WHILE,
-    TRUE,
-    FALSE
+    ENDIF,
+    REPEAT,
+    ENDREPEAT,
+    EQUAL
 }

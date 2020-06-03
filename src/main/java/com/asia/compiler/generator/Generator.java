@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 @NoArgsConstructor(staticName = "instance")
 public class Generator {
@@ -15,6 +16,8 @@ public class Generator {
     static int reg = 1;
     String result = "";
     String declarations = "";
+    static int br = 0;
+    static Stack<Integer> brstack = new Stack<Integer>();
 
     public String generate(List<IntermediateObject> intermediateObjectList) {
 
@@ -60,14 +63,19 @@ public class Generator {
                         result += generateMod(o);
                         break;
                     case IF:
+                        result += generateIf(o);
                         break;
-                    case ELSE:
+                    case ENDIF:
+                        result += generateEndIf(o);
                         break;
-                    case WHILE:
-                        result += generateWhile(o);
+                    case REPEAT:
+                        result += generateRepeat(o);
                         break;
-                    case TRUE:
-                        result += generateTrue(o);
+                    case ENDREPEAT:
+                        result += generateEndRepeat(o);
+                        break;
+                    case EQUAL:
+                        result += generateEqual(o);
                         break;
                 }
             }
@@ -253,18 +261,101 @@ public class Generator {
         return main_text;
     }
 
-    private String generateWhile(IntermediateObject obj){
-        System.out.println("Im in generateWhile!!!");
-        return "";
-    }
 
-    private String generateTrue(IntermediateObject obj){
+    static String assign_i32(String id, String value){
         String main_text = "";
-        System.out.println("Im in generate TRUE");
+        main_text += "store i32 "+value+", i32* "+id+"\n";
         return main_text;
     }
 
-    private String generateIfElse(IntermediateObject obj){
-        return "";
+    static String load_i32(String id){
+        String main_text = "";
+        main_text += "%"+reg+" = load i32, i32* "+id+"\n";
+        reg++;
+        return main_text;
+    }
+
+    static String add_i32(String val1, String val2){
+        String main_text = "";
+        main_text += "%"+reg+" = add i32 "+val1+", "+val2+"\n";
+        reg++;
+        return main_text;
+    }
+
+    private String generateRepeat(IntermediateObject obj){
+        String main_text = "";
+        main_text += "%"+reg+" = alloca i32\n";
+        int counter = reg;
+        reg++;
+        main_text += assign_i32("%" + Integer.toString(counter), "0");
+        br++;
+        main_text += "br label %cond"+br+"\n";
+        main_text += "cond"+br+":\n";
+
+        main_text += load_i32("%" +Integer.toString(counter));
+        main_text += add_i32("%"+(reg-1), "1");
+        main_text += assign_i32("%" + Integer.toString(counter), "%"+(reg-1));
+
+        main_text += "%"+reg+" = icmp slt i32 %"+(reg-2)+", "+obj.getV1()+"\n";
+        reg++;
+
+        main_text += "br i1 %"+(reg-1)+", label %true"+br+", label %false"+br+"\n";
+        main_text += "true"+br+":\n";
+        brstack.push(br);
+        return main_text;
+    }
+
+    private String generateEndRepeat(IntermediateObject obj){
+        String main_text = "";
+        int b = brstack.pop();
+        main_text += "br label %cond"+b+"\n";
+        main_text += "false"+b+":\n";
+        return main_text;
+    }
+
+    private String generateIf(IntermediateObject obj){
+        String main_text = "";
+        br++;
+        main_text += "br i1 %"+(reg-1)+", label %true"+br+", label %false"+br+"\n";
+        main_text += "true"+br+":\n";
+        brstack.push(br);
+        return main_text;
+    }
+
+    static String icmp(String id, String value){
+        String main_text = "";
+        main_text += "%"+reg+" = load i32, i32* "+id+"\n";
+        reg++;
+        main_text += "%"+reg+" = icmp eq i32 %"+(reg-1)+", "+value+"\n";
+        reg++;
+        return main_text;
+    }
+
+    static String fcmp(String id, String value){
+        String main_text = "";
+        main_text += "%"+reg+" = load double, double* "+id+"\n";
+        reg++;
+        main_text += "%"+reg+" = fcmp oeq double %"+(reg-1)+", "+value+"\n";
+        reg++;
+        return main_text;
+    }
+
+    private String generateEqual(IntermediateObject obj){
+        String main_text = "";
+        System.out.println("generateEqual");
+        if (obj.getType().equals(Type.INT)) {
+            main_text += icmp("%" + obj.getV1(), obj.getV2());
+        } else if (obj.getType().equals(Type.FLOAT)) {
+            main_text += fcmp("%" + obj.getV1(), obj.getV2());
+        }
+        return main_text;
+    }
+
+    private String generateEndIf(IntermediateObject obj){
+        String main_text = "";
+        int b = brstack.pop();
+        main_text += "br label %false"+b+"\n";
+        main_text += "false"+b+":\n";
+        return main_text;
     }
 }

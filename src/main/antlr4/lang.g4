@@ -11,7 +11,7 @@ statement
     |print
     |comment
     |if_statement
-    |while_statement;
+    |repeat_statement;
 
 def_var: define NAME SEMI_COLON;
 assign_var: NAME ASSIGN operation SEMI_COLON;
@@ -19,25 +19,18 @@ read: READ NAME SEMI_COLON;
 print: PRINT NAME SEMI_COLON;
 comment: COMMENT;
 
-if_statement: IF condition_block (ELSE IF condition_block)* (ELSE statement_block);
+if_statement: IF equal THEN blockif ENDIF SEMI_COLON;
 
-condition_block: expr statement_block;
-
-statement_block: LBRACE block RBRACE | statement;
-
-while_statement: WHILE expr statement_block;
+blockif: block;
 
 block: statement*;
 
-expr
-    : NOT expr
-    | expr op=(MULT | DIV | MOD) expr
-    | expr op=(PLUS | MINUS) expr
-    | expr op=(EQ|NEQ) expr
-    | expr AND expr
-    | expr OR expr
-    | TRUE
-    | FALSE;
+repeat_statement: REPEAT repeatitions block ENDREPEAT SEMI_COLON;
+
+expr:expr op=(PLUS|MINUS|MULT|DIV) expr
+    | NAME
+    | INT
+    | FLOAT;
 
 define: (DEF_INT|DEF_FLOAT|DEF_STRING);
 operation: init_var|math_module;
@@ -63,21 +56,15 @@ PRINT: 'PRINT';
 
 // ==== IF ELSE ====
 IF: 'IF';
-ELSE: 'ELSE';
-LBRACE: '{';
-RBRACE: '}';
+THEN: 'THEN';
+ENDIF: 'ENDIF';
+equal: NAME '==' expr;
+
 
 // ==== LOOPS ====
-WHILE: 'WHILE';
-
-// ==== LOGIC ====
-NOT: '!';
-EQ: '==';
-NEQ: '!=';
-AND: '&&';
-OR: '||';
-TRUE:  'TRUE';
-FALSE: 'FALSE';
+REPEAT: 'REPEAT';
+ENDREPEAT: 'ENDREPEAT';
+repeatitions: INT|NAME;
 
 // ==== SYMBOLS ====
 ASSIGN: '=';

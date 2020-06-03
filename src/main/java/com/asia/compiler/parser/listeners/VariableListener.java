@@ -156,10 +156,6 @@ public class VariableListener extends langBaseListener {
         }
     }
 
-    private void handleLogic(Assign_varContext ctx){
-
-    }
-
     private void createMathIntermediateObject(Tuple3<Object, Object, MathArgType> arguments, Instructions instruction, String varName, Type type) {
         intermediateObjectList.add(new IntermediateObject<>(
             instruction,

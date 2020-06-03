@@ -1,0 +1,66 @@
+#  ==== INT TESTS ====
+# ---- int declaration ----
+INT V_0;
+INT V_1;
+
+# ---- assigning ----
+V_0 = 5;
+V_1 = 3;
+
+# ---- priting int value ----
+PRINT V_0;
+PRINT V_1;
+
+# ---- math operation on int values ----
+V_1 = V_1 + 3;
+PRINT V_1;
+V_1 = V_1 * V_0;
+PRINT V_1;
+V_1 = 90 / V_1;
+PRINT V_1;
+V_0 = 3 % 2;
+PRINT V_0;
+
+
+# ==== FLOAT TESTS ====
+# ---- float declaration ----
+FLOAT V_2;
+FLOAT V_3;
+# ---- assigning ----
+V_2 = 5.1;
+V_3 = 3.3;
+# ---- priting float value ----
+PRINT V_2;
+PRINT V_3;
+# ---- math operation on float values ----
+V_2 = V_2 - V_3;
+PRINT V_2;
+V_2 = V_2 * 3.1;
+PRINT V_2;
+V_3 = 9.9 / V_3;
+PRINT V_3;
+
+# ==== IO SECTION TESTS ====
+INT V_11;
+READ V_11;
+PRINT V_11;
+
+FLOAT V_12;
+READ V_12;
+PRINT V_12;
+
+STRING V_13;
+READ V_13;
+PRINT V_13;
+
+# ==== STRING TESTS ====
+# ---- string declaration ----
+STRING V_4;
+STRING V_5;
+# ---- assigning ----
+V_4 = "abcABCabc";
+V_5 = "aa";
+PRINT V_4;
+PRINT V_5;
+# ==== WHILE TEST ====
+REPEAT 4 PRINT V_4; ENDREPEAT;

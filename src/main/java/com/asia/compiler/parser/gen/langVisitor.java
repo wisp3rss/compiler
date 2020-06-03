@@ -58,29 +58,23 @@ public interface langVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitIf_statement(langParser.If_statementContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link langParser#condition_block}.
+	 * Visit a parse tree produced by {@link langParser#blockif}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitCondition_block(langParser.Condition_blockContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link langParser#statement_block}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitStatement_block(langParser.Statement_blockContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link langParser#while_statement}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitWhile_statement(langParser.While_statementContext ctx);
+	T visitBlockif(langParser.BlockifContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link langParser#block}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitBlock(langParser.BlockContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link langParser#repeat_statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRepeat_statement(langParser.Repeat_statementContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link langParser#expr}.
 	 * @param ctx the parse tree
@@ -129,4 +123,16 @@ public interface langVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitMath_module(langParser.Math_moduleContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link langParser#equal}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitEqual(langParser.EqualContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link langParser#repeatitions}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRepeatitions(langParser.RepeatitionsContext ctx);
 }
