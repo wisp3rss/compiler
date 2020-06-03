@@ -19,11 +19,17 @@ read: READ NAME SEMI_COLON;
 print: PRINT NAME SEMI_COLON;
 comment: COMMENT;
 
+function: FUNCTION fparam fblock ENDFUNCTION;
+
+fparam: NAME;
+
+fblock: ( statement? NEWLINE )*;
+
 if_statement: IF equal THEN blockif ENDIF SEMI_COLON;
 
 blockif: block;
 
-block: statement*;
+block: ( (statement|function)? NEWLINE)*;
 
 repeat_statement: REPEAT repeatitions block ENDREPEAT SEMI_COLON;
 
@@ -65,6 +71,11 @@ equal: NAME '==' expr;
 REPEAT: 'REPEAT';
 ENDREPEAT: 'ENDREPEAT';
 repeatitions: INT|NAME;
+
+// ==== FUNCTION ====
+FUNCTION: 'FUNCTION';
+ENDFUNCTION: 'ENDFUNCTION';
+NEWLINE:'\r'? '\n';
 
 // ==== SYMBOLS ====
 ASSIGN: '=';

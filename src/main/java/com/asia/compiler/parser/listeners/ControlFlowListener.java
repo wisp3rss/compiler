@@ -10,9 +10,7 @@ import lombok.AllArgsConstructor;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
 
 import static com.asia.compiler.common.utils.Instructions.*;
 
@@ -22,7 +20,8 @@ public class ControlFlowListener extends langBaseListener {
     private List<IntermediateObject> intermediateObjectList;
     private Map<String, Type> variableTypesMap;
     private Stack<Value> stack;
-
+    private HashSet<String> functions;
+    private String function;
     //    repeat_statement: REPEAT repeatitions block ENDREPEAT;
 
     @Override
@@ -99,6 +98,36 @@ public class ControlFlowListener extends langBaseListener {
     @Override
     public void exitBlockif(langParser.BlockifContext ctx){
         intermediateObjectList.add(new IntermediateObject<>(ENDIF, null, "", "", null, MathArgType.NULL, new Tuple2<>(null, null)));
+    }
+
+    //funkcje
+    @Override
+    public void exitFparam(langParser.FparamContext ctx){
+        Type NAME = variableTypesMap.get(ctx.NAME().getText());
+        String ID = ctx.NAME().getText();
+        functions.add(ID);
+        function = ID;
+        if (NAME != null){
+            intermediateObjectList.add(new IntermediateObject<>(FUNCTION, NAME, ID, "", null, MathArgType.NULL, new Tuple2<>(null, null)));
+        } else{
+            ctx.exception = new RecognitionException("Variable " + ctx.NAME().getText() + " not found.", null, null, ctx);
+            throw new ParseCancellationException("Variable " + ctx.NAME().getText() + " not found.");
+        }
+    }
+
+//    @Override
+//    public void enterFblock(langParser.FblockContext ctx){
+//        global=false;
+//    }
+
+    @Override
+    public void exitFblock(langParser.FblockContext ctx) {
+        Type NAME = variableTypesMap.get(function);
+        if (NAME != null){
+            intermediateObjectList.add(new IntermediateObject<>(FBLOCK, NAME, function, "", null, MathArgType.NULL, new Tuple2<>(null, null)));
+            variableTypesMap = new HashMap<String, Type>();
+            //global ==true;
+        }
     }
 
 }

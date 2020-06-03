@@ -14,6 +14,7 @@ public class Generator {
 
     static String header_text = "";
     static int reg = 1;
+    static int main_reg = 1;
     String result = "";
     String declarations = "";
     static int br = 0;
@@ -76,6 +77,12 @@ public class Generator {
                         break;
                     case EQUAL:
                         result += generateEqual(o);
+                        break;
+                    case FUNCTION:
+                        result += generateFunction(o);
+                        break;
+                    case FBLOCK:
+                        result += generateFBlock(o);
                         break;
                 }
             }
@@ -357,5 +364,28 @@ public class Generator {
         main_text += "br label %false"+b+"\n";
         main_text += "false"+b+":\n";
         return main_text;
+    }
+
+    private String generateFunction(IntermediateObject obj){
+        String main_text = "";
+        main_reg = reg;
+        main_text += "define i32 @"+obj.getV1()+"() nounwind {\n";
+        reg = 1;
+        return main_text;
+    }
+
+    private String generateFBlock(IntermediateObject obj){
+        String main_text = "";
+        main_text+= load_i32( "%"+obj.getV1() );
+        main_text += "ret i32 %"+(reg-1)+"\n";
+        main_text+= "}\n";
+        header_text += main_text;
+        main_text = "";
+        reg = main_reg;
+        return main_text;
+    }
+
+    public String functionend(){
+        return "";
     }
 }

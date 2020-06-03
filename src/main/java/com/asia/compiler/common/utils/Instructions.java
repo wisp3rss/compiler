@@ -14,5 +14,7 @@ public enum Instructions {
     ENDIF,
     REPEAT,
     ENDREPEAT,
-    EQUAL
+    EQUAL,
+    FUNCTION,
+    FBLOCK
 }

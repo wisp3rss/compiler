@@ -77,6 +77,36 @@ public interface langListener extends ParseTreeListener {
 	 */
 	void exitComment(langParser.CommentContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link langParser#function}.
+	 * @param ctx the parse tree
+	 */
+	void enterFunction(langParser.FunctionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link langParser#function}.
+	 * @param ctx the parse tree
+	 */
+	void exitFunction(langParser.FunctionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link langParser#fparam}.
+	 * @param ctx the parse tree
+	 */
+	void enterFparam(langParser.FparamContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link langParser#fparam}.
+	 * @param ctx the parse tree
+	 */
+	void exitFparam(langParser.FparamContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link langParser#fblock}.
+	 * @param ctx the parse tree
+	 */
+	void enterFblock(langParser.FblockContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link langParser#fblock}.
+	 * @param ctx the parse tree
+	 */
+	void exitFblock(langParser.FblockContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link langParser#if_statement}.
 	 * @param ctx the parse tree
 	 */

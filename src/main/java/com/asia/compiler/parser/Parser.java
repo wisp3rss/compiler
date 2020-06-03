@@ -13,11 +13,12 @@ import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
-import java.util.Stack;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
+import java.util.HashSet;
 
 public class Parser {
 
@@ -52,6 +53,8 @@ public class Parser {
             List<IntermediateObject> list,
             Map<String, Type> variableTypesMap) {
         Stack<Value> stack = new Stack<Value>();
+        HashSet<String> functions = new HashSet<String>();
+
         langParser parser = new langParser(new CommonTokenStream(lexer));
         parser.removeErrorListeners();
         parser.addErrorListener(ThrowingErrorListener.INSTANCE);
@@ -59,7 +62,7 @@ public class Parser {
 
         parser.addParseListener(new IOListener(list, variableTypesMap));
         parser.addParseListener(new VariableListener(list, variableTypesMap));
-        parser.addParseListener(new ControlFlowListener(list, variableTypesMap, stack));
+        parser.addParseListener(new ControlFlowListener(list, variableTypesMap, stack, functions, ""));
         return parser;
     }
 
