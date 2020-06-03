@@ -15,6 +15,8 @@ import com.asia.compiler.common.utils.Type;
 import com.asia.compiler.parser.gen.langBaseListener;
 import com.asia.compiler.parser.gen.langParser.Assign_varContext;
 import com.asia.compiler.parser.gen.langParser.Def_varContext;
+import com.asia.compiler.parser.gen.langParser.Numeric_valueContext;
+import com.asia.compiler.parser.gen.langParser.ValueContext;
 import com.asia.compiler.parser.utils.CancellationExceptionFactory;
 import com.asia.compiler.parser.visitors.MathArgsVisitor;
 import io.vavr.Tuple2;
@@ -31,7 +33,6 @@ public class VariableListener extends langBaseListener {
 
     @Override
     public void exitAssign_var(Assign_varContext ctx) {
-        Type t;
         String varName = ctx.NAME().getText();
 
         if (!variableTypesMap.containsKey(varName)) {
@@ -40,20 +41,36 @@ public class VariableListener extends langBaseListener {
         }
 
         if (ctx.operation().init_var() != null) {
-            if (ctx.operation().init_var().value().NAME() != null) {
-                handleAssignVariable(ctx);
-            } else if (ctx.operation().init_var().value().numeric_value() != null) {
-                if (ctx.operation().init_var().value().numeric_value().INT() != null) {
-                    handleAssignConstant(ctx, Type.INT);
-                } else if (ctx.operation().init_var().value().numeric_value().FLOAT() != null) {
-                    handleAssignConstant(ctx, Type.FLOAT);
-                }
-            } else if (ctx.operation().init_var().value().STRING() != null) {
-                handleAssignConstant(ctx, Type.STRING);
-            }
+            handleInitVar(ctx);
         } else if (ctx.operation().math_module() != null) {
             handleAssignMath(ctx, varName, variableTypesMap.get(varName));
         }
+    }
+
+    private void handleInitVar(Assign_varContext ctx) {
+        if (getInitVar_value(ctx).NAME() != null) {
+            handleAssignVariable(ctx);
+        } else if (getNumeric_valueContext(ctx) != null) {
+            handleNumericValue(ctx);
+        } else if (getInitVar_value(ctx).STRING() != null) {
+            handleAssignConstant(ctx, Type.STRING);
+        }
+    }
+
+    private void handleNumericValue(Assign_varContext ctx) {
+        if (getNumeric_valueContext(ctx).INT() != null) {
+            handleAssignConstant(ctx, Type.INT);
+        } else if (getNumeric_valueContext(ctx).FLOAT() != null) {
+            handleAssignConstant(ctx, Type.FLOAT);
+        }
+    }
+
+    private ValueContext getInitVar_value(Assign_varContext ctx) {
+        return ctx.operation().init_var().value();
+    }
+
+    private Numeric_valueContext getNumeric_valueContext(Assign_varContext ctx) {
+        return getInitVar_value(ctx).numeric_value();
     }
 
     @Override
@@ -84,14 +101,14 @@ public class VariableListener extends langBaseListener {
 
         String value = "";
 
-        if (ctx.operation().init_var().value().numeric_value() != null) {
-            if (ctx.operation().init_var().value().numeric_value().INT() != null) {
-                value = ctx.operation().init_var().value().numeric_value().INT().getText();
-            } else if (ctx.operation().init_var().value().numeric_value().FLOAT() != null) {
-                value = ctx.operation().init_var().value().numeric_value().FLOAT().getText();
+        if (getNumeric_valueContext(ctx) != null) {
+            if (getNumeric_valueContext(ctx).INT() != null) {
+                value = getNumeric_valueContext(ctx).INT().getText();
+            } else if (getNumeric_valueContext(ctx).FLOAT() != null) {
+                value = getNumeric_valueContext(ctx).FLOAT().getText();
             }
-        } else if (ctx.operation().init_var().value().STRING() != null) {
-            value = ctx.operation().init_var().value().STRING().getText();
+        } else if (getInitVar_value(ctx).STRING() != null) {
+            value = getInitVar_value(ctx).STRING().getText();
         }
 
         intermediateObjectList.add(new IntermediateObject<>(
@@ -107,7 +124,7 @@ public class VariableListener extends langBaseListener {
 
     private void handleAssignVariable(Assign_varContext ctx) {
         String leftVar = ctx.NAME().getText();
-        String rightVar = ctx.operation().init_var().value().NAME().getText();
+        String rightVar = getInitVar_value(ctx).NAME().getText();
 
         /* Check if left variable exist */
         if (variableTypesMap.get(leftVar) == null) {
