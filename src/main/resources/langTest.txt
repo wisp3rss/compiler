@@ -1,0 +1,5 @@
+INT V_0;
+V_0 = 2;
+IF (true){
+PRINT V_0;
+}

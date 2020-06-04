@@ -119,6 +119,45 @@ store i32 0, i32* %V_1
 ret i32 0 }
 ```
 
+###Bool
+Test:
+```
+#declaration
+BOOL V_0;
+BOOL V_1;
+
+#assigning
+V_0 = true;
+V_1 = fale;
+```
+
+W pliku result.ll:
+```llvm
+declare i32 @printf(i8*, ...)
+declare i32 @scanf(i8*, ...)
+declare i8* @__strcpy_chk(i8*, i8*, i64) #1
+@strpi = constant [4 x i8] c"%d\0A\00"
+@strpd = constant [4 x i8] c"%f\0A\00"
+@strs = constant [3 x i8] c"%d\00"
+@.strbool = private unnamed_addr constant [4 x i8] c"%u\0A\00"
+@.strdouble = private unnamed_addr constant [4 x i8] c"%lf\00"
+@.stringScan = private unnamed_addr constant [3 x i8] c"%s\00"
+@.stringPrint = private unnamed_addr constant [4 x i8] c"%s\0A\00"
+define i32 @main() nounwind{
+%tmp_V_0 = alloca i32
+%V_0 = alloca i32
+store i32 0, i32* %tmp_V_0
+%tmp_V_1 = alloca i32
+%V_1 = alloca i32
+store i32 0, i32* %tmp_V_1
+store i32 1, i32* %V_0
+store i32 0, i32* %V_1
+%1 = load i32, i32* %V_0
+%2 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.strbool, i64 0, i64 0), i32 %1)%3 = load i32, i32* %V_1
+%4 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.strbool, i64 0, i64 0), i32 %3)ret i32 0 }
+
+```
+
 ##Operaje wejścia-wyjścia
 ###Int
 Test:
@@ -250,6 +289,26 @@ Wynik po uruchomieniu:
 abc
 JFIK
 ```
+
+###Bool
+Test:
+```
+V_0 = true;
+
+#----print test----
+PRINT V_0;
+
+#----read test----
+READ V_0;
+PRINT V_0;
+```
+
+W pliku result.ll:
+```llvm
+//TODO
+
+```
+
 
 ##Operacje arytmetyczne
 ###Int
