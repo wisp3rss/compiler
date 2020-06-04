@@ -335,13 +335,9 @@ public class Generator {
         reg++;
         main_text += String.format(BOOL_CONDITION.getValue(), ("%" + reg), typeValue, ("%" + (reg-1)));
 
-        if ((int)obj.getVal() == 1){
-            main_text += String.format(IF_JUMP.getValue(), ("%" + (reg)), ("%" + (label)), ("%" + (endLabel)));
 
-        } else if ((int)obj.getVal() == 0){
-            main_text += String.format(IF_JUMP.getValue(), ("%" + (reg)), ("%" + (endLabel)), ("%" + (label)));
+        main_text += String.format(IF_JUMP.getValue(), ("%" + (reg)), ("%" + (label)), ("%" + (endLabel)));
 
-        }
         main_text +=  String.format(LABEL.getValue(), label);
         reg++;
 

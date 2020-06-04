@@ -1,5 +1,5 @@
 INT V_0;
 V_0 = 2;
-IF (true){
+IF (false){
 PRINT V_0;
 }
