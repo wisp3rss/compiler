@@ -9,16 +9,18 @@ import com.asia.compiler.parser.gen.langParser;
 import com.asia.compiler.parser.listeners.ConditionListener;
 import com.asia.compiler.parser.listeners.IOListener;
 import com.asia.compiler.parser.listeners.VariableListener;
-import java.util.ArrayList;
-import java.util.List;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 public class Parser {
 
-    public List<IntermediateObject> parse(String code) {
+    public Optional<List<IntermediateObject>> parse(String code) {
         LabelStack labelStack = new LabelStack();
         VariableMap variableMap = new VariableMap();
         List<IntermediateObject> intermediateObjectList = new ArrayList<>();
@@ -31,9 +33,10 @@ public class Parser {
         try {
             parser.program();
         } catch (Exception e) {
-            System.out.println("Message: " + e.getMessage());
+            System.err.println("Error: " + e.getMessage());
+            return Optional.empty();
         }
-        return intermediateObjectList;
+        return Optional.of(intermediateObjectList);
     }
 
     private langLexer prepareLexer(CharStream input) {
