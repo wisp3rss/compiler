@@ -12,7 +12,7 @@ define i32 @main() nounwind{
 %V_0 = alloca i32
 store i32 2, i32* %V_0
 %1 = alloca i32
-store i32 1, i32* %1
+store i32 0, i32* %1
 %2 = load i32, i32* %1
 %3 = icmp ne i32 %2, 0
 br i1 %3, label %if_1, label %end_if_1
