@@ -1,6 +1,7 @@
 package com.asia.compiler.parser;
 
 import com.asia.compiler.common.model.IntermediateObject;
+import com.asia.compiler.common.model.VariableMap;
 import com.asia.compiler.common.utils.Type;
 import com.asia.compiler.parser.errors.ThrowingErrorListener;
 import com.asia.compiler.parser.gen.langLexer;
@@ -19,13 +20,14 @@ import org.antlr.v4.runtime.CommonTokenStream;
 public class Parser {
 
     public List<IntermediateObject> parse(String code) {
-        Map<String, Type> variableTypesMap = new HashMap<>();
+//        Map<String, Type> variableTypesMap = new HashMap<>();
+        VariableMap variableMap = new VariableMap();
         List<IntermediateObject> intermediateObjectList = new ArrayList<>();
 
         CharStream input = new ANTLRInputStream(code);
 
         langLexer lexer = prepareLexer(input);
-        langParser parser = prepareParser(lexer, intermediateObjectList, variableTypesMap);
+        langParser parser = prepareParser(lexer, intermediateObjectList, variableMap);
 
         try {
             parser.program();
@@ -43,17 +45,14 @@ public class Parser {
         return lexer;
     }
 
-    private langParser prepareParser(
-            langLexer lexer,
-            List<IntermediateObject> list,
-            Map<String, Type> variableTypesMap) {
+    private langParser prepareParser(langLexer lexer, List<IntermediateObject> list, VariableMap variableMap) {
         langParser parser = new langParser(new CommonTokenStream(lexer));
         parser.removeErrorListeners();
         parser.addErrorListener(ThrowingErrorListener.INSTANCE);
         parser.setErrorHandler(new BailErrorStrategy());
 
-        parser.addParseListener(new IOListener(list, variableTypesMap));
-        parser.addParseListener(new VariableListener(list, variableTypesMap));
+        parser.addParseListener(new IOListener(list, variableMap));
+        parser.addParseListener(new VariableListener(list, variableMap));
 
         return parser;
     }

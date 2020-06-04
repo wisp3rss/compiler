@@ -9,6 +9,7 @@ import static com.asia.compiler.common.utils.Instructions.MUL;
 import static com.asia.compiler.common.utils.Instructions.SUB;
 
 import com.asia.compiler.common.model.IntermediateObject;
+import com.asia.compiler.common.model.VariableMap;
 import com.asia.compiler.common.utils.Instructions;
 import com.asia.compiler.common.utils.MathArgType;
 import com.asia.compiler.common.utils.Type;
@@ -29,13 +30,13 @@ import lombok.AllArgsConstructor;
 public class VariableListener extends langBaseListener {
 
     private List<IntermediateObject> intermediateObjectList;
-    private Map<String, Type> variableTypesMap;
+    private VariableMap variableMap;
 
     @Override
     public void exitAssign_var(Assign_varContext ctx) {
         String varName = ctx.NAME().getText();
 
-        if (!variableTypesMap.containsKey(varName)) {
+        if (!variableMap.getVariableTypesMap().containsKey(varName)) {
             CancellationExceptionFactory.throwCancellationException(ctx, "Variable " + varName + " undefined.");
             return;
         }
@@ -43,7 +44,7 @@ public class VariableListener extends langBaseListener {
         if (ctx.operation().init_var() != null) {
             assignInitVar(ctx);
         } else if (ctx.operation().math_module() != null) {
-            handleAssignMath(ctx, varName, variableTypesMap.get(varName));
+            handleAssignMath(ctx, varName, variableMap.getVariableTypesMap().get(varName));
         }
     }
 
@@ -92,17 +93,17 @@ public class VariableListener extends langBaseListener {
             t = Type.BOOL;
         }
 
-        if (variableTypesMap.containsKey(ctx.NAME().getText()) || null == t) {
+        if (variableMap.getVariableTypesMap().containsKey(ctx.NAME().getText()) || null == t) {
             CancellationExceptionFactory.throwCancellationException(ctx, "Variable " + ctx.NAME().getText() + "  already defined.");
         }
 
-        variableTypesMap.put(ctx.NAME().getText(), t);
+        variableMap.addVariable(ctx.NAME().getText(), t);
         intermediateObjectList.add(new IntermediateObject<>(DECLARE, t, ctx.NAME().getText(), "", 0, null, null));
     }
 
     private void handleAssignConstant(Assign_varContext ctx, Type t) {
         String varName = ctx.NAME().getText();
-        if (!variableTypesMap.get(varName).equals(t)) {
+        if (!variableMap.getVariableTypesMap().get(varName).equals(t)) {
             CancellationExceptionFactory.throwCancellationException(ctx, "Variable " + varName + "  incompatible.");
             return;
         }
@@ -139,24 +140,24 @@ public class VariableListener extends langBaseListener {
         String rightVar = getInitVar_value(ctx).NAME().getText();
 
         /* Check if left variable exist */
-        if (variableTypesMap.get(leftVar) == null) {
+        if (variableMap.getVariableTypesMap().get(leftVar) == null) {
             CancellationExceptionFactory.throwCancellationException(ctx, leftVar + " is undefined");
             return;
         }
         /* Check if right variable exist */
-        if (variableTypesMap.get(rightVar) == null) {
+        if (variableMap.getVariableTypesMap().get(rightVar) == null) {
             CancellationExceptionFactory.throwCancellationException(ctx, rightVar + " is undefined");
             return;
         }
         /* Check types */
-        if (!variableTypesMap.get(leftVar).equals(variableTypesMap.get(rightVar))) {
+        if (!variableMap.getVariableTypesMap().get(leftVar).equals(variableMap.getVariableTypesMap().get(rightVar))) {
             CancellationExceptionFactory.throwCancellationException(ctx, "Incompatible types between " + leftVar + " and " + rightVar);
             return;
         }
 
         intermediateObjectList.add(new IntermediateObject<>(
             ASSIGN,
-            variableTypesMap.get(leftVar),
+            variableMap.getVariableTypesMap().get(leftVar),
             leftVar,
             rightVar,
             0,
@@ -167,7 +168,7 @@ public class VariableListener extends langBaseListener {
 
     private void handleAssignMath(Assign_varContext ctx, String varName, Type type) {
 
-        MathArgsVisitor mathArgsVisitor = MathArgsVisitor.of(variableTypesMap);
+        MathArgsVisitor mathArgsVisitor = MathArgsVisitor.of(variableMap);
 
         Tuple3<Object, Object, MathArgType> arguments = mathArgsVisitor.visitMathArgs(ctx.operation().math_module(), type);
 
