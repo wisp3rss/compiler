@@ -38,7 +38,7 @@ while_loop: WHILE condition OPEN_BRACE statement* CLOSE_BRACE;
 
 
 // ==== IF STATEMENT ====
-if_begin: IF condition OPEN_BRACE statement*;
+if_begin: IF '(' condition ')' OPEN_BRACE statement*;
 if_statement: if_begin CLOSE_BRACE (|else_statement);
 else_statement: ELSE ( OPEN_BRACE statement* CLOSE_BRACE
     | if_statement);
@@ -62,10 +62,11 @@ math_module
 
 // ==== CONDITION ====
 condition
-    : condition comp=(GT|LT|GT_EQ|LT_EQ|EQUAL|NEQ) condition
-    | condition log=(AND|OR) condition
-    | '(' condition ')'
-    | (bool|value|math_module)
+    : (value|math_module) comp=(GT|LT|GT_EQ|LT_EQ|EQUAL|NEQ) (value|math_module)
+    | bool
+//    | condition log=(AND|OR) condition
+//    | '(' condition ')'
+//    | (bool|value|math_module)
     ;
 // ==== END CONDITION ====
 

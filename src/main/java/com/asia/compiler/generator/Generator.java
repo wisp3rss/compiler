@@ -3,8 +3,12 @@ package com.asia.compiler.generator;
 import static com.asia.compiler.generator.utils.LLVMCodeParts.ASSIGN_STRING_DECLARATION;
 import static com.asia.compiler.generator.utils.LLVMCodeParts.ASSIGN_STRING_LINE_1;
 import static com.asia.compiler.generator.utils.LLVMCodeParts.ASSIGN_STRING_LINE_2;
+import static com.asia.compiler.generator.utils.LLVMCodeParts.BOOL_CONDITION;
 import static com.asia.compiler.generator.utils.LLVMCodeParts.DEFINE_INT_FLOAT;
 import static com.asia.compiler.generator.utils.LLVMCodeParts.DEFINE_STRING;
+import static com.asia.compiler.generator.utils.LLVMCodeParts.EXIT_JUMP;
+import static com.asia.compiler.generator.utils.LLVMCodeParts.IF_JUMP;
+import static com.asia.compiler.generator.utils.LLVMCodeParts.LABEL;
 import static com.asia.compiler.generator.utils.LLVMCodeParts.LOAD;
 import static com.asia.compiler.generator.utils.LLVMCodeParts.MATH_OPERATION;
 import static com.asia.compiler.generator.utils.LLVMCodeParts.PRINT_BOOL;
@@ -20,7 +24,7 @@ import static com.asia.compiler.generator.utils.LLVMCodeParts.READ_STRING_LNE_2;
 import static com.asia.compiler.generator.utils.LLVMCodeParts.STORE;
 
 import com.asia.compiler.common.model.IntermediateObject;
-import com.asia.compiler.common.utils.MathArgType;
+import com.asia.compiler.common.utils.ArgType;
 import com.asia.compiler.common.utils.Type;
 import java.util.HashMap;
 import java.util.List;
@@ -79,7 +83,12 @@ public class Generator {
                     case MOD:
                         result += generateMod(o);
                         break;
-
+                    case CONDITION_SIMPLE:
+                        result += generateConditionSimple(o);
+                        break;
+                    case END:
+                        result += generateEndLabel(o);
+                        break;
                 }
             }
         );
@@ -166,13 +175,13 @@ public class Generator {
         Map<String, Integer> varRegistry = new HashMap<>();
         String value = obj.getType().getValue();
 
-        if (obj.getMathArgType().equals(MathArgType.VAR_VAR)) {
+        if (obj.getArgType().equals(ArgType.VAR_VAR)) {
             main_text = generateMathVarVar(obj, operation, main_text, varRegistry, value);
-        } else if (obj.getMathArgType().equals(MathArgType.NUM_NUM)) {
+        } else if (obj.getArgType().equals(ArgType.NUM_NUM)) {
             main_text = generateMathNumNum(obj, operation, main_text, value);
-        } else if (obj.getMathArgType().equals(MathArgType.NUM_VAR)) {
+        } else if (obj.getArgType().equals(ArgType.NUM_VAR)) {
             main_text = generateMathNumVar(obj, operation, main_text, varRegistry, value);
-        } else if (obj.getMathArgType().equals(MathArgType.VAR_NUM)) {
+        } else if (obj.getArgType().equals(ArgType.VAR_NUM)) {
             main_text = generateMathVarNum(obj, operation, main_text, varRegistry, value);
         }
         return main_text;
@@ -311,6 +320,39 @@ public class Generator {
 
     private boolean isTypeEquals(IntermediateObject obj, Type type) {
         return obj.getType().equals(type);
+    }
+
+    private String generateConditionSimple(IntermediateObject obj) {
+        String main_text = "";
+        String typeValue = obj.getType().getValue();
+        String label = obj.getV1();
+        String endLabel = obj.getV2();
+
+        main_text += String.format(DEFINE_INT_FLOAT.getValue(), ("%" + reg), typeValue);
+        reg++;
+        main_text += String.format(STORE.getValue(), typeValue, obj.getVal(), typeValue, ("%" + (reg-1)));
+        main_text += String.format(LOAD.getValue(), ("%" + reg), typeValue, typeValue, ("%" + (reg-1)));
+        reg++;
+        main_text += String.format(BOOL_CONDITION.getValue(), ("%" + reg), typeValue, ("%" + (reg-1)));
+
+        if ((int)obj.getVal() == 1){
+            main_text += String.format(IF_JUMP.getValue(), ("%" + (reg)), ("%" + (label)), ("%" + (endLabel)));
+
+        } else if ((int)obj.getVal() == 0){
+            main_text += String.format(IF_JUMP.getValue(), ("%" + (reg)), ("%" + (endLabel)), ("%" + (label)));
+
+        }
+        main_text +=  String.format(LABEL.getValue(), label);
+        reg++;
+
+        return main_text;
+    }
+
+    private String generateEndLabel(IntermediateObject obj) {
+        String main_text = "";
+        main_text += String.format(EXIT_JUMP.getValue(), ("%" + obj.getV1()));
+        main_text += String.format(LABEL.getValue(), obj.getV1());
+        return main_text;
     }
 
 }

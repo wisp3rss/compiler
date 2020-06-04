@@ -9,5 +9,9 @@ public enum Instructions {
     DIV,
     MOD,
     ASSIGN,
-    DECLARE
+    DECLARE,
+    IF,
+    END,
+    CONDITION_SIMPLE,
+    CONDITION_EXTENDED
 }

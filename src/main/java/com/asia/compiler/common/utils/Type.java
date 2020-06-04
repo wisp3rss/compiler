@@ -8,7 +8,8 @@ public enum Type {
     INT("i32"),
     FLOAT("double"),
     STRING("i32"),
-    BOOL("i32");
+    BOOL("i32"),
+    LOOP( "");
 
     @Getter
     private String value;

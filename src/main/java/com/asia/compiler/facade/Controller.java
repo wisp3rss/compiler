@@ -15,13 +15,13 @@ import java.util.stream.Stream;
 public class Controller {
 
     public static void main(String[] args) throws IOException {
-        String filePath = "src/main/resources/lang.txt";
+        String filePath = "src/main/resources/langTest.txt";
         String code = readFileAsString(filePath);
 
         List<IntermediateObject> intermediateCode = new Parser().parse(code);
         String result = Generator.instance().generate(intermediateCode);
         System.out.println(result);
-        whenWriteStringUsingBufferedWritter_thenCorrect("src/main/resources/result.ll", result);
+        whenWriteStringUsingBufferedWritter_thenCorrect("src/main/resources/resultTest.ll", result);
     }
 
     private static String readFileAsString(String filePath) {

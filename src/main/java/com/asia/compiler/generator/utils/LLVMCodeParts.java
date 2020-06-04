@@ -28,7 +28,12 @@ public enum LLVMCodeParts {
 
     LOAD( "%s = load %s, %s* %s\n"),
 
-    MATH_OPERATION( "%s = %s %s %s, %s\n");
+    MATH_OPERATION( "%s = %s %s %s, %s\n"),
+
+    BOOL_CONDITION( "%s = icmp ne %s %s, 0\n"),
+    IF_JUMP( "br i1 %s, label %s, label %s\n"),
+    LABEL( "%s:\n"),
+    EXIT_JUMP( "br label %s\n");
 
     @Getter
     private String value;

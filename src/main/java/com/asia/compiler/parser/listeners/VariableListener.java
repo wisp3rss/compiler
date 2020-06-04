@@ -1,17 +1,11 @@
 package com.asia.compiler.parser.listeners;
 
-import static com.asia.compiler.common.utils.Instructions.ADD;
 import static com.asia.compiler.common.utils.Instructions.ASSIGN;
 import static com.asia.compiler.common.utils.Instructions.DECLARE;
-import static com.asia.compiler.common.utils.Instructions.DIV;
-import static com.asia.compiler.common.utils.Instructions.MOD;
-import static com.asia.compiler.common.utils.Instructions.MUL;
-import static com.asia.compiler.common.utils.Instructions.SUB;
 
 import com.asia.compiler.common.model.IntermediateObject;
 import com.asia.compiler.common.model.VariableMap;
-import com.asia.compiler.common.utils.Instructions;
-import com.asia.compiler.common.utils.MathArgType;
+import com.asia.compiler.common.utils.ArgType;
 import com.asia.compiler.common.utils.Type;
 import com.asia.compiler.parser.gen.langBaseListener;
 import com.asia.compiler.parser.gen.langParser.Assign_varContext;
@@ -19,11 +13,9 @@ import com.asia.compiler.parser.gen.langParser.Def_varContext;
 import com.asia.compiler.parser.gen.langParser.Numeric_valueContext;
 import com.asia.compiler.parser.gen.langParser.ValueContext;
 import com.asia.compiler.parser.utils.CancellationExceptionFactory;
-import com.asia.compiler.parser.visitors.MathArgsVisitor;
+import com.asia.compiler.parser.visitors.MathArgsHelper;
 import io.vavr.Tuple2;
-import io.vavr.Tuple3;
 import java.util.List;
-import java.util.Map;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -44,7 +36,8 @@ public class VariableListener extends langBaseListener {
         if (ctx.operation().init_var() != null) {
             assignInitVar(ctx);
         } else if (ctx.operation().math_module() != null) {
-            handleAssignMath(ctx, varName, variableMap.getVariableTypesMap().get(varName));
+            MathArgsHelper mathArgsHelper = new MathArgsHelper(variableMap, intermediateObjectList);
+            mathArgsHelper.handleAssignMath(ctx, varName, variableMap.getVariableTypesMap().get(varName));
         }
     }
 
@@ -161,45 +154,9 @@ public class VariableListener extends langBaseListener {
             leftVar,
             rightVar,
             0,
-            MathArgType.NULL,
+            ArgType.NULL,
             new Tuple2<>(null, null)
         ));
     }
 
-    private void handleAssignMath(Assign_varContext ctx, String varName, Type type) {
-
-        MathArgsVisitor mathArgsVisitor = MathArgsVisitor.of(variableMap);
-
-        Tuple3<Object, Object, MathArgType> arguments = mathArgsVisitor.visitMathArgs(ctx.operation().math_module(), type);
-
-        switch (ctx.operation().math_module().op.getText()) {
-            case "+":
-                createMathIntermediateObject(arguments, ADD, varName, type);
-                break;
-            case "-":
-                createMathIntermediateObject(arguments, SUB, varName, type);
-                break;
-            case "*":
-                createMathIntermediateObject(arguments, MUL, varName, type);
-                break;
-            case "/":
-                createMathIntermediateObject(arguments, DIV, varName, type);
-                break;
-            case "%":
-                createMathIntermediateObject(arguments, MOD, varName, type);
-                break;
-        }
-    }
-
-    private void createMathIntermediateObject(Tuple3<Object, Object, MathArgType> arguments, Instructions instruction, String varName, Type type) {
-        intermediateObjectList.add(new IntermediateObject<>(
-            instruction,
-            type,
-            varName,
-            "",
-            0,
-            arguments._3(),
-            new Tuple2<>(arguments._1(), arguments._2())
-        ));
-    }
 }

@@ -1,9 +1,11 @@
 package com.asia.compiler.common.utils;
 
-public enum MathArgType {
+public enum ArgType {
     VAR_VAR,
     VAR_NUM,
     NUM_VAR,
     NUM_NUM,
-    NULL
+    NULL,
+    BUL_BUL,
+    STR_STR
 }
