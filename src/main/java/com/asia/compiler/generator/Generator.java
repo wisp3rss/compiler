@@ -7,10 +7,12 @@ import static com.asia.compiler.generator.utils.LLVMCodeParts.DEFINE_INT_FLOAT;
 import static com.asia.compiler.generator.utils.LLVMCodeParts.DEFINE_STRING;
 import static com.asia.compiler.generator.utils.LLVMCodeParts.LOAD;
 import static com.asia.compiler.generator.utils.LLVMCodeParts.MATH_OPERATION;
+import static com.asia.compiler.generator.utils.LLVMCodeParts.PRINT_BOOL;
 import static com.asia.compiler.generator.utils.LLVMCodeParts.PRINT_FLOAT;
 import static com.asia.compiler.generator.utils.LLVMCodeParts.PRINT_INT;
 import static com.asia.compiler.generator.utils.LLVMCodeParts.PRINT_STRING_LINE_1;
 import static com.asia.compiler.generator.utils.LLVMCodeParts.PRINT_STRING_LINE_2;
+import static com.asia.compiler.generator.utils.LLVMCodeParts.READ_BOOL;
 import static com.asia.compiler.generator.utils.LLVMCodeParts.READ_FLOAT;
 import static com.asia.compiler.generator.utils.LLVMCodeParts.READ_INT;
 import static com.asia.compiler.generator.utils.LLVMCodeParts.READ_STRING_LNE_1;
@@ -41,6 +43,7 @@ public class Generator {
         result += "@strpi = constant [4 x i8] c\"%d\\0A\\00\"\n";
         result += "@strpd = constant [4 x i8] c\"%f\\0A\\00\"\n";
         result += "@strs = constant [3 x i8] c\"%d\\00\"\n";
+        result += "@.strbool = private unnamed_addr constant [4 x i8] c\"%u\\0A\\00\"\n";
         result += "@.strdouble = private unnamed_addr constant [4 x i8] c\"%lf\\00\"\n";
         result += "@.stringScan = private unnamed_addr constant [3 x i8] c\"%s\\00\"\n";
         result += "@.stringPrint = private unnamed_addr constant [4 x i8] c\"%s\\0A\\00\"\n";
@@ -85,15 +88,16 @@ public class Generator {
     }
 
     private String generatePrint(IntermediateObject obj) {
-        String main_text = "%" + reg + " = load " + obj.getType().getValue() + ", " + obj.getType().getValue() + "* %" + obj.getV1() + "\n";
+        String typeValue = obj.getType().getValue();
+        String main_text = String.format(LOAD.getValue(), ("%" + reg), typeValue, typeValue, ("%" + obj.getV1()));
         reg++;
 
         if (isTypeEquals(obj, Type.INT)) {
-            main_text += String.format(PRINT_INT.getValue(), ("%" + reg), obj.getType().getValue(), ("%" + (reg - 1)));
+            main_text += String.format(PRINT_INT.getValue(), ("%" + reg), typeValue, ("%" + (reg - 1)));
             reg++;
 
         } else if (isTypeEquals(obj, Type.FLOAT)) {
-            main_text += String.format(PRINT_FLOAT.getValue(), ("%" + reg), obj.getType().getValue(), ("%" + (reg - 1)));
+            main_text += String.format(PRINT_FLOAT.getValue(), ("%" + reg), typeValue, ("%" + (reg - 1)));
             reg++;
 
         } else if (isTypeEquals(obj, Type.STRING)) {
@@ -102,35 +106,58 @@ public class Generator {
 
             main_text += String.format(PRINT_STRING_LINE_2.getValue(), ("%" + reg), ("%" + (reg - 1)));
             reg++;
+
+            //TODO chce miec true/false zamiast 1/0
+        } else if (isTypeEquals(obj, Type.BOOL)){
+            main_text += String.format(PRINT_BOOL.getValue(), ("%" + reg), typeValue, typeValue, ("%" + (reg - 1)));
+            reg++;
         }
 
         return main_text;
     }
 
     private String generateRead(IntermediateObject obj) {
+        String typeValue = obj.getType().getValue();
         String main_text = "";
+
         if (isTypeEquals(obj, Type.INT)) {
-            main_text = String.format(READ_INT.getValue(), ("%" + reg), obj.getType().getValue(), ("%" + obj.getV1()));
+            main_text += String.format(READ_INT.getValue(), ("%" + reg), typeValue, ("%" + obj.getV1()));
 
         } else if (isTypeEquals(obj, Type.FLOAT)) {
-            main_text = String.format(READ_FLOAT.getValue(), ("%" + reg), obj.getType().getValue(), ("%" + obj.getV1()));
+            main_text += String.format(READ_FLOAT.getValue(), ("%" + reg), typeValue, ("%" + obj.getV1()));
 
         } else if (isTypeEquals(obj, Type.STRING)) {
             main_text += String.format(READ_STRING_LNE_1.getValue(), ("%" + reg), ("%tmp_" + obj.getV1()));
             reg++;
             main_text += String.format(READ_STRING_LNE_2.getValue(), ("%" + reg), ("%" + (reg - 1)));
+
+        } else if (isTypeEquals(obj, Type.BOOL)){
+            main_text += String.format(LOAD.getValue(), ("%" + reg), typeValue, typeValue, ("%" + obj.getV1()));
+            reg++;
+            main_text += String.format(READ_BOOL.getValue(), ("%" + reg), typeValue, typeValue, ("%" + obj.getV1()));
         }
+
         reg++;
         return main_text;
     }
 
     private String generateDefine(IntermediateObject obj) {
+        String typeValue = obj.getType().getValue();
         String main_text = "";
-        main_text += String.format(DEFINE_INT_FLOAT.getValue(), ("%" + obj.getV1()), obj.getType().getValue());
+
+        if(!isTypeEquals(obj, Type.BOOL)) {
+            main_text += String.format(DEFINE_INT_FLOAT.getValue(), ("%" + obj.getV1()), typeValue);
+
+        } else {
+            main_text += String.format(DEFINE_INT_FLOAT.getValue(), ("%tmp_" + obj.getV1()), typeValue);
+            main_text += String.format(DEFINE_INT_FLOAT.getValue(), ("%" + obj.getV1()), typeValue);
+            main_text += String.format(STORE.getValue(), typeValue, 0, typeValue, ("%tmp_" + obj.getV1()));
+        }
 
         if (isTypeEquals(obj, Type.STRING)) {
             main_text += String.format(DEFINE_STRING.getValue(), ("%tmp_" + obj.getV1()), ("%" + obj.getV1()));
         }
+
         return main_text;
     }
 
@@ -243,13 +270,30 @@ public class Generator {
     }
 
     private String generateAssign(IntermediateObject obj) {
+        String typeValue = obj.getType().getValue();
+        String boolValue = "0"; //default false
         String main_text = "";
+
         if (isTypeEquals(obj, Type.STRING)) {
             main_text += generateAssignString(obj);
+
+        } else if (isTypeEquals(obj, Type.BOOL)) {
+            boolValue = convertBoolValue(obj, boolValue);
+            main_text += String.format(STORE.getValue(), typeValue, boolValue, typeValue, ("%" + obj.getV1()));
+
         } else {
-            main_text += String.format(STORE.getValue(), obj.getType().getValue(), obj.getVal(), obj.getType().getValue(), ("%" + obj.getV1()));
+            main_text += String.format(STORE.getValue(), typeValue, obj.getVal(), typeValue, ("%" + obj.getV1()));
         }
         return main_text;
+    }
+
+    private String convertBoolValue(IntermediateObject obj, String boolValue) {
+        if (obj.getVal().equals("true")){
+            boolValue = String.valueOf(1);
+        } else if(obj.getVal().equals("false")){
+            boolValue = String.valueOf(0);
+        }
+        return boolValue;
     }
 
     private String generateAssignString(IntermediateObject obj) {
@@ -265,7 +309,8 @@ public class Generator {
         return main_text;
     }
 
-    private boolean isTypeEquals(IntermediateObject obj, Type anInt) {
-        return obj.getType().equals(anInt);
+    private boolean isTypeEquals(IntermediateObject obj, Type type) {
+        return obj.getType().equals(type);
     }
+
 }

@@ -10,11 +10,13 @@ public enum LLVMCodeParts {
     PRINT_FLOAT( "%s = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @strpd, i32 0, i32 0), %s %s)\n"),
     PRINT_STRING_LINE_1( "%s = getelementptr inbounds [256 x i8], [256 x i8]* %s, i64 0, i64 0\n"),
     PRINT_STRING_LINE_2( "%s = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.stringPrint, i64 0, i64 0), i8* %s)\n"),
+    PRINT_BOOL( "%s = call %s (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.strbool, i64 0, i64 0), %s %s)\n"),
 
     READ_INT( "%s = call i32 (i8*, ...) @scanf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @strs, i64 0, i64 0), %s* %s)\n"),
     READ_FLOAT( "%s = call i32 (i8*, ...) @scanf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.strdouble, i64 0, i64 0), %s* %s)\n"),
     READ_STRING_LNE_1( "%s  = getelementptr inbounds [256 x i8], [256 x i8]* %s, i64 0, i64 0\n"),
     READ_STRING_LNE_2( "%s  = call i32 (i8*, ...) @scanf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.stringScan, i64 0, i64 0), i8* %s)\n"),
+    READ_BOOL( "%s = call %s (i8*, ...) @scanf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.strbool, i64 0, i64 0), %s* %s)\n"),
 
     DEFINE_INT_FLOAT( "%s = alloca %s\n"),
     DEFINE_STRING( "%s = alloca [256 x i8]\nstore i32 0, i32* %s\n"),

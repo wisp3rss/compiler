@@ -40,6 +40,15 @@ PRINT V_2;
 V_3 = 9.9 / V_3;
 PRINT V_3;
 
+# ==== BOOL TESTS ====
+# ---- bool declaration ----
+BOOL V_6;
+# ---- assigning ----
+V_6 = true;
+PRINT V_6;
+V_6 = false;
+PRINT V_6;
+
 # ==== IO SECTION TESTS ====
 INT V_11;
 READ V_11;
@@ -52,6 +61,10 @@ PRINT V_12;
 STRING V_13;
 READ V_13;
 PRINT V_13;
+
+#BOOL V_14;
+#READ V_14;
+#PRINT V_14;
 
 # ==== STRING TESTS ====
 # ---- string declaration ----

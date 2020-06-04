@@ -41,23 +41,29 @@ public class VariableListener extends langBaseListener {
         }
 
         if (ctx.operation().init_var() != null) {
-            handleInitVar(ctx);
+            assignInitVar(ctx);
         } else if (ctx.operation().math_module() != null) {
             handleAssignMath(ctx, varName, variableTypesMap.get(varName));
         }
     }
 
-    private void handleInitVar(Assign_varContext ctx) {
-        if (getInitVar_value(ctx).NAME() != null) {
+    private void assignInitVar(Assign_varContext ctx) {
+        ValueContext valueContext = getInitVar_value(ctx);
+
+        if (valueContext.NAME() != null) {
             handleAssignVariable(ctx);
         } else if (getNumeric_valueContext(ctx) != null) {
-            handleNumericValue(ctx);
-        } else if (getInitVar_value(ctx).STRING() != null) {
+            assignNumericValue(ctx);
+        } else if (valueContext.STRING() != null) {
             handleAssignConstant(ctx, Type.STRING);
+        } else if (valueContext.TRUE() != null) {
+            handleAssignConstant(ctx, Type.BOOL);
+        } else if (valueContext.FALSE() != null) {
+            handleAssignConstant(ctx, Type.BOOL);
         }
     }
 
-    private void handleNumericValue(Assign_varContext ctx) {
+    private void assignNumericValue(Assign_varContext ctx) {
         if (getNumeric_valueContext(ctx).INT() != null) {
             handleAssignConstant(ctx, Type.INT);
         } else if (getNumeric_valueContext(ctx).FLOAT() != null) {
@@ -82,6 +88,8 @@ public class VariableListener extends langBaseListener {
             t = Type.FLOAT;
         } else if (ctx.define().DEF_STRING() != null) {
             t = Type.STRING;
+        } else if (ctx.define().DEF_BOOL() != null) {
+            t = Type.BOOL;
         }
 
         if (variableTypesMap.containsKey(ctx.NAME().getText()) || null == t) {
@@ -109,6 +117,10 @@ public class VariableListener extends langBaseListener {
             }
         } else if (getInitVar_value(ctx).STRING() != null) {
             value = getInitVar_value(ctx).STRING().getText();
+        } else if (getInitVar_value(ctx).TRUE() != null) {
+            value = getInitVar_value(ctx).TRUE().getText();
+        } else if (getInitVar_value(ctx).FALSE() != null) {
+            value = getInitVar_value(ctx).FALSE().getText();
         }
 
         intermediateObjectList.add(new IntermediateObject<>(
