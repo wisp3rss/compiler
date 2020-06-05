@@ -1,5 +1,6 @@
 package com.asia.compiler.facade;
 
+import com.asia.compiler.common.model.LabelStack;
 import com.asia.compiler.generator.Generator;
 import com.asia.compiler.parser.Parser;
 
@@ -16,17 +17,13 @@ public class Controller {
     public static void main(String[] args) {
         String filePath = "src/main/resources/langTest.txt";
         String code = readFileAsString(filePath);
+        LabelStack labelStack = new LabelStack();
 
-        new Parser().parse(code)
-                .map(list -> Generator.instance().generate(list))
+        Parser.of(labelStack).parse(code)
+                .map(list -> new Generator(labelStack).generate(list))
                 .ifPresent(result ->
                         whenWriteStringUsingBufferedWritter_thenCorrect("src/main/resources/resultTest.ll", result)
                 );
-
-
-//        String result = Generator.instance().generate(intermediateCode);
-//        System.out.println(result);
-//        whenWriteStringUsingBufferedWritter_thenCorrect("src/main/resources/resultTest.ll", result);
     }
 
     private static String readFileAsString(String filePath) {

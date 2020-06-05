@@ -1,43 +1,27 @@
 package com.asia.compiler.generator;
 
-import static com.asia.compiler.generator.utils.LLVMCodeParts.ASSIGN_STRING_DECLARATION;
-import static com.asia.compiler.generator.utils.LLVMCodeParts.ASSIGN_STRING_LINE_1;
-import static com.asia.compiler.generator.utils.LLVMCodeParts.ASSIGN_STRING_LINE_2;
-import static com.asia.compiler.generator.utils.LLVMCodeParts.BOOL_CONDITION;
-import static com.asia.compiler.generator.utils.LLVMCodeParts.DEFINE_INT_FLOAT;
-import static com.asia.compiler.generator.utils.LLVMCodeParts.DEFINE_STRING;
-import static com.asia.compiler.generator.utils.LLVMCodeParts.EXIT_JUMP;
-import static com.asia.compiler.generator.utils.LLVMCodeParts.IF_JUMP;
-import static com.asia.compiler.generator.utils.LLVMCodeParts.LABEL;
-import static com.asia.compiler.generator.utils.LLVMCodeParts.LOAD;
-import static com.asia.compiler.generator.utils.LLVMCodeParts.MATH_OPERATION;
-import static com.asia.compiler.generator.utils.LLVMCodeParts.PRINT_BOOL;
-import static com.asia.compiler.generator.utils.LLVMCodeParts.PRINT_FLOAT;
-import static com.asia.compiler.generator.utils.LLVMCodeParts.PRINT_INT;
-import static com.asia.compiler.generator.utils.LLVMCodeParts.PRINT_STRING_LINE_1;
-import static com.asia.compiler.generator.utils.LLVMCodeParts.PRINT_STRING_LINE_2;
-import static com.asia.compiler.generator.utils.LLVMCodeParts.READ_BOOL;
-import static com.asia.compiler.generator.utils.LLVMCodeParts.READ_FLOAT;
-import static com.asia.compiler.generator.utils.LLVMCodeParts.READ_INT;
-import static com.asia.compiler.generator.utils.LLVMCodeParts.READ_STRING_LNE_1;
-import static com.asia.compiler.generator.utils.LLVMCodeParts.READ_STRING_LNE_2;
-import static com.asia.compiler.generator.utils.LLVMCodeParts.STORE;
-
 import com.asia.compiler.common.model.IntermediateObject;
+import com.asia.compiler.common.model.LabelStack;
 import com.asia.compiler.common.utils.ArgType;
 import com.asia.compiler.common.utils.Type;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import lombok.NoArgsConstructor;
 
-@NoArgsConstructor(staticName = "instance")
+import static com.asia.compiler.generator.utils.LLVMCodeParts.*;
+
 public class Generator {
 
     static String header_text = "";
     static int reg = 1;
     String result = "";
     String declarations = "";
+    LabelStack labelStack;
+
+    public Generator(LabelStack labelStack) {
+        this.labelStack = labelStack;
+    }
 
     public String generate(List<IntermediateObject> intermediateObjectList) {
 
@@ -55,42 +39,42 @@ public class Generator {
         result += "define i32 @main() nounwind{\n";
 
         intermediateObjectList.forEach(o -> {
-                switch (o.getInstructions()) {
-                    case PRINT:
-                        result += generatePrint(o);
-                        break;
-                    case READ:
-                        result += generateRead(o);
-                        break;
-                    case DECLARE:
-                        result += generateDefine(o);
-                        break;
-                    case ASSIGN:
-                        result += generateAssign(o);
-                        break;
-                    case ADD:
-                        result += generateAdd(o);
-                        break;
-                    case SUB:
-                        result += generateSub(o);
-                        break;
-                    case MUL:
-                        result += generateMul(o);
-                        break;
-                    case DIV:
-                        result += generateDiv(o);
-                        break;
-                    case MOD:
-                        result += generateMod(o);
-                        break;
-                    case CONDITION_SIMPLE:
-                        result += generateConditionSimple(o);
-                        break;
-                    case END:
-                        result += generateEndLabel(o);
-                        break;
+                    switch (o.getInstructions()) {
+                        case PRINT:
+                            result += generatePrint(o);
+                            break;
+                        case READ:
+                            result += generateRead(o);
+                            break;
+                        case DECLARE:
+                            result += generateDefine(o);
+                            break;
+                        case ASSIGN:
+                            result += generateAssign(o);
+                            break;
+                        case ADD:
+                            result += generateAdd(o);
+                            break;
+                        case SUB:
+                            result += generateSub(o);
+                            break;
+                        case MUL:
+                            result += generateMul(o);
+                            break;
+                        case DIV:
+                            result += generateDiv(o);
+                            break;
+                        case MOD:
+                            result += generateMod(o);
+                            break;
+                        case CONDITION_SIMPLE:
+                            result += generateConditionSimple(o);
+                            break;
+                        case END:
+                            result += generateEndLabel(o);
+                            break;
+                    }
                 }
-            }
         );
         result += "ret i32 0 }\n";
         return declarations + result;
@@ -116,8 +100,7 @@ public class Generator {
             main_text += String.format(PRINT_STRING_LINE_2.getValue(), ("%" + reg), ("%" + (reg - 1)));
             reg++;
 
-            //TODO chce miec true/false zamiast 1/0
-        } else if (isTypeEquals(obj, Type.BOOL)){
+        } else if (isTypeEquals(obj, Type.BOOL)) {
             main_text += String.format(PRINT_BOOL.getValue(), ("%" + reg), typeValue, typeValue, ("%" + (reg - 1)));
             reg++;
         }
@@ -140,7 +123,7 @@ public class Generator {
             reg++;
             main_text += String.format(READ_STRING_LNE_2.getValue(), ("%" + reg), ("%" + (reg - 1)));
 
-        } else if (isTypeEquals(obj, Type.BOOL)){
+        } else if (isTypeEquals(obj, Type.BOOL)) {
             main_text += String.format(LOAD.getValue(), ("%" + reg), typeValue, typeValue, ("%" + obj.getV1()));
             reg++;
             main_text += String.format(READ_BOOL.getValue(), ("%" + reg), typeValue, typeValue, ("%" + obj.getV1()));
@@ -154,7 +137,7 @@ public class Generator {
         String typeValue = obj.getType().getValue();
         String main_text = "";
 
-        if(!isTypeEquals(obj, Type.BOOL)) {
+        if (!isTypeEquals(obj, Type.BOOL)) {
             main_text += String.format(DEFINE_INT_FLOAT.getValue(), ("%" + obj.getV1()), typeValue);
 
         } else {
@@ -192,7 +175,7 @@ public class Generator {
         varRegistry.put(obj.getMathArgs()._1().toString(), reg);
         reg++;
         main_text += String.format(MATH_OPERATION.getValue(), ("%" + reg), operation, value, ("%" + varRegistry.get(obj.getMathArgs()._1().toString())),
-            obj.getMathArgs()._2());
+                obj.getMathArgs()._2());
         reg++;
         main_text += String.format(STORE.getValue(), value, ("%" + (reg - 1)), value, ("%" + obj.getV1()));
         return main_text;
@@ -203,7 +186,7 @@ public class Generator {
         varRegistry.put(obj.getMathArgs()._2().toString(), reg);
         reg++;
         main_text += String.format(MATH_OPERATION.getValue(), ("%" + reg), operation, value, obj.getMathArgs()._1(),
-            ("%" + varRegistry.get(obj.getMathArgs()._2().toString())));
+                ("%" + varRegistry.get(obj.getMathArgs()._2().toString())));
         reg++;
         main_text += String.format(STORE.getValue(), value, ("%" + (reg - 1)), value, ("%" + obj.getV1()));
         return main_text;
@@ -226,7 +209,7 @@ public class Generator {
         reg++;
 
         main_text += String.format(MATH_OPERATION.getValue(), ("%" + reg), operation, value, ("%" + varRegistry.get(obj.getMathArgs()._1().toString())),
-            ("%" + varRegistry.get(obj.getMathArgs()._2().toString())));
+                ("%" + varRegistry.get(obj.getMathArgs()._2().toString())));
         reg++;
         main_text += String.format(STORE.getValue(), value, ("%" + (reg - 1)), value, ("%" + obj.getV1()));
         return main_text;
@@ -297,9 +280,9 @@ public class Generator {
     }
 
     private String convertBoolValue(IntermediateObject obj, String boolValue) {
-        if (obj.getVal().equals("true")){
+        if (obj.getVal().equals("true")) {
             boolValue = String.valueOf(1);
-        } else if(obj.getVal().equals("false")){
+        } else if (obj.getVal().equals("false")) {
             boolValue = String.valueOf(0);
         }
         return boolValue;
@@ -326,19 +309,25 @@ public class Generator {
         String main_text = "";
         String typeValue = obj.getType().getValue();
         String label = obj.getV1();
-        String endLabel = obj.getV2();
+        String endLabel = "";
+
+        if (!labelStack.getElseExistMap().get(label)) {
+            endLabel = obj.getV2();
+        } else {
+            endLabel = "else_" + label.split("_")[1];
+        }
 
         main_text += String.format(DEFINE_INT_FLOAT.getValue(), ("%" + reg), typeValue);
         reg++;
-        main_text += String.format(STORE.getValue(), typeValue, obj.getVal(), typeValue, ("%" + (reg-1)));
-        main_text += String.format(LOAD.getValue(), ("%" + reg), typeValue, typeValue, ("%" + (reg-1)));
+        main_text += String.format(STORE.getValue(), typeValue, obj.getVal(), typeValue, ("%" + (reg - 1)));
+        main_text += String.format(LOAD.getValue(), ("%" + reg), typeValue, typeValue, ("%" + (reg - 1)));
         reg++;
-        main_text += String.format(BOOL_CONDITION.getValue(), ("%" + reg), typeValue, ("%" + (reg-1)));
+        main_text += String.format(BOOL_CONDITION.getValue(), ("%" + reg), typeValue, ("%" + (reg - 1)));
 
 
         main_text += String.format(IF_JUMP.getValue(), ("%" + (reg)), ("%" + (label)), ("%" + (endLabel)));
 
-        main_text +=  String.format(LABEL.getValue(), label);
+        main_text += String.format(LABEL.getValue(), label);
         reg++;
 
         return main_text;
@@ -346,8 +335,32 @@ public class Generator {
 
     private String generateEndLabel(IntermediateObject obj) {
         String main_text = "";
-        main_text += String.format(EXIT_JUMP.getValue(), ("%" + obj.getV1()));
-        main_text += String.format(LABEL.getValue(), obj.getV1());
+        String endLabel = "";
+        String label = "";
+        Boolean lavelValue = labelStack.getElseExistMap().get(obj.getV1());
+
+        if (lavelValue != null && !lavelValue) {
+            /* if only */
+            main_text += String.format(EXIT_JUMP.getValue(), ("%" + obj.getV2()));
+            main_text += String.format(LABEL.getValue(), obj.getV2());
+        } else {
+            /* if else */
+            System.out.println(labelStack.getLastClosedIf().get(0));
+            label = "else_" + labelStack.getLastClosedIf().get(0).split("_")[1];
+            endLabel = "end_" + label;
+            main_text += String.format(EXIT_JUMP.getValue(), ("%" + endLabel));
+
+            if (obj.getV1().contains("if")) {
+                main_text += String.format(LABEL.getValue(), label);
+            } else {
+                main_text += String.format(LABEL.getValue(), endLabel);
+                labelStack.getLastClosedIf().remove(0);
+            }
+
+
+        }
+
+
         return main_text;
     }
 

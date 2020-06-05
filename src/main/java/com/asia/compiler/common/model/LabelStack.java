@@ -1,7 +1,9 @@
 package com.asia.compiler.common.model;
 
-import java.util.Stack;
+import java.util.*;
+
 import lombok.Data;
+import lombok.Setter;
 
 @Data
 public class LabelStack {
@@ -12,9 +14,14 @@ public class LabelStack {
     int forNumber;
     int whileNumber;
     int doWhileNumber;
+    Map<String,Boolean> elseExistMap;
+    List<String> lastClosedIf;
 
     public LabelStack() {
+
         labelStack = new Stack<>();
+        elseExistMap = new HashMap<>();
+        lastClosedIf=new ArrayList<>();
     }
 
     public void incrementNumber(String methodName) {
@@ -31,18 +38,8 @@ public class LabelStack {
         }
     }
 
-    public void decrementNumber(String methodName) {
-        if ("IF".equals(methodName)) {
-            ifNumber--;
-        } else if ("ELSE".equals(methodName)) {
-            elseNumber--;
-        } else if ("FOR".equals(methodName)) {
-            forNumber--;
-        } else if ("WHILE".equals(methodName)) {
-            whileNumber--;
-        } else if ("DOWHILE".equals(methodName)) {
-            doWhileNumber--;
-        }
+    public void changeElseExist(String label, boolean value){
+        elseExistMap.put(label,value);
     }
 
 }

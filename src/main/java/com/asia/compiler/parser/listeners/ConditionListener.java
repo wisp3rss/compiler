@@ -8,6 +8,7 @@ import com.asia.compiler.common.model.VariableMap;
 import com.asia.compiler.common.utils.ArgType;
 import com.asia.compiler.common.utils.Type;
 import com.asia.compiler.parser.gen.langBaseListener;
+import com.asia.compiler.parser.gen.langParser;
 import com.asia.compiler.parser.gen.langParser.ConditionContext;
 import com.asia.compiler.parser.gen.langParser.If_beginContext;
 import com.asia.compiler.parser.visitors.ConditionVisitor;
@@ -27,6 +28,7 @@ public class ConditionListener extends langBaseListener {
         labelStack.incrementNumber("IF");
         variableMap.incrementLevel();
         labelStack.getLabelStack().push("if_" + labelStack.getIfNumber());
+        labelStack.changeElseExist("if_" + labelStack.getIfNumber(), false);
     }
 
     @Override
@@ -40,7 +42,27 @@ public class ConditionListener extends langBaseListener {
     @Override
     public void exitIf_begin(If_beginContext ctx) {
         String label = labelStack.getLabelStack().pop();
-        intermediateObjectList.add(new IntermediateObject<>(END, Type.LOOP, ("end_" + label), "", 0, ArgType.NULL, new Tuple2<>(null, null)));
+        intermediateObjectList.add(new IntermediateObject<>(END, Type.LOOP, label, ("end_" + label), 0, ArgType.NULL, new Tuple2<>(null, null)));
         variableMap.decrementLevel();
+        labelStack.getLastClosedIf().add(label);
+    }
+
+    @Override
+    public void enterElse_statement(langParser.Else_statementContext ctx) {
+        labelStack.incrementNumber("ELSE");
+        labelStack.getLabelStack().push("else_" + labelStack.getIfNumber());
+        labelStack.changeElseExist(
+                labelStack.getLastClosedIf().get(labelStack.getLastClosedIf().size()-1),
+                true
+        );
+
+    }
+
+    @Override
+    public void exitElse_statement(langParser.Else_statementContext ctx) {
+        String label = labelStack.getLabelStack().pop();
+        intermediateObjectList.add(new IntermediateObject<>(END, Type.LOOP, label, ("end_" + label), 0, ArgType.NULL, new Tuple2<>(null, null)));
+        variableMap.decrementLevel();
+//        labelStack.decrementNumber("ELSE");
     }
 }

@@ -1,5 +1,18 @@
 INT V_0;
 V_0 = 2;
-IF (false){
-PRINT V_0;
+
+INT V_1;
+V_1 = 4;
+
+IF (true) {
+    IF(true){
+        PRINT V_0;
+    }
+    ELSE {
+        PRINT V_1;
+    }
+    PRINT V_0;
+}
+ELSE {
+    PRINT V_1;
 }

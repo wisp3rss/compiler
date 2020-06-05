@@ -9,6 +9,7 @@ import com.asia.compiler.parser.gen.langParser;
 import com.asia.compiler.parser.listeners.ConditionListener;
 import com.asia.compiler.parser.listeners.IOListener;
 import com.asia.compiler.parser.listeners.VariableListener;
+import lombok.AllArgsConstructor;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.CharStream;
@@ -18,10 +19,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@AllArgsConstructor(staticName = "of")
 public class Parser {
+    LabelStack labelStack;
 
     public Optional<List<IntermediateObject>> parse(String code) {
-        LabelStack labelStack = new LabelStack();
         VariableMap variableMap = new VariableMap();
         List<IntermediateObject> intermediateObjectList = new ArrayList<>();
 
