@@ -1,6 +1,6 @@
 package com.asia.compiler.parser.listeners;
 
-import static com.asia.compiler.common.utils.Instructions.END;
+import static com.asia.compiler.common.utils.Instructions.END_IF_ELSE;
 
 import com.asia.compiler.common.model.IntermediateObject;
 import com.asia.compiler.common.model.LabelStack;
@@ -42,7 +42,7 @@ public class ConditionListener extends langBaseListener {
     @Override
     public void exitIf_begin(If_beginContext ctx) {
         String label = labelStack.getLabelStack().pop();
-        intermediateObjectList.add(new IntermediateObject<>(END, Type.LOOP, label, ("end_" + label), 0, ArgType.NULL, new Tuple2<>(null, null)));
+        intermediateObjectList.add(new IntermediateObject<>(END_IF_ELSE, Type.LOOP, label, ("end_" + label), 0, ArgType.NULL, new Tuple2<>(null, null)));
         variableMap.decrementLevel();
         labelStack.getLastClosedIf().add(label);
     }
@@ -61,8 +61,7 @@ public class ConditionListener extends langBaseListener {
     @Override
     public void exitElse_statement(langParser.Else_statementContext ctx) {
         String label = labelStack.getLabelStack().pop();
-        intermediateObjectList.add(new IntermediateObject<>(END, Type.LOOP, label, ("end_" + label), 0, ArgType.NULL, new Tuple2<>(null, null)));
+        intermediateObjectList.add(new IntermediateObject<>(END_IF_ELSE, Type.LOOP, label, ("end_" + label), 0, ArgType.NULL, new Tuple2<>(null, null)));
         variableMap.decrementLevel();
-//        labelStack.decrementNumber("ELSE");
     }
 }

@@ -11,7 +11,8 @@ public enum Instructions {
     ASSIGN,
     DECLARE,
     IF,
-    END,
+    END_IF_ELSE,
     CONDITION_SIMPLE,
-    CONDITION_EXTENDED
+    CONDITION_EXTENDED,
+    END_WHILE
 }

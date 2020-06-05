@@ -70,9 +70,11 @@ public class Generator {
                         case CONDITION_SIMPLE:
                             result += generateConditionSimple(o);
                             break;
-                        case END:
-                            result += generateEndLabel(o);
+                        case END_IF_ELSE:
+                            result += generateEndIfElseLabel(o);
                             break;
+                        case END_WHILE:
+                            result += geneateWhileLabel(o);
                     }
                 }
         );
@@ -311,17 +313,32 @@ public class Generator {
         String label = obj.getV1();
         String endLabel = "";
 
-        if (!labelStack.getElseExistMap().get(label)) {
+        if(obj.getV1().contains("if")) {
+            if (!labelStack.getElseExistMap().get(label)) {
+                endLabel = obj.getV2();
+            } else {
+                endLabel = "else_" + label.split("_")[1];
+            }
+        }
+        else if(obj.getV1().contains("while")){
+            main_text += String.format(EXIT_JUMP.getValue(),("%" + label + "_c"));
+            main_text += String.format(LABEL.getValue(), (label + "_c"));
+
             endLabel = obj.getV2();
-        } else {
-            endLabel = "else_" + label.split("_")[1];
         }
 
+        main_text = generateCondition(obj, main_text, typeValue, label, endLabel);
+
+        return main_text;
+    }
+
+    private String generateCondition(IntermediateObject obj, String main_text, String typeValue, String label, String endLabel) {
         main_text += String.format(DEFINE_INT_FLOAT.getValue(), ("%" + reg), typeValue);
         reg++;
         main_text += String.format(STORE.getValue(), typeValue, obj.getVal(), typeValue, ("%" + (reg - 1)));
         main_text += String.format(LOAD.getValue(), ("%" + reg), typeValue, typeValue, ("%" + (reg - 1)));
         reg++;
+
         main_text += String.format(BOOL_CONDITION.getValue(), ("%" + reg), typeValue, ("%" + (reg - 1)));
 
 
@@ -329,11 +346,10 @@ public class Generator {
 
         main_text += String.format(LABEL.getValue(), label);
         reg++;
-
         return main_text;
     }
 
-    private String generateEndLabel(IntermediateObject obj) {
+    private String generateEndIfElseLabel(IntermediateObject obj) {
         String main_text = "";
         String endLabel = "";
         String label = "";
@@ -356,12 +372,19 @@ public class Generator {
                 main_text += String.format(LABEL.getValue(), endLabel);
                 labelStack.getLastClosedIf().remove(0);
             }
-
-
         }
-
 
         return main_text;
     }
 
+    private String geneateWhileLabel(IntermediateObject obj){
+        String main_text = "";
+        String label = obj.getV1();
+
+        main_text += String.format(EXIT_JUMP.getValue(),("%" + label + "_c"));
+        main_text += String.format(LABEL.getValue(), obj.getV2());
+
+        return main_text;
+    }
 }
+

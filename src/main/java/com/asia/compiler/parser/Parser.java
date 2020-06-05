@@ -8,6 +8,7 @@ import com.asia.compiler.parser.gen.langLexer;
 import com.asia.compiler.parser.gen.langParser;
 import com.asia.compiler.parser.listeners.ConditionListener;
 import com.asia.compiler.parser.listeners.IOListener;
+import com.asia.compiler.parser.listeners.LoopListener;
 import com.asia.compiler.parser.listeners.VariableListener;
 import lombok.AllArgsConstructor;
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -58,6 +59,7 @@ public class Parser {
         parser.addParseListener(new IOListener(list, variableMap));
         parser.addParseListener(new VariableListener(list, variableMap));
         parser.addParseListener(new ConditionListener(list, variableMap, labelStack));
+        parser.addParseListener(new LoopListener(list, variableMap, labelStack));
 
         return parser;
     }

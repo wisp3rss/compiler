@@ -15,14 +15,14 @@ import java.util.stream.Stream;
 public class Controller {
 
     public static void main(String[] args) {
-        String filePath = "src/main/resources/langTest.txt";
+        String filePath = "src/main/resources/langTest_2.txt";
         String code = readFileAsString(filePath);
         LabelStack labelStack = new LabelStack();
 
         Parser.of(labelStack).parse(code)
                 .map(list -> new Generator(labelStack).generate(list))
                 .ifPresent(result ->
-                        whenWriteStringUsingBufferedWritter_thenCorrect("src/main/resources/resultTest.ll", result)
+                        whenWriteStringUsingBufferedWritter_thenCorrect("src/main/resources/resultTest_2.ll", result)
                 );
     }
 

@@ -1,0 +1,6 @@
+INT V_0;
+V_0 = 2;
+
+WHILE true{
+    PRINT V_0;
+}
