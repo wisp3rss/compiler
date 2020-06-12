@@ -501,7 +501,9 @@ public class Generator {
         if (val.toString().equals("!")) {
             main_text += String.format(IF_JUMP.getValue(), ("%" + (reg)), ("%" + (endLabel)), ("%" + (label)));
         }
-        main_text += String.format(IF_JUMP.getValue(), ("%" + (reg)), ("%" + (label)), ("%" + (endLabel)));
+        else {
+            main_text += String.format(IF_JUMP.getValue(), ("%" + (reg)), ("%" + (label)), ("%" + (endLabel)));
+        }
 
         main_text += String.format(LABEL.getValue(), label);
         reg++;
