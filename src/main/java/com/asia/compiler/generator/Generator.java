@@ -343,12 +343,17 @@ public class Generator {
 
         main_text += String.format(BOOL_CONDITION.getValue(), ("%" + reg), typeValue, ("%" + (reg - 1)));
 
-        main_text += String.format(IF_JUMP.getValue(), ("%" + (reg)), ("%" + (label)), ("%" + (endLabel)));
+//        main_text += String.format(IF_JUMP.getValue(), ("%" + (reg)), ("%" + (label)), ("%" + (endLabel)));
+//
+//        main_text += String.format(LABEL.getValue(), label);
+//        reg++;
 
-        main_text += String.format(LABEL.getValue(), label);
-        reg++;
+        main_text += generateJumpInstruction(obj, label, endLabel);
+
         return main_text;
     }
+
+    private int idx = -1;
 
     private String generateEndIfElseLabel(IntermediateObject obj) {
         String main_text = "";
@@ -362,8 +367,12 @@ public class Generator {
             main_text += String.format(LABEL.getValue(), obj.getV2());
         } else {
             /* if else */
-            System.out.println(labelStack.getLastClosedIf().get(0));
-            label = "else_" + labelStack.getLastClosedIf().get(0).split("_")[1];
+
+            if (obj.getV1().contains("if")) {
+                idx++;
+            }
+
+            label = "else_" + labelStack.getLastClosedIf().get(idx).split("_")[1];
             endLabel = "end_" + label;
             main_text += String.format(EXIT_JUMP.getValue(), ("%" + endLabel));
 
@@ -371,7 +380,7 @@ public class Generator {
                 main_text += String.format(LABEL.getValue(), label);
             } else {
                 main_text += String.format(LABEL.getValue(), endLabel);
-                labelStack.getLastClosedIf().remove(0);
+                idx--;
             }
         }
 
@@ -463,7 +472,7 @@ public class Generator {
 
         main_text += String.format(CONDITION_OPERATION.getValue(), ("%" + reg), operation, typeValue, obj.getArgs()._1(), ("%" + varRegistry.get(obj.getArgs()._2().toString())));
 
-        main_text += generateJumpInstruction(obj.getVal(), label, endLabel);
+        main_text += generateJumpInstruction(obj, label, endLabel);
 
         return main_text;
     }
@@ -480,7 +489,7 @@ public class Generator {
 
         main_text += String.format(CONDITION_OPERATION.getValue(), ("%" + reg), operation, typeValue, ("%" + varRegistry.get(obj.getArgs()._1().toString())), ("%" + varRegistry.get(obj.getArgs()._2().toString())));
 
-        main_text += generateJumpInstruction(obj.getVal(), label, endLabel);
+        main_text += generateJumpInstruction(obj, label, endLabel);
 
         return main_text;
     }
@@ -495,19 +504,13 @@ public class Generator {
         return main_text;
     }
 
-    private String generateJumpInstruction(Object val, String label, String endLabel) {
+    private String generateJumpInstruction(IntermediateObject obj, String label, String endLabel) {
         String main_text = "";
 
-        if (val.toString().equals("!")) {
-            main_text += String.format(IF_JUMP.getValue(), ("%" + (reg)), ("%" + (endLabel)), ("%" + (label)));
-        }
-        else {
-            main_text += String.format(IF_JUMP.getValue(), ("%" + (reg)), ("%" + (label)), ("%" + (endLabel)));
-        }
+        main_text += String.format(IF_JUMP.getValue(), ("%" + (reg)), ("%" + (label)), ("%" + (endLabel)));
 
         main_text += String.format(LABEL.getValue(), label);
         reg++;
         return main_text;
     }
 }
-

@@ -1,7 +1,22 @@
 INT V_0;
-V_0 = 0;
+V_0 = 2;
 
 INT V_1;
-V_1 = 1;
+V_1 = 4;
 
-WHILE
+
+WHILE (V_1 >= 0) {
+    IF (V_0 != 2) {             #false
+        PRINT V_0;              #2
+
+    }
+    ELSE {
+        IF(2 != V_0){           #false
+                PRINT V_0;      #2
+            }
+            ELSE {
+                PRINT V_1;      #4,3,2,1,0
+            }
+    }
+    V_1 = V_1 - 1;
+}

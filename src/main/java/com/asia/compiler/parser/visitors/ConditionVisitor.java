@@ -27,11 +27,11 @@ public class ConditionVisitor {
 
         if (ctx.bool() != null) {
             if (ctx.bool().TRUE() != null) {
-                int trueVal = 1;
+                int trueVal = ctx.NOT() != null ? 0: 1;
                 localIntermediateObjectList
                     .add(new IntermediateObject<>(CONDITION_SIMPLE, Type.BOOL, label, endLabel, trueVal, ArgType.NULL, new Tuple2<>(null, null)));
             } else if (ctx.bool().FALSE() != null) {
-                int falseVal = 0;
+                int falseVal = ctx.NOT() != null ? 1: 0;
                 localIntermediateObjectList
                     .add(new IntermediateObject<>(CONDITION_SIMPLE, Type.BOOL, label, endLabel, falseVal, ArgType.NULL, new Tuple2<>(null, null)));
             }

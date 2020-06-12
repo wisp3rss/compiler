@@ -34,6 +34,7 @@ public enum LLVMCodeParts {
     IF_JUMP( "br i1 %s, label %s, label %s\n"),
     LABEL( "%s:\n"),
     EXIT_JUMP( "br label %s\n"),
+    //TODO obsluga double
     CONDITION_OPERATION("%s = icmp %s %s %s, %s\n");
 
     @Getter
