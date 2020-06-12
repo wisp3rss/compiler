@@ -4,9 +4,4 @@ V_0 = 0;
 INT V_1;
 V_1 = 1;
 
-IF (!true){
-    PRINT V_0;
-}
-ELSE {
-    PRINT V_1;
-}
+WHILE

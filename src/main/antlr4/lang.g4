@@ -33,7 +33,7 @@ do_while_loop: DO OPEN_BRACE statement* CLOSE_BRACE WHILE '(' condition ')' SEMI
 // ==== END DO WHILE LOOP ====
 
 // ==== WHILE LOOP ====
-while_loop: WHILE condition OPEN_BRACE statement* CLOSE_BRACE;
+while_loop: WHILE '(' condition ')' OPEN_BRACE statement* CLOSE_BRACE;
 // ==== END WHILE LOOP ====
 
 
