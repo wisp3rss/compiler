@@ -15,5 +15,5 @@ public class IntermediateObject<T> {
     String v2;
     T val;
     ArgType argType;
-    Tuple2<Object, Object> mathArgs;
+    Tuple2<Object, Object> args;
 }

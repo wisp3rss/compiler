@@ -1,6 +1,6 @@
 INT V_0;
 V_0 = 2;
 
-WHILE true{
+IF (2 < 1){
     PRINT V_0;
 }

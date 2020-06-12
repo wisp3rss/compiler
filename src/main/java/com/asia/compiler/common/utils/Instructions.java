@@ -10,7 +10,6 @@ public enum Instructions {
     MOD,
     ASSIGN,
     DECLARE,
-    IF,
     END_IF_ELSE,
     CONDITION_SIMPLE,
     CONDITION_EXTENDED,

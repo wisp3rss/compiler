@@ -11,16 +11,11 @@ declare i8* @__strcpy_chk(i8*, i8*, i64) #1
 define i32 @main() nounwind{
 %V_0 = alloca i32
 store i32 2, i32* %V_0
-br label %while_0_c
-while_0_c:
-%1 = alloca i32
-store i32 1, i32* %1
-%2 = load i32, i32* %1
-%3 = icmp ne i32 %2, 0
-br i1 %3, label %while_0, label %end_while_0
-while_0:
-%4 = load i32, i32* %V_0
-%5 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @strpi, i32 0, i32 0), i32 %4)
-br label %while_0_c
-end_while_0:
+%1 = icmp slt i32 2, 1
+br i1 %1, label %if_1, label %end_if_1
+if_1:
+%2 = load i32, i32* %V_0
+%3 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @strpi, i32 0, i32 0), i32 %2)
+br label %end_if_1
+end_if_1:
 ret i32 0 }

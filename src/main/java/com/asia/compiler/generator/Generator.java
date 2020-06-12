@@ -70,6 +70,9 @@ public class Generator {
                         case CONDITION_SIMPLE:
                             result += generateConditionSimple(o);
                             break;
+                        case CONDITION_EXTENDED:
+                            result += generateConditionExtended(o);
+                            break;
                         case END_IF_ELSE:
                             result += generateEndIfElseLabel(o);
                             break;
@@ -173,45 +176,45 @@ public class Generator {
     }
 
     private String generateMathVarNum(IntermediateObject obj, String operation, String main_text, Map<String, Integer> varRegistry, String value) {
-        main_text += String.format(LOAD.getValue(), ("%" + reg), value, value, ("%" + obj.getMathArgs()._1()));
-        varRegistry.put(obj.getMathArgs()._1().toString(), reg);
+        main_text += String.format(LOAD.getValue(), ("%" + reg), value, value, ("%" + obj.getArgs()._1()));
+        varRegistry.put(obj.getArgs()._1().toString(), reg);
         reg++;
-        main_text += String.format(MATH_OPERATION.getValue(), ("%" + reg), operation, value, ("%" + varRegistry.get(obj.getMathArgs()._1().toString())),
-                obj.getMathArgs()._2());
+        main_text += String.format(MATH_OPERATION.getValue(), ("%" + reg), operation, value, ("%" + varRegistry.get(obj.getArgs()._1().toString())),
+                obj.getArgs()._2());
         reg++;
         main_text += String.format(STORE.getValue(), value, ("%" + (reg - 1)), value, ("%" + obj.getV1()));
         return main_text;
     }
 
     private String generateMathNumVar(IntermediateObject obj, String operation, String main_text, Map<String, Integer> varRegistry, String value) {
-        main_text += String.format(LOAD.getValue(), ("%" + reg), value, value, ("%" + obj.getMathArgs()._2()));
-        varRegistry.put(obj.getMathArgs()._2().toString(), reg);
+        main_text += String.format(LOAD.getValue(), ("%" + reg), value, value, ("%" + obj.getArgs()._2()));
+        varRegistry.put(obj.getArgs()._2().toString(), reg);
         reg++;
-        main_text += String.format(MATH_OPERATION.getValue(), ("%" + reg), operation, value, obj.getMathArgs()._1(),
-                ("%" + varRegistry.get(obj.getMathArgs()._2().toString())));
+        main_text += String.format(MATH_OPERATION.getValue(), ("%" + reg), operation, value, obj.getArgs()._1(),
+                ("%" + varRegistry.get(obj.getArgs()._2().toString())));
         reg++;
         main_text += String.format(STORE.getValue(), value, ("%" + (reg - 1)), value, ("%" + obj.getV1()));
         return main_text;
     }
 
     private String generateMathNumNum(IntermediateObject obj, String operation, String main_text, String value) {
-        main_text += String.format(MATH_OPERATION.getValue(), ("%" + reg), operation, value, obj.getMathArgs()._1(), obj.getMathArgs()._2());
+        main_text += String.format(MATH_OPERATION.getValue(), ("%" + reg), operation, value, obj.getArgs()._1(), obj.getArgs()._2());
         reg++;
         main_text += String.format(STORE.getValue(), value, ("%" + (reg - 1)), value, ("%" + obj.getV1()));
         return main_text;
     }
 
     private String generateMathVarVar(IntermediateObject obj, String operation, String main_text, Map<String, Integer> varRegistry, String value) {
-        main_text += String.format(LOAD.getValue(), ("%" + reg), value, value, ("%" + obj.getMathArgs()._1()));
-        varRegistry.put(obj.getMathArgs()._1().toString(), reg);
+        main_text += String.format(LOAD.getValue(), ("%" + reg), value, value, ("%" + obj.getArgs()._1()));
+        varRegistry.put(obj.getArgs()._1().toString(), reg);
         reg++;
 
-        main_text += String.format(LOAD.getValue(), ("%" + reg), value, value, ("%" + obj.getMathArgs()._2()));
-        varRegistry.put(obj.getMathArgs()._2().toString(), reg);
+        main_text += String.format(LOAD.getValue(), ("%" + reg), value, value, ("%" + obj.getArgs()._2()));
+        varRegistry.put(obj.getArgs()._2().toString(), reg);
         reg++;
 
-        main_text += String.format(MATH_OPERATION.getValue(), ("%" + reg), operation, value, ("%" + varRegistry.get(obj.getMathArgs()._1().toString())),
-                ("%" + varRegistry.get(obj.getMathArgs()._2().toString())));
+        main_text += String.format(MATH_OPERATION.getValue(), ("%" + reg), operation, value, ("%" + varRegistry.get(obj.getArgs()._1().toString())),
+                ("%" + varRegistry.get(obj.getArgs()._2().toString())));
         reg++;
         main_text += String.format(STORE.getValue(), value, ("%" + (reg - 1)), value, ("%" + obj.getV1()));
         return main_text;
@@ -313,15 +316,14 @@ public class Generator {
         String label = obj.getV1();
         String endLabel = "";
 
-        if(obj.getV1().contains("if")) {
+        if (obj.getV1().contains("if")) {
             if (!labelStack.getElseExistMap().get(label)) {
                 endLabel = obj.getV2();
             } else {
                 endLabel = "else_" + label.split("_")[1];
             }
-        }
-        else if(obj.getV1().contains("while")){
-            main_text += String.format(EXIT_JUMP.getValue(),("%" + label + "_c"));
+        } else if (obj.getV1().contains("while")) {
+            main_text += String.format(EXIT_JUMP.getValue(), ("%" + label + "_c"));
             main_text += String.format(LABEL.getValue(), (label + "_c"));
 
             endLabel = obj.getV2();
@@ -340,7 +342,6 @@ public class Generator {
         reg++;
 
         main_text += String.format(BOOL_CONDITION.getValue(), ("%" + reg), typeValue, ("%" + (reg - 1)));
-
 
         main_text += String.format(IF_JUMP.getValue(), ("%" + (reg)), ("%" + (label)), ("%" + (endLabel)));
 
@@ -377,13 +378,133 @@ public class Generator {
         return main_text;
     }
 
-    private String geneateWhileLabel(IntermediateObject obj){
+    private String geneateWhileLabel(IntermediateObject obj) {
         String main_text = "";
         String label = obj.getV1();
 
-        main_text += String.format(EXIT_JUMP.getValue(),("%" + label + "_c"));
+        main_text += String.format(EXIT_JUMP.getValue(), ("%" + label + "_c"));
         main_text += String.format(LABEL.getValue(), obj.getV2());
 
+        return main_text;
+    }
+
+    private String generateConditionExtended(IntermediateObject obj) {
+        String main_text = "";
+        Map<String, Integer> varRegistry = new HashMap<>();
+        String typeValue = obj.getType().getValue();
+        String label = obj.getV1();
+        String endLabel = "";
+        String operation = "";
+
+        if (obj.getV1().contains("if")) {
+            if (!labelStack.getElseExistMap().get(label)) {
+                endLabel = obj.getV2();
+            } else {
+                endLabel = "else_" + label.split("_")[1];
+            }
+        } else if (obj.getV1().contains("while")) {
+            main_text += String.format(EXIT_JUMP.getValue(), ("%" + label + "_c"));
+            main_text += String.format(LABEL.getValue(), (label + "_c"));
+
+            endLabel = obj.getV2();
+        }
+
+        operation = getOperation(obj);
+
+        if (obj.getArgType().equals(ArgType.VAR_VAR)) {
+            main_text = generateConditionVarVar(obj, main_text, varRegistry, typeValue, label, endLabel, operation);
+        } else if (obj.getArgType().equals(ArgType.NUM_NUM)) {
+            main_text = generateConditionNumNum(obj, main_text, typeValue, label, endLabel, operation);
+        } else if (obj.getArgType().equals(ArgType.NUM_VAR)) {
+            main_text = generateConditionNumVar(obj, main_text, varRegistry, typeValue, label, endLabel, operation);
+        } else if (obj.getArgType().equals(ArgType.VAR_NUM)) {
+            main_text = generateConditionVarNum(obj, main_text, varRegistry, typeValue, label, endLabel, operation);
+        }
+        return main_text;
+    }
+
+    private String getOperation(IntermediateObject obj) {
+        if (obj.getVal().equals(">")) {
+            return "sgt";
+        } else if (obj.getVal().equals("<")) {
+            return "slt";
+        } else if (obj.getVal().equals(">=")) {
+            return "sge";
+        } else if (obj.getVal().equals("<=")) {
+            return "sle";
+        } else if (obj.getVal().equals("==")) {
+            return "eq";
+        } else if (obj.getVal().equals("!=")) {
+            return "ne";
+        } else if (obj.getVal().equals("!")) {
+            return "ne";
+        }
+        return "";
+    }
+
+    private String generateConditionVarNum(IntermediateObject obj, String main_text, Map<String, Integer> varRegistry, String typeValue, String label, String endLabel, String operation) {
+
+        main_text += String.format(LOAD.getValue(), ("%" + reg), typeValue, typeValue, ("%" + obj.getArgs()._1()));
+        varRegistry.put(obj.getArgs()._1().toString(), reg);
+        reg++;
+        main_text += String.format(CONDITION_OPERATION.getValue(), ("%" + reg), operation, typeValue, ("%" + varRegistry.get(obj.getArgs()._1().toString())),
+                obj.getArgs()._2());
+
+        main_text += generateJumpInstruction(obj, label, endLabel);
+
+        return main_text;
+    }
+
+    private String generateConditionNumVar(IntermediateObject obj, String main_text, Map<String, Integer> varRegistry, String typeValue, String label, String endLabel, String operation) {
+
+        main_text += String.format(LOAD.getValue(), ("%" + reg), typeValue, typeValue, ("%" + obj.getArgs()._2()));
+        varRegistry.put(obj.getArgs()._2().toString(), reg);
+        reg++;
+
+        main_text += String.format(CONDITION_OPERATION.getValue(), ("%" + reg), operation, typeValue, obj.getArgs()._1(), ("%" + varRegistry.get(obj.getArgs()._2().toString())));
+
+        main_text += generateJumpInstruction(obj.getVal(), label, endLabel);
+
+        return main_text;
+    }
+
+    private String generateConditionVarVar(IntermediateObject obj, String main_text, Map<String, Integer> varRegistry, String typeValue, String label, String endLabel, String operation) {
+        main_text += String.format(LOAD.getValue(), ("%" + reg), typeValue, typeValue, ("%" + obj.getArgs()._1()));
+        varRegistry.put(obj.getArgs()._1().toString(), reg);
+        reg++;
+
+        main_text += String.format(LOAD.getValue(), ("%" + reg), typeValue, typeValue, ("%" + obj.getArgs()._2()));
+        varRegistry.put(obj.getArgs()._2().toString(), reg);
+
+        reg++;
+
+        main_text += String.format(CONDITION_OPERATION.getValue(), ("%" + reg), operation, typeValue, ("%" + varRegistry.get(obj.getArgs()._1().toString())), ("%" + varRegistry.get(obj.getArgs()._2().toString())));
+
+        main_text += generateJumpInstruction(obj.getVal(), label, endLabel);
+
+        return main_text;
+    }
+
+    private String generateConditionNumNum(IntermediateObject obj, String main_text, String typeValue, String label, String endLabel, String operation) {
+
+        main_text += String.format(CONDITION_OPERATION.getValue(), ("%" + reg), operation, typeValue, obj.getArgs()._1(),
+                obj.getArgs()._2());
+
+        main_text += generateJumpInstruction(obj, label, endLabel);
+
+        return main_text;
+    }
+
+    private String generateJumpInstruction(Object val, String label, String endLabel) {
+        String main_text = "";
+
+        if (val.toString().equals("!")) {
+            main_text += String.format(IF_JUMP.getValue(), ("%" + (reg)), ("%" + (endLabel)), ("%" + (label)));
+        }
+        main_text += String.format(IF_JUMP.getValue(), ("%" + (reg)), ("%" + (label)), ("%" + (endLabel)));
+
+        main_text += String.format(LABEL.getValue(), label);
+        reg++;
         return main_text;
     }
 }

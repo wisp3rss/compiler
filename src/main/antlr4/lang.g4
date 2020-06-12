@@ -63,7 +63,7 @@ math_module
 // ==== CONDITION ====
 condition
     : (value|math_module) comp=(GT|LT|GT_EQ|LT_EQ|EQUAL|NEQ) (value|math_module)
-    | bool
+    | NOT? bool
 //    | condition log=(AND|OR) condition
 //    | '(' condition ')'
 //    | (bool|value|math_module)

@@ -33,7 +33,8 @@ public enum LLVMCodeParts {
     BOOL_CONDITION( "%s = icmp ne %s %s, 0\n"),
     IF_JUMP( "br i1 %s, label %s, label %s\n"),
     LABEL( "%s:\n"),
-    EXIT_JUMP( "br label %s\n");
+    EXIT_JUMP( "br label %s\n"),
+    CONDITION_OPERATION("%s = icmp %s %s %s, %s\n");
 
     @Getter
     private String value;
