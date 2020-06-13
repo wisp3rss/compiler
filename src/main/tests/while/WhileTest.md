@@ -48,7 +48,7 @@ Wynik po uruchomieniu:
 0
 ```
 
-##Test 2
+##Test While with if else statement
 Test:
 ```
 INT V_0;

@@ -1,4 +1,4 @@
-##If, If else
+##If, If else with constance value and variable, operations: ==, !=
 Test: 
 ```
 INT V_0;

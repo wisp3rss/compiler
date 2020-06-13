@@ -1,4 +1,4 @@
-##If, If else
+##If, If else with two math operations
 Test: 
 ```
 INT V_0;
@@ -7,7 +7,7 @@ READ V_0;
 INT V_1;
 V_1 = 4;
 
-IF ( V_0 + 5 == 7) {
+IF ( V_0 + 5 == V_1 - 5) {
     PRINT V_0;
 }
 ELSE {
@@ -29,18 +29,23 @@ define i32 @main() nounwind{
     %2 = load i32, i32* %V_0
     %3 = add i32 %2, 5
     store i32 %3, i32* %math_var_0
-    %4 = load i32, i32* %math_var_0
-    %5 = icmp eq i32 %4, 7
-    br i1 %5, label %if_1, label %else_1
+    %math_var_1 = alloca i32
+    %4 = load i32, i32* %V_1
+    %5 = sub i32 %4, 5
+    store i32 %5, i32* %math_var_1
+    %6 = load i32, i32* %math_var_0
+    %7 = load i32, i32* %math_var_1
+    %8 = icmp eq i32 %6, %7
+    br i1 %8, label %if_1, label %else_1
 
 if_1:
-    %6 = load i32, i32* %V_0
-    %7 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @strpi, i32 0, i32 0), i32 %6)
+    %9 = load i32, i32* %V_0
+    %10 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @strpi, i32 0, i32 0), i32 %9)
     br label %end_else_1
 
 else_1:
-    %8 = load i32, i32* %V_1
-    %9 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @strpi, i32 0, i32 0), i32 %8)
+    %11 = load i32, i32* %V_1
+    %12 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @strpi, i32 0, i32 0), i32 %11)
     br label %end_else_1
 
 end_else_1:
@@ -48,9 +53,9 @@ end_else_1:
 }
 ```
 
-podajemy wartość z klawiatury: `7`
+podajemy wartość z klawiatury: `-6`
 
 Wynik po uruchomieniu: 
 ```
-4
+-6
 ```

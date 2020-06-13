@@ -1,12 +1,7 @@
-INT V_0;
-READ V_0;
-
 INT V_1;
 V_1 = 4;
 
-IF ( V_0 + 5 == V_1 - 5) {
-    PRINT V_0;
-}
-ELSE {
+WHILE (V_1 + 2 >= 0) {
     PRINT V_1;
+    V_1 = V_1 - 1;
 }
