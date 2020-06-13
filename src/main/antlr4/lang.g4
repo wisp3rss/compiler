@@ -14,7 +14,7 @@ statement
     |comment;
 
 def_var: define NAME SEMI_COLON;
-assign_var: NAME ASSIGN operation SEMI_COLON;
+assign_var: for_loop_assign SEMI_COLON;
 for_loop_assign: NAME ASSIGN operation;
 read: READ NAME SEMI_COLON;
 print: PRINT NAME SEMI_COLON;
@@ -25,7 +25,7 @@ operation: init_var|math_module;
 init_var: value;
 
 // ==== FOR LOOP ====
-for_loop: FOR OPEN_PAREN (|for_loop_assign) SEMI_COLON condition SEMI_COLON (|for_loop_assign) CLOSE_PAREN OPEN_BRACE statement* CLOSE_BRACE;
+for_loop: FOR OPEN_PAREN for_loop_assign SEMI_COLON condition SEMI_COLON for_loop_assign CLOSE_PAREN OPEN_BRACE statement* CLOSE_BRACE;
 // ==== END FOR LOOP ====
 
 // ==== DO WHILE LOOP ====

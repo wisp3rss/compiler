@@ -1,6 +1,8 @@
 package com.asia.compiler.parser.listeners;
 
 import static com.asia.compiler.common.utils.Instructions.END_IF_ELSE;
+import static com.asia.compiler.common.utils.Instructions.FOR_COND;
+import static com.asia.compiler.common.utils.Instructions.FOR_OP;
 
 import com.asia.compiler.common.model.IntermediateObject;
 import com.asia.compiler.common.model.LabelStack;
@@ -10,6 +12,7 @@ import com.asia.compiler.common.utils.Type;
 import com.asia.compiler.parser.gen.langBaseListener;
 import com.asia.compiler.parser.gen.langParser;
 import com.asia.compiler.parser.gen.langParser.ConditionContext;
+import com.asia.compiler.parser.gen.langParser.For_loopContext;
 import com.asia.compiler.parser.gen.langParser.If_beginContext;
 import com.asia.compiler.parser.visitors.ConditionVisitor;
 import io.vavr.Tuple2;
@@ -32,11 +35,30 @@ public class ConditionListener extends langBaseListener {
     }
 
     @Override
+    public void enterCondition(ConditionContext ctx) {
+        if(ctx.parent instanceof For_loopContext && ((For_loopContext) ctx.parent).FOR() != null){
+            String label = labelStack.getLabelStack().peek();
+            intermediateObjectList.add(new IntermediateObject<>(
+            FOR_COND, Type.LOOP, (label + "_cond"), "", 0, ArgType.NULL, new Tuple2<>(null, null)));
+        }
+    }
+
+    @Override
     public void exitCondition(ConditionContext ctx) {
         ConditionVisitor conditionVisitor = ConditionVisitor.of(variableMap, labelStack);
         String label = labelStack.getLabelStack().peek();
-        List<IntermediateObject> localIntermediateObjectList = conditionVisitor.visitConditionNode(ctx, label, ("end_" + label));
-        intermediateObjectList.addAll(localIntermediateObjectList);
+
+        if(ctx.parent instanceof For_loopContext && ((For_loopContext) ctx.parent).FOR() != null){
+            List<IntermediateObject> localIntermediateObjectList = conditionVisitor.visitConditionNode(ctx, (label + "_body"), ("end_" + label));
+            intermediateObjectList.addAll(localIntermediateObjectList);
+            intermediateObjectList.add(new IntermediateObject<>(
+                FOR_OP, Type.LOOP, (label + "_body"), (label + "_operation"), 0, ArgType.NULL, new Tuple2<>(null, null)));
+        }
+        else {
+            List<IntermediateObject> localIntermediateObjectList = conditionVisitor.visitConditionNode(ctx, label, ("end_" + label));
+            intermediateObjectList.addAll(localIntermediateObjectList);
+        }
+
     }
 
     @Override

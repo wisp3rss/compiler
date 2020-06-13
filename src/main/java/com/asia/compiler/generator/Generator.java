@@ -98,8 +98,12 @@ public class Generator {
                 return geneateWhileLabel(o);
             case DO_WHILE:
                 return generateDoLabel(o);
-            case END_DO_WHILE:
-                return generateEndDoWhile(o);
+            case FOR_COND:
+                return generateForConditionLabel(o);
+            case FOR_BODY:
+                return generateForBodyLabel(o);
+            case END_FOR:
+                return generateEndForLabel(o);
         }
         return "";
     }
@@ -438,6 +442,10 @@ public class Generator {
             endLabel = obj.getV2();
         }
 
+        if (obj.getV1().contains("for")){
+            endLabel = obj.getV2();
+        }
+
         operation = getOperation(obj);
 
         if (obj.getArgType().equals(ArgType.VAR_VAR)) {
@@ -536,8 +544,9 @@ public class Generator {
 
         if (obj.getV1().contains("dowhile")){
             main_text += String.format(LABEL.getValue(), endLabel);
-        }
-        else {
+        } else if (obj.getV1().contains("for")){
+            main_text += String.format(LABEL.getValue(), (label.substring(0, label.lastIndexOf('_')) + "_operation"));
+        } else {
             main_text += String.format(LABEL.getValue(), label);
         }
         reg++;
@@ -554,10 +563,35 @@ public class Generator {
         return main_text;
     }
 
-    private String generateEndDoWhile(IntermediateObject obj){
+    private String generateForConditionLabel(IntermediateObject obj){
         String main_text = "";
-//        main_text += String.format(LABEL.getValue(), obj.getV2());
+        String label = obj.getV1();
+
+        main_text += String.format(EXIT_JUMP.getValue(), ("%" + label));
+        main_text += String.format(LABEL.getValue(), label);
 
         return main_text;
     }
+
+    private String generateForBodyLabel(IntermediateObject obj){
+        String main_text = "";
+        String label = obj.getV1();
+
+        main_text += String.format(EXIT_JUMP.getValue(), ("%" + label));
+        main_text += String.format(LABEL.getValue(), obj.getV2());
+
+        return main_text;
+    }
+
+    private String generateEndForLabel(IntermediateObject obj){
+
+        String main_text = "";
+        String label = obj.getV1();
+
+        main_text += String.format(EXIT_JUMP.getValue(), ("%" + label));
+        main_text += String.format(LABEL.getValue(), obj.getV2());
+
+        return main_text;
+    }
+
 }

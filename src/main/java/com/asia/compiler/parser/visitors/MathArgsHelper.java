@@ -12,6 +12,7 @@ import com.asia.compiler.common.utils.Instructions;
 import com.asia.compiler.common.utils.ArgType;
 import com.asia.compiler.common.utils.Type;
 import com.asia.compiler.parser.gen.langParser.Assign_varContext;
+import com.asia.compiler.parser.gen.langParser.For_loop_assignContext;
 import com.asia.compiler.parser.gen.langParser.Math_moduleContext;
 import com.asia.compiler.parser.gen.langParser.OperationContext;
 import io.vavr.Tuple;
@@ -39,7 +40,7 @@ public class MathArgsHelper {
         ));
     }
 
-    public void handleAssignMath(Assign_varContext ctx, String varName, Type type) {
+    public void handleAssignMath(For_loop_assignContext ctx, String varName, Type type) {
         handleAssignMathModule(ctx.operation().math_module(), varName, type);
 
     }

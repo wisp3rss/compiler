@@ -56,10 +56,13 @@ public class Parser {
         parser.addErrorListener(ThrowingErrorListener.INSTANCE);
         parser.setErrorHandler(new BailErrorStrategy());
 
+        VariableListener variableListener = new VariableListener(list, variableMap, labelStack);
+        ConditionListener conditionListener = new ConditionListener(list, variableMap, labelStack);
+
         parser.addParseListener(new IOListener(list, variableMap));
-        parser.addParseListener(new VariableListener(list, variableMap));
-        parser.addParseListener(new ConditionListener(list, variableMap, labelStack));
-        parser.addParseListener(new LoopListener(list, variableMap, labelStack));
+        parser.addParseListener(variableListener);
+        parser.addParseListener(conditionListener);
+        parser.addParseListener(new LoopListener(list, variableMap, labelStack, variableListener, conditionListener));
 
         return parser;
     }

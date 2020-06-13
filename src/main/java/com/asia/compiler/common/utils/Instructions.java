@@ -15,5 +15,10 @@ public enum Instructions {
     CONDITION_EXTENDED,
     END_WHILE,
     DO_WHILE,
-    END_DO_WHILE
+    END_DO_WHILE,
+    FOR,
+    FOR_COND,
+    FOR_OP,
+    FOR_BODY,
+    END_FOR
 }

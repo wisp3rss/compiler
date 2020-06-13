@@ -2,14 +2,19 @@ package com.asia.compiler.parser.listeners;
 
 import static com.asia.compiler.common.utils.Instructions.ASSIGN;
 import static com.asia.compiler.common.utils.Instructions.DECLARE;
+import static com.asia.compiler.common.utils.Instructions.FOR_BODY;
+import static com.asia.compiler.common.utils.Instructions.FOR_COND;
 
 import com.asia.compiler.common.model.IntermediateObject;
+import com.asia.compiler.common.model.LabelStack;
 import com.asia.compiler.common.model.VariableMap;
 import com.asia.compiler.common.utils.ArgType;
 import com.asia.compiler.common.utils.Type;
 import com.asia.compiler.parser.gen.langBaseListener;
 import com.asia.compiler.parser.gen.langParser.Assign_varContext;
 import com.asia.compiler.parser.gen.langParser.Def_varContext;
+import com.asia.compiler.parser.gen.langParser.For_loopContext;
+import com.asia.compiler.parser.gen.langParser.For_loop_assignContext;
 import com.asia.compiler.parser.gen.langParser.Numeric_valueContext;
 import com.asia.compiler.parser.gen.langParser.ValueContext;
 import com.asia.compiler.parser.utils.CancellationExceptionFactory;
@@ -23,9 +28,27 @@ public class VariableListener extends langBaseListener {
 
     private List<IntermediateObject> intermediateObjectList;
     private VariableMap variableMap;
+    private LabelStack labelStack;
 
     @Override
     public void exitAssign_var(Assign_varContext ctx) {
+        String varName = ctx.for_loop_assign().NAME().getText();
+
+        if (!variableMap.getVariableTypesMap().containsKey(varName)) {
+            CancellationExceptionFactory.throwCancellationException(ctx, "Variable " + varName + " undefined.");
+            return;
+        }
+
+        if (ctx.for_loop_assign().operation().init_var() != null) {
+            assignInitVar(ctx.for_loop_assign());
+        } else if (ctx.for_loop_assign().operation().math_module() != null) {
+            MathArgsHelper mathArgsHelper = new MathArgsHelper(variableMap, intermediateObjectList);
+            mathArgsHelper.handleAssignMath(ctx.for_loop_assign(), varName, variableMap.getVariableTypesMap().get(varName));
+        }
+    }
+
+    @Override
+    public void exitFor_loop_assign(For_loop_assignContext ctx) {
         String varName = ctx.NAME().getText();
 
         if (!variableMap.getVariableTypesMap().containsKey(varName)) {
@@ -39,9 +62,18 @@ public class VariableListener extends langBaseListener {
             MathArgsHelper mathArgsHelper = new MathArgsHelper(variableMap, intermediateObjectList);
             mathArgsHelper.handleAssignMath(ctx, varName, variableMap.getVariableTypesMap().get(varName));
         }
+
+        if(ctx.parent instanceof For_loopContext && ((For_loopContext) ctx.parent).FOR() != null){
+            For_loopContext parent = (For_loopContext) ctx.parent;
+            if(parent.for_loop_assign().indexOf(ctx) == 1){
+                String label = labelStack.getLabelStack().peek();
+                intermediateObjectList.add(new IntermediateObject<>(
+                    FOR_BODY, Type.LOOP, (label + "_cond"), (label + "_body"), 0, ArgType.NULL, new Tuple2<>(null, null)));
+            }
+        }
     }
 
-    private void assignInitVar(Assign_varContext ctx) {
+    private void assignInitVar(For_loop_assignContext ctx) {
         ValueContext valueContext = getInitVar_value(ctx);
 
         if (valueContext.NAME() != null) {
@@ -57,7 +89,7 @@ public class VariableListener extends langBaseListener {
         }
     }
 
-    private void assignNumericValue(Assign_varContext ctx) {
+    private void assignNumericValue(For_loop_assignContext ctx) {
         if (getNumeric_valueContext(ctx).INT() != null) {
             handleAssignConstant(ctx, Type.INT);
         } else if (getNumeric_valueContext(ctx).FLOAT() != null) {
@@ -65,11 +97,11 @@ public class VariableListener extends langBaseListener {
         }
     }
 
-    private ValueContext getInitVar_value(Assign_varContext ctx) {
+    private ValueContext getInitVar_value(For_loop_assignContext ctx) {
         return ctx.operation().init_var().value();
     }
 
-    private Numeric_valueContext getNumeric_valueContext(Assign_varContext ctx) {
+    private Numeric_valueContext getNumeric_valueContext(For_loop_assignContext ctx) {
         return getInitVar_value(ctx).numeric_value();
     }
 
@@ -94,7 +126,7 @@ public class VariableListener extends langBaseListener {
         intermediateObjectList.add(new IntermediateObject<>(DECLARE, t, ctx.NAME().getText(), "", 0, null, null));
     }
 
-    private void handleAssignConstant(Assign_varContext ctx, Type t) {
+    private void handleAssignConstant(For_loop_assignContext ctx, Type t) {
         String varName = ctx.NAME().getText();
         if (!variableMap.getVariableTypesMap().get(varName).equals(t)) {
             CancellationExceptionFactory.throwCancellationException(ctx, "Variable " + varName + "  incompatible.");
@@ -128,7 +160,7 @@ public class VariableListener extends langBaseListener {
         );
     }
 
-    private void handleAssignVariable(Assign_varContext ctx) {
+    private void handleAssignVariable(For_loop_assignContext ctx) {
         String leftVar = ctx.NAME().getText();
         String rightVar = getInitVar_value(ctx).NAME().getText();
 
