@@ -14,6 +14,7 @@ public class LabelStack {
     int forNumber;
     int whileNumber;
     int doWhileNumber;
+    int mathVarNumber;
     Map<String,Boolean> elseExistMap;
     List<String> lastClosedIf;
 
@@ -21,7 +22,8 @@ public class LabelStack {
 
         labelStack = new Stack<>();
         elseExistMap = new HashMap<>();
-        lastClosedIf=new ArrayList<>();
+        lastClosedIf = new ArrayList<>();
+        mathVarNumber = 0;
     }
 
     public void incrementNumber(String methodName) {
@@ -35,7 +37,15 @@ public class LabelStack {
             whileNumber++;
         } else if ("DOWHILE".equals(methodName)) {
             doWhileNumber++;
+        } else if ("MATH_VAR".equals(methodName)) {
+            mathVarNumber++;
         }
+    }
+
+    public int getMathVarNumber() {
+        int value = mathVarNumber;
+        mathVarNumber++;
+        return value;
     }
 
     public void changeElseExist(String label, boolean value){

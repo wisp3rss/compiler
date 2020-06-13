@@ -33,7 +33,7 @@ public class ConditionListener extends langBaseListener {
 
     @Override
     public void exitCondition(ConditionContext ctx) {
-        ConditionVisitor conditionVisitor = ConditionVisitor.of(variableMap);
+        ConditionVisitor conditionVisitor = ConditionVisitor.of(variableMap, labelStack);
         String label = labelStack.getLabelStack().peek();
         List<IntermediateObject> localIntermediateObjectList = conditionVisitor.visitConditionNode(ctx, label, ("end_" + label));
         intermediateObjectList.addAll(localIntermediateObjectList);

@@ -343,17 +343,12 @@ public class Generator {
 
         main_text += String.format(BOOL_CONDITION.getValue(), ("%" + reg), typeValue, ("%" + (reg - 1)));
 
-//        main_text += String.format(IF_JUMP.getValue(), ("%" + (reg)), ("%" + (label)), ("%" + (endLabel)));
-//
-//        main_text += String.format(LABEL.getValue(), label);
-//        reg++;
-
         main_text += generateJumpInstruction(obj, label, endLabel);
 
         return main_text;
     }
 
-    private int idx = -1;
+    private int lastClosedIfIndex = -1;
 
     private String generateEndIfElseLabel(IntermediateObject obj) {
         String main_text = "";
@@ -369,10 +364,10 @@ public class Generator {
             /* if else */
 
             if (obj.getV1().contains("if")) {
-                idx++;
+                lastClosedIfIndex++;
             }
 
-            label = "else_" + labelStack.getLastClosedIf().get(idx).split("_")[1];
+            label = "else_" + labelStack.getLastClosedIf().get(lastClosedIfIndex).split("_")[1];
             endLabel = "end_" + label;
             main_text += String.format(EXIT_JUMP.getValue(), ("%" + endLabel));
 
@@ -380,7 +375,7 @@ public class Generator {
                 main_text += String.format(LABEL.getValue(), label);
             } else {
                 main_text += String.format(LABEL.getValue(), endLabel);
-                idx--;
+                lastClosedIfIndex--;
             }
         }
 

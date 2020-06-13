@@ -9,6 +9,7 @@ import com.asia.compiler.parser.utils.CancellationExceptionFactory;
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
 import io.vavr.Tuple3;
+import io.vavr.Tuple4;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor(staticName = "of")
@@ -23,6 +24,33 @@ public class MathArgsVisitor {
         ArgType argType = getArgType(left._2(), right._2());
 
         return Tuple.of(left._1(), right._1(), argType);
+    }
+
+    public Tuple4<String, String, ArgType, Type> visitMathArgs(Math_moduleContext ctx) {
+        Type typeL = getType(ctx.math_var(0));
+        Type typeR = getType(ctx.math_var(1));
+
+        if(typeL == typeR) {
+            Tuple2<String, Boolean> left = visitValueNode(ctx.math_var(0), typeL);
+            Tuple2<String, Boolean> right = visitValueNode(ctx.math_var(1), typeR);
+
+            ArgType argType = getArgType(left._2(), right._2());
+
+            return Tuple.of(left._1(), right._1(), argType, typeL);
+        }
+
+        return Tuple.of(null, null, null, null);
+    }
+
+    private Type getType(Math_varContext math_var){
+        if(math_var.NAME() != null){
+            return variableMap.getVariableTypesMap().get(math_var.NAME().getText());
+        } else if (math_var.numeric_value().INT() != null){
+            return Type.INT;
+        } else if (math_var.numeric_value().FLOAT() != null){
+            return Type.FLOAT;
+        }
+        return Type.LOOP;
     }
 
     private ArgType getArgType(Boolean left, Boolean right) {
