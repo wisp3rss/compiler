@@ -13,5 +13,7 @@ public enum Instructions {
     END_IF_ELSE,
     CONDITION_SIMPLE,
     CONDITION_EXTENDED,
-    END_WHILE
+    END_WHILE,
+    DO_WHILE,
+    END_DO_WHILE
 }

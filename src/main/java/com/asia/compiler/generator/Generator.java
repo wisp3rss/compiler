@@ -96,6 +96,10 @@ public class Generator {
                 return generateEndIfElseLabel(o);
             case END_WHILE:
                 return geneateWhileLabel(o);
+            case DO_WHILE:
+                return generateDoLabel(o);
+            case END_DO_WHILE:
+                return generateEndDoWhile(o);
         }
         return "";
     }
@@ -530,8 +534,30 @@ public class Generator {
 
         main_text += String.format(IF_JUMP.getValue(), ("%" + (reg)), ("%" + (label)), ("%" + (endLabel)));
 
-        main_text += String.format(LABEL.getValue(), label);
+        if (obj.getV1().contains("dowhile")){
+            main_text += String.format(LABEL.getValue(), endLabel);
+        }
+        else {
+            main_text += String.format(LABEL.getValue(), label);
+        }
         reg++;
+        return main_text;
+    }
+
+    private String generateDoLabel(IntermediateObject obj){
+        String main_text = "";
+        String label = obj.getV1();
+
+        main_text += String.format(EXIT_JUMP.getValue(), ("%" + label));
+        main_text += String.format(LABEL.getValue(), obj.getV1());
+
+        return main_text;
+    }
+
+    private String generateEndDoWhile(IntermediateObject obj){
+        String main_text = "";
+//        main_text += String.format(LABEL.getValue(), obj.getV2());
+
         return main_text;
     }
 }

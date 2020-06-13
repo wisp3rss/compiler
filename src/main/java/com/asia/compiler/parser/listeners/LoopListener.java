@@ -7,11 +7,14 @@ import com.asia.compiler.common.utils.ArgType;
 import com.asia.compiler.common.utils.Type;
 import com.asia.compiler.parser.gen.langBaseListener;
 import com.asia.compiler.parser.gen.langParser;
+import com.asia.compiler.parser.gen.langParser.Do_while_loopContext;
 import io.vavr.Tuple2;
 import lombok.AllArgsConstructor;
 
 import java.util.List;
 
+import static com.asia.compiler.common.utils.Instructions.DO_WHILE;
+import static com.asia.compiler.common.utils.Instructions.END_DO_WHILE;
 import static com.asia.compiler.common.utils.Instructions.END_WHILE;
 
 @AllArgsConstructor
@@ -25,13 +28,31 @@ public class LoopListener extends langBaseListener {
     public void enterWhile_loop(langParser.While_loopContext ctx) {
         labelStack.incrementNumber("WHILE");
         variableMap.incrementLevel();
-        labelStack.getLabelStack().push("while_" + labelStack.getIfNumber());
+        labelStack.getLabelStack().push("while_" + labelStack.getWhileNumber());
     }
 
     @Override
     public void exitWhile_loop(langParser.While_loopContext ctx) {
         String label = labelStack.getLabelStack().pop();
         intermediateObjectList.add(new IntermediateObject<>(END_WHILE, Type.LOOP, label, ("end_" + label), 0, ArgType.NULL, new Tuple2<>(null, null)));
+        variableMap.decrementLevel();
+        labelStack.getLastClosedIf().add(label);
+    }
+
+    @Override
+    public void enterDo_while_loop(Do_while_loopContext ctx) {
+        labelStack.incrementNumber("DOWHILE");
+        labelStack.incrementNumber("WHILE");
+        variableMap.incrementLevel();
+        labelStack.getLabelStack().push("dowhile_" + labelStack.getDoWhileNumber());
+        String label = labelStack.getLabelStack().peek();
+        intermediateObjectList.add(new IntermediateObject<>(DO_WHILE, Type.LOOP, label, ("end_" + label), 0, ArgType.NULL, new Tuple2<>(null, null)));
+    }
+
+    @Override
+    public void exitDo_while_loop(Do_while_loopContext ctx) {
+        String label = labelStack.getLabelStack().pop();
+        intermediateObjectList.add(new IntermediateObject<>(END_DO_WHILE, Type.LOOP, label, ("end_" + label), 0, ArgType.NULL, new Tuple2<>(null, null)));
         variableMap.decrementLevel();
         labelStack.getLastClosedIf().add(label);
     }

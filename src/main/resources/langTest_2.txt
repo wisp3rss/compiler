@@ -1,7 +1,20 @@
 INT V_1;
 V_1 = 4;
 
-WHILE (V_1 + 2 >= 0) {
+INT V_2;
+V_2 = 1;
+
+INT V_0;
+V_0 = 0;
+
+DO {
+    DO{
+        PRINT V_0;
+        V_2 = V_2 - 1;
+    }
+    WHILE (V_2 > 0);
+
     PRINT V_1;
     V_1 = V_1 - 1;
 }
+WHILE (V_1 >= 0);
