@@ -87,7 +87,7 @@ public class ClassAnalyser extends langBaseListener {
         fields.addAll(structs);
 
         if(fields.stream().map(f -> f.getName()).distinct().count() != fields.size()){
-            CancellationExceptionFactory.throwCancellationException(ctx, "In class \"" + classStructName + " variable already defined.");
+            CancellationExceptionFactory.throwCancellationException(ctx, "In class \"" + classStructName + "\" variable already defined.");
                 return;
         }
 

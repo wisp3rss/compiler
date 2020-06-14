@@ -29,6 +29,11 @@ public class StructAnalyser extends langBaseListener {
                     ""))
             .collect(Collectors.toList());
 
+        if(fields.stream().map(f -> f.getName()).distinct().count() != fields.size()){
+            CancellationExceptionFactory.throwCancellationException(ctx, "In struct \"" + className + "\" variable already defined.");
+            return;
+        }
+
         classManager.getStructMap().put(className, fields);
     }
 }

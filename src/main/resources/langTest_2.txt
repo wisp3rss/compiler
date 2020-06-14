@@ -1,16 +1,15 @@
-struct SFoo {
-    INT a;
-    FLOAT d;
-}
+
 
 class CFoo{
     INT a;
     BOOL b;
+    FLOAT a;
 }
 
 class Klasa1 {
     INT a;
     BOOL b;
+    INT b;
 
     SFoo sfoo = new struct SFoo();
 

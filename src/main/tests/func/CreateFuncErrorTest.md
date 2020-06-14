@@ -1,4 +1,4 @@
-##Example Test
+##Error handling in creating func
 Test: 
 ```
 func INT foo(INT a, BOOL b, FLOAT f){
