@@ -1,31 +1,26 @@
-func INT foo(INT a, BOOL b, FLOAT f){
-   return 0;
+struct SFoo {
+    INT a;
+    FLOAT d;
 }
 
-func INT foo(INT a, BOOL b){
-    return 0;
+class CFoo{
+    INT a;
+    BOOL b;
 }
 
-func INT foo(INT a, FLOAT b){
-    return 0;
-}
+class Klasa1 {
+    INT a;
+    BOOL b;
 
-func INT foo(){
-   return 0;
-}
+    SFoo sfoo = new struct SFoo();
 
-func INT foo2(){
-   return 0;
-}
+    CFoo cfoo = new class CFoo();
 
-func INT foo2(INT a, FLOAT b){
-   return 0;
-}
+    func INT getFoo(INT a){
+        return a;
+    }
 
-func INT foo2(FLOAT b,INT a){
-   return 0;
-}
-
-func INT foo2(FLOAT b,INT a){
-   return 0;
+    func INT getFoo(){
+            return a;
+        }
 }

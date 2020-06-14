@@ -10,4 +10,5 @@ public class Field {
 
     String name;
     Type type;
+    String classStructName;
 }

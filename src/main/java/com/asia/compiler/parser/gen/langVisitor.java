@@ -98,6 +98,14 @@ public interface langVisitor<T> extends ParseTreeVisitor<T> {
     T visitInit_var(langParser.Init_varContext ctx);
 
     /**
+     * Visit a parse tree produced by {@link langParser#def_class}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitDef_class(langParser.Def_classContext ctx);
+
+    /**
      * Visit a parse tree produced by {@link langParser#class_}.
      *
      * @param ctx the parse tree

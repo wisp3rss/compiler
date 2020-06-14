@@ -6,6 +6,7 @@ import com.asia.compiler.common.model.LabelStack;
 import com.asia.compiler.common.model.VariableMap;
 import com.asia.compiler.parser.analyse.ClassAnalyser;
 import com.asia.compiler.parser.analyse.FunctionAnalyser;
+import com.asia.compiler.parser.analyse.StructAnalyser;
 import com.asia.compiler.parser.errors.ThrowingErrorListener;
 import com.asia.compiler.parser.gen.langLexer;
 import com.asia.compiler.parser.gen.langParser;
@@ -80,6 +81,7 @@ public class Parser {
         parser.setErrorHandler(new BailErrorStrategy());
 
         parser.addParseListener(new ClassAnalyser(classManager));
+        parser.addParseListener(new StructAnalyser(classManager));
         parser.addParseListener(new FunctionAnalyser(classManager)); //czy tu kolejnosc ma znaczenie?
 
         return parser;

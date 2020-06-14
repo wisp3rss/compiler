@@ -36,7 +36,8 @@ operation: ((init_var|math_module|call_func) SEMI_COLON)|call_struct|call_class_
 init_var: value;
 
 // ==== CLASS ===
-class_: CLASS CLASS_NAME OPEN_BRACE (def_var|def_func|create_struct|create_class)* CLOSE_BRACE;
+def_class: CLASS CLASS_NAME;
+class_: def_class OPEN_BRACE (def_var|def_func|create_struct|create_class)* CLOSE_BRACE;
 create_class: CLASS_NAME NAME ASSIGN NEW CLASS CLASS_NAME OPEN_PAREN CLOSE_PAREN SEMI_COLON;
 call_class_field: NAME ('.' NAME)+;
 call_class_func: NAME '.' call_func;

@@ -138,6 +138,17 @@ public class langBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements l
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
+    public T visitDef_class(langParser.Def_classContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
     public T visitClass_(langParser.Class_Context ctx) {
         return visitChildren(ctx);
     }

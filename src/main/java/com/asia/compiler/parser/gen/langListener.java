@@ -162,6 +162,20 @@ public interface langListener extends ParseTreeListener {
     void exitInit_var(langParser.Init_varContext ctx);
 
     /**
+     * Enter a parse tree produced by {@link langParser#def_class}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterDef_class(langParser.Def_classContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link langParser#def_class}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitDef_class(langParser.Def_classContext ctx);
+
+    /**
      * Enter a parse tree produced by {@link langParser#class_}.
      *
      * @param ctx the parse tree

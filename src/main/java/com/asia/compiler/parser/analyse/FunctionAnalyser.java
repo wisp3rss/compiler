@@ -22,8 +22,8 @@ public class FunctionAnalyser extends langBaseListener {
     @Override
     public void exitDef_func(Def_funcContext ctx) {
         String name = ctx.NAME().getText();
-        Type type = getType(ctx.define());
-        List<Type> args = ctx.def_args().stream().map(o -> getType(o.define())).collect(Collectors.toList());
+        Type type = classManager.getType(ctx.define());
+        List<Type> args = ctx.def_args().stream().map(o -> classManager.getType(o.define())).collect(Collectors.toList());
         Function function = new Function(name, type, args);
 
         addFunction(ctx, name, function);
@@ -57,18 +57,5 @@ public class FunctionAnalyser extends langBaseListener {
 
     private String getCurrentDefClass() {
         return classManager.getCurrentDefClass();
-    }
-
-    private Type getType(DefineContext ctx) {
-        if (ctx.DEF_INT() != null) {
-            return Type.INT;
-        } else if (ctx.DEF_FLOAT() != null) {
-            return Type.FLOAT;
-        } else if (ctx.DEF_BOOL() != null) {
-            return Type.BOOL;
-        } else if (ctx.DEF_STRING() != null) {
-            return Type.STRING;
-        }
-        return Type.INT;
     }
 }

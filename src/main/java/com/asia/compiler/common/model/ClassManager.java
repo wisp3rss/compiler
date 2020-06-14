@@ -1,5 +1,7 @@
 package com.asia.compiler.common.model;
 
+import com.asia.compiler.common.utils.Type;
+import com.asia.compiler.parser.gen.langParser.DefineContext;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,7 +9,7 @@ import lombok.Data;
 
 @Data
 public class ClassManager {
-    Map<String, Map<String, List<Function>>> classMap;      //mapa nazwaKlasy -> mape <nazwaFunkcji, listaFunkcji>, listaFunkcji przechowuje wszystkie warianty danej nazwy (przeadowania)
+    Map<String, Map<String, List<Function>>> classMap;      //mapa nazwaKlasy -> mape <nazwaFunkcji, listaFunkcji>, listaFunkcji przechowuje wszystkie warianty danej nazwy (przeladowania)
     String currentDefClass;
     Map<String, List<Field>> structMap;                     //mapa nazwaStruktury -> liste argumentow
 
@@ -16,5 +18,23 @@ public class ClassManager {
         classMap.put("Main", new HashMap<>());
         currentDefClass = "Main";
         structMap = new HashMap<>();
+    }
+
+    public Type getType(DefineContext ctx) {
+        if (ctx.DEF_INT() != null) {
+            return Type.INT;
+        } else if (ctx.DEF_FLOAT() != null) {
+            return Type.FLOAT;
+        } else if (ctx.DEF_BOOL() != null) {
+            return Type.BOOL;
+        } else if (ctx.DEF_STRING() != null) {
+            return Type.STRING;
+        }
+        return Type.INT;
+    }
+
+    public void setCurrentDefClass(String currentDefClass) {
+        this.currentDefClass = currentDefClass;
+        classMap.put(currentDefClass, new HashMap<>());
     }
 }
