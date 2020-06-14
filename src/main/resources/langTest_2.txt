@@ -1,15 +1,15 @@
-func INT getFoo(INT a){
-        INT b;
-        return b;
+INT x;
+x = 2;
+
+func INT getFoo(INT b){
+        INT a;
+        return a;
     }
 
 func INT getFoo2(INT a){
         INT b;
         return b;
     }
-
-INT x;
-x = 2;
 
 class CFoo{
     INT a;
@@ -29,6 +29,7 @@ class Klasa1 {
     }
 
     func INT getFoo(){
+            INT a;
             return a;
         }
 }

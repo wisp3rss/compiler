@@ -394,6 +394,24 @@ public class langBaseListener implements langListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
+    public void enterDef_arg(langParser.Def_argContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitDef_arg(langParser.Def_argContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
     public void enterArgs(langParser.ArgsContext ctx) {
     }
 

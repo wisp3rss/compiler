@@ -8,6 +8,7 @@ import static com.asia.compiler.common.utils.Type.NULL;
 import static com.asia.compiler.common.utils.Type.STRING;
 
 import com.asia.compiler.common.model.ClassManager;
+import com.asia.compiler.common.model.Function;
 import com.asia.compiler.common.model.IntermediateObject;
 import com.asia.compiler.common.model.IntermediateObjectsData;
 import com.asia.compiler.common.model.VariableMap;
@@ -16,12 +17,17 @@ import com.asia.compiler.common.utils.Type;
 import com.asia.compiler.parser.gen.langBaseListener;
 import com.asia.compiler.parser.gen.langParser.Call_class_fieldContext;
 import com.asia.compiler.parser.gen.langParser.Call_structContext;
+import com.asia.compiler.parser.gen.langParser.Def_argsContext;
 import com.asia.compiler.parser.gen.langParser.Def_funcContext;
 import com.asia.compiler.parser.gen.langParser.Numeric_valueContext;
 import com.asia.compiler.parser.gen.langParser.ValueContext;
 import com.asia.compiler.parser.utils.CancellationExceptionFactory;
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
@@ -35,6 +41,19 @@ public class FunctionListener extends langBaseListener {
     private int beginFunctionIndex = 0;
     @NonNull
     private VariableMap variableMap;
+
+    @Override
+    public void exitDef_args(Def_argsContext ctx) {
+//        Map<String, List<Function>> classMap = classManager.getClassMap().get(classManager.getCurrentDefClass());
+//        String type = ctx.getParent().getChild(1).getChild(0).getText(); // todo trzeba zmapowac na typ Type zamiast stringa
+//        String funcName = ctx.getParent().getChild(2).getText();
+
+        List<Type> argTypes = ctx.def_arg().stream().map(o -> classManager.getType(o.define())).collect(Collectors.toList());
+        List<String> argsName = ctx.def_arg().stream().map(o -> o.NAME().getText()).collect(Collectors.toList());
+
+        IntStream.iterate(0, i -> i+1).limit(argTypes.size()).forEach(i -> variableMap.addVariable(argsName.get(i), argTypes.get(i)));
+    }
+
 
     @Override
     public void enterDef_func(Def_funcContext ctx) {

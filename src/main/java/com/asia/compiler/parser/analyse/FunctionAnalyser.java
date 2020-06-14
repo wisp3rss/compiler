@@ -20,16 +20,13 @@ public class FunctionAnalyser extends langBaseListener {
     private ClassManager classManager;
     private VariableMap variableMap;
 
-    @Override
-    public void enterDef_func(Def_funcContext ctx) {
-    }
 
     @Override
     public void exitDef_func(Def_funcContext ctx) {
         String name = ctx.NAME().getText();
         Type type = classManager.getType(ctx.define());
-        List<Type> argsType = ctx.def_args().stream().map(o -> classManager.getType(o.define())).collect(Collectors.toList());
-        List<String> argsName = ctx.def_args().stream().map(o -> o.NAME().getText()).collect(Collectors.toList());
+        List<Type> argsType = ctx.def_args().def_arg().stream().map(o -> classManager.getType(o.define())).collect(Collectors.toList());
+        List<String> argsName = ctx.def_args().def_arg().stream().map(o -> o.NAME().getText()).collect(Collectors.toList());
         Function function = new Function(name, type, argsType, argsName);
 
         addFunction(ctx, name, function);
@@ -46,7 +43,6 @@ public class FunctionAnalyser extends langBaseListener {
                 classMap.get(name).add(function);
             } else {
                 classMap.get(name).stream().filter(func ->
-
                     (IntStream.iterate(0, i -> i + 1)
                         .limit(function.getArgsType().size())
                         .filter(i -> function.getArgsType().size() == func.getArgsType().size() && function.getArgsType().get(i).name()

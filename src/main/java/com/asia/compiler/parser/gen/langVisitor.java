@@ -178,6 +178,14 @@ public interface langVisitor<T> extends ParseTreeVisitor<T> {
     T visitDef_args(langParser.Def_argsContext ctx);
 
     /**
+     * Visit a parse tree produced by {@link langParser#def_arg}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitDef_arg(langParser.Def_argContext ctx);
+
+    /**
      * Visit a parse tree produced by {@link langParser#args}.
      *
      * @param ctx the parse tree

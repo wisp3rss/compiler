@@ -44,6 +44,8 @@ public class Parser {
         try {
             analyseParser.program();
             parser.program();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
             return Optional.empty();

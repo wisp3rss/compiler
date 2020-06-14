@@ -302,6 +302,20 @@ public interface langListener extends ParseTreeListener {
     void exitDef_args(langParser.Def_argsContext ctx);
 
     /**
+     * Enter a parse tree produced by {@link langParser#def_arg}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterDef_arg(langParser.Def_argContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link langParser#def_arg}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitDef_arg(langParser.Def_argContext ctx);
+
+    /**
      * Enter a parse tree produced by {@link langParser#args}.
      *
      * @param ctx the parse tree

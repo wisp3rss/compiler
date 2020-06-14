@@ -50,8 +50,9 @@ call_struct: NAME '.' NAME;
 // ==== END STRUCT ===
 
 // ==== FUNCTION ===
-def_func: FUNCTION define NAME '(' (def_args?|((def_args ',')+ def_args)) ')' OPEN_BRACE statement* ret CLOSE_BRACE;
-def_args: define NAME;
+def_func: FUNCTION define NAME '(' def_args ')' OPEN_BRACE statement* ret CLOSE_BRACE;
+def_args: (def_arg?|((def_arg ',')+ def_arg));
+def_arg: define NAME;
 //def_args: define NAME (|(',' def_args));
 args: value (|(',' args));
 call_func: NAME '(' args* ')';
