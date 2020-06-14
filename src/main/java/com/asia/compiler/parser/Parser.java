@@ -1,8 +1,11 @@
 package com.asia.compiler.parser;
 
+import com.asia.compiler.common.model.ClassManager;
 import com.asia.compiler.common.model.IntermediateObject;
 import com.asia.compiler.common.model.LabelStack;
 import com.asia.compiler.common.model.VariableMap;
+import com.asia.compiler.parser.analyse.ClassAnalyser;
+import com.asia.compiler.parser.analyse.FunctionAnalyser;
 import com.asia.compiler.parser.errors.ThrowingErrorListener;
 import com.asia.compiler.parser.gen.langLexer;
 import com.asia.compiler.parser.gen.langParser;
@@ -27,13 +30,16 @@ public class Parser {
     public Optional<List<IntermediateObject>> parse(String code) {
         VariableMap variableMap = new VariableMap();
         List<IntermediateObject> intermediateObjectList = new ArrayList<>();
+        ClassManager classManager = new ClassManager();
 
         CharStream input = new ANTLRInputStream(code);
 
         langLexer lexer = prepareLexer(input);
         langParser parser = prepareParser(lexer, intermediateObjectList, variableMap, labelStack);
+        langParser analyseParser = prepareAnalyseParser(lexer, classManager);
 
         try {
+            analyseParser.program();
             parser.program();
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
@@ -63,6 +69,18 @@ public class Parser {
         parser.addParseListener(variableListener);
         parser.addParseListener(conditionListener);
         parser.addParseListener(new LoopListener(list, variableMap, labelStack, variableListener, conditionListener));
+
+        return parser;
+    }
+
+    private langParser prepareAnalyseParser(langLexer lexer, ClassManager classManager){
+        langParser parser = new langParser(new CommonTokenStream(lexer));
+        parser.removeErrorListeners();
+        parser.addErrorListener(ThrowingErrorListener.INSTANCE);
+        parser.setErrorHandler(new BailErrorStrategy());
+
+        parser.addParseListener(new ClassAnalyser(classManager));
+        parser.addParseListener(new FunctionAnalyser(classManager)); //czy tu kolejnosc ma znaczenie?
 
         return parser;
     }

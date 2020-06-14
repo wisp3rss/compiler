@@ -98,6 +98,102 @@ public interface langVisitor<T> extends ParseTreeVisitor<T> {
     T visitInit_var(langParser.Init_varContext ctx);
 
     /**
+     * Visit a parse tree produced by {@link langParser#class_}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitClass_(langParser.Class_Context ctx);
+
+    /**
+     * Visit a parse tree produced by {@link langParser#create_class}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitCreate_class(langParser.Create_classContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link langParser#call_class_field}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitCall_class_field(langParser.Call_class_fieldContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link langParser#call_class_func}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitCall_class_func(langParser.Call_class_funcContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link langParser#struct}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitStruct(langParser.StructContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link langParser#create_struct}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitCreate_struct(langParser.Create_structContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link langParser#call_struct}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitCall_struct(langParser.Call_structContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link langParser#def_func}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitDef_func(langParser.Def_funcContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link langParser#def_args}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitDef_args(langParser.Def_argsContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link langParser#args}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitArgs(langParser.ArgsContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link langParser#call_func}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitCall_func(langParser.Call_funcContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link langParser#ret}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitRet(langParser.RetContext ctx);
+
+    /**
      * Visit a parse tree produced by {@link langParser#for_loop}.
      *
      * @param ctx the parse tree
@@ -176,6 +272,14 @@ public interface langVisitor<T> extends ParseTreeVisitor<T> {
      * @return the visitor result
      */
     T visitValue(langParser.ValueContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link langParser#call_external}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitCall_external(langParser.Call_externalContext ctx);
 
     /**
      * Visit a parse tree produced by {@link langParser#math_module}.

@@ -162,6 +162,174 @@ public interface langListener extends ParseTreeListener {
     void exitInit_var(langParser.Init_varContext ctx);
 
     /**
+     * Enter a parse tree produced by {@link langParser#class_}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterClass_(langParser.Class_Context ctx);
+
+    /**
+     * Exit a parse tree produced by {@link langParser#class_}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitClass_(langParser.Class_Context ctx);
+
+    /**
+     * Enter a parse tree produced by {@link langParser#create_class}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterCreate_class(langParser.Create_classContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link langParser#create_class}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitCreate_class(langParser.Create_classContext ctx);
+
+    /**
+     * Enter a parse tree produced by {@link langParser#call_class_field}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterCall_class_field(langParser.Call_class_fieldContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link langParser#call_class_field}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitCall_class_field(langParser.Call_class_fieldContext ctx);
+
+    /**
+     * Enter a parse tree produced by {@link langParser#call_class_func}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterCall_class_func(langParser.Call_class_funcContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link langParser#call_class_func}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitCall_class_func(langParser.Call_class_funcContext ctx);
+
+    /**
+     * Enter a parse tree produced by {@link langParser#struct}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterStruct(langParser.StructContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link langParser#struct}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitStruct(langParser.StructContext ctx);
+
+    /**
+     * Enter a parse tree produced by {@link langParser#create_struct}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterCreate_struct(langParser.Create_structContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link langParser#create_struct}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitCreate_struct(langParser.Create_structContext ctx);
+
+    /**
+     * Enter a parse tree produced by {@link langParser#call_struct}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterCall_struct(langParser.Call_structContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link langParser#call_struct}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitCall_struct(langParser.Call_structContext ctx);
+
+    /**
+     * Enter a parse tree produced by {@link langParser#def_func}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterDef_func(langParser.Def_funcContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link langParser#def_func}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitDef_func(langParser.Def_funcContext ctx);
+
+    /**
+     * Enter a parse tree produced by {@link langParser#def_args}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterDef_args(langParser.Def_argsContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link langParser#def_args}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitDef_args(langParser.Def_argsContext ctx);
+
+    /**
+     * Enter a parse tree produced by {@link langParser#args}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterArgs(langParser.ArgsContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link langParser#args}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitArgs(langParser.ArgsContext ctx);
+
+    /**
+     * Enter a parse tree produced by {@link langParser#call_func}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterCall_func(langParser.Call_funcContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link langParser#call_func}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitCall_func(langParser.Call_funcContext ctx);
+
+    /**
+     * Enter a parse tree produced by {@link langParser#ret}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterRet(langParser.RetContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link langParser#ret}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitRet(langParser.RetContext ctx);
+
+    /**
      * Enter a parse tree produced by {@link langParser#for_loop}.
      *
      * @param ctx the parse tree
@@ -300,6 +468,20 @@ public interface langListener extends ParseTreeListener {
      * @param ctx the parse tree
      */
     void exitValue(langParser.ValueContext ctx);
+
+    /**
+     * Enter a parse tree produced by {@link langParser#call_external}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterCall_external(langParser.Call_externalContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link langParser#call_external}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitCall_external(langParser.Call_externalContext ctx);
 
     /**
      * Enter a parse tree produced by {@link langParser#math_module}.

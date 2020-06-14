@@ -1,6 +1,11 @@
 grammar lang;
 
-program : statement+ |;
+program
+    :(  statement
+        |def_func
+        |class_
+        |struct
+    )*;
 
 statement
     :def_var
@@ -11,18 +16,46 @@ statement
     |for_loop
     |read
     |print
-    |comment;
+    |comment
+    |(call_func SEMI_COLON)
+    |(call_struct SEMI_COLON)
+    |(call_class_field SEMI_COLON)
+    |(call_class_func SEMI_COLON)
+    |create_class
+    |create_struct;
 
 def_var: define NAME SEMI_COLON;
-assign_var: for_loop_assign SEMI_COLON;
+assign_var: for_loop_assign;
 for_loop_assign: NAME ASSIGN operation;
 read: READ NAME SEMI_COLON;
 print: PRINT NAME SEMI_COLON;
 comment: COMMENT;
 
 define: (DEF_INT|DEF_FLOAT|DEF_STRING|DEF_BOOL);
-operation: init_var|math_module;
+operation: ((init_var|math_module|call_func) SEMI_COLON)|call_struct|call_class_func|call_class_field;
 init_var: value;
+
+// ==== CLASS ===
+class_: CLASS CLASS_NAME OPEN_BRACE (def_var|def_func|create_struct|create_class)* CLOSE_BRACE;
+create_class: CLASS_NAME NAME ASSIGN NEW CLASS CLASS_NAME OPEN_PAREN CLOSE_PAREN SEMI_COLON;
+call_class_field: NAME ('.' NAME)+;
+call_class_func: NAME '.' call_func;
+// ==== END CLASS ===
+
+// ==== STRUCT ===
+struct: STRUCT CLASS_NAME OPEN_BRACE def_var* CLOSE_BRACE;
+create_struct: CLASS_NAME NAME ASSIGN NEW STRUCT CLASS_NAME OPEN_PAREN CLOSE_PAREN SEMI_COLON;
+call_struct: NAME '.' NAME;
+// ==== END STRUCT ===
+
+// ==== FUNCTION ===
+def_func: FUNCTION define NAME '(' (def_args?|((def_args ',')+ def_args)) ')' OPEN_BRACE statement* ret CLOSE_BRACE;
+def_args: define NAME;
+//def_args: define NAME (|(',' def_args));
+args: value (|(',' args));
+call_func: NAME '(' args* ')';
+ret: RETURN value SEMI_COLON;
+// ==== END FUNCTION =====
 
 // ==== FOR LOOP ====
 for_loop: FOR OPEN_PAREN for_loop_assign SEMI_COLON condition SEMI_COLON for_loop_assign CLOSE_PAREN OPEN_BRACE statement* CLOSE_BRACE;
@@ -46,9 +79,10 @@ else_statement: ELSE ( OPEN_BRACE statement* CLOSE_BRACE
 
 // ==== MATH ====
 numeric_value: (INT|FLOAT);
-math_var: (numeric_value|NAME);
+math_var: (call_external|numeric_value|NAME);
 bool: (TRUE|FALSE);
-value: (STRING|NAME|TRUE|FALSE|numeric_value);
+value: (STRING|NAME|TRUE|FALSE|numeric_value|call_struct|call_class_field);
+call_external: call_func|call_struct|call_class_func|call_class_field;
 
 math_module
     :   math_var op=('*'|'/'|'%'|'+'|'-') math_var;
@@ -62,8 +96,8 @@ math_module
 
 // ==== CONDITION ====
 condition
-    : (value|math_module) comp=(GT|LT|GT_EQ|LT_EQ|EQUAL|NEQ) (value|math_module)
-    | NOT? bool
+    : (value|math_module|call_external) comp=(GT|LT|GT_EQ|LT_EQ|EQUAL|NEQ) (value|math_module|call_external)
+    | NOT? (bool|call_external){1}
 //    | condition log=(AND|OR) condition
 //    | '(' condition ')'
 //    | (bool|value|math_module)
@@ -120,13 +154,22 @@ WHILE: 'WHILE';
 DO:    'DO';
 FOR:   'FOR';
 
+FUNCTION: 'func';
+RETURN: 'return';
+
+CLASS: 'class';
+STRUCT: 'struct';
+NEW: 'new';
+
 // ==== TYPES ====
 DEF_INT:    'INT';
 DEF_FLOAT:  'FLOAT';
 DEF_STRING:  'STRING';
 DEF_BOOL:   'BOOL';
-NAME: NAME_PREFIX [0-9]+;
-NAME_PREFIX: 'V_';
+//NAME: NAME_PREFIX [0-9]+;
+//NAME_PREFIX: 'V_';
+CLASS_NAME: [A-Z]+[_a-zA-Z0-9]*;
+NAME: [a-zA-Z]+[_a-zA-Z0-9]*;
 BLANK: [ \t]+ -> channel(HIDDEN);
 COMMENT : '#' ~[\r\n\f]* NEXT_LINE -> skip;
 

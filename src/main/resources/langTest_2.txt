@@ -1,13 +1,31 @@
-INT V_1;
-V_1 = 4;
-
-INT V_2;
-V_2 = 1;
-
-INT V_0;
-
-FOR (V_0 = 0; V_0 < 3; V_0 = V_0 + 1){
-    PRINT V_0;
+func INT foo(INT a, BOOL b, FLOAT f){
+   return 0;
 }
 
-PRINT V_0;
+func INT foo(INT a, BOOL b){
+    return 0;
+}
+
+func INT foo(INT a, FLOAT b){
+    return 0;
+}
+
+func INT foo(){
+   return 0;
+}
+
+func INT foo2(){
+   return 0;
+}
+
+func INT foo2(INT a, FLOAT b){
+   return 0;
+}
+
+func INT foo2(FLOAT b,INT a){
+   return 0;
+}
+
+func INT foo2(FLOAT b,INT a){
+   return 0;
+}
