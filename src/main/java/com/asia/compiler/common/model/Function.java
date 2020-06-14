@@ -11,5 +11,6 @@ public class Function {
 
     String funcName;
     Type funcType;
-    List<Type> args;
+    List<Type> argsType;
+    List<String> argsName;
 }

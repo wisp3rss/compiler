@@ -20,7 +20,7 @@ public class Controller {
         LabelStack labelStack = new LabelStack();
 
         Parser.of(labelStack).parse(code)
-                .map(list -> new Generator(labelStack).generate(list))
+                .map(data -> new Generator(labelStack).generate(data))
                 .ifPresent(result ->
                         whenWriteStringUsingBufferedWritter_thenCorrect("src/main/resources/resultTest_2.ll", result)
                 );

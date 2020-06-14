@@ -3,9 +3,10 @@ package com.asia.compiler.parser.listeners;
 import static com.asia.compiler.common.utils.Instructions.ASSIGN;
 import static com.asia.compiler.common.utils.Instructions.DECLARE;
 import static com.asia.compiler.common.utils.Instructions.FOR_BODY;
-import static com.asia.compiler.common.utils.Instructions.FOR_COND;
 
+import com.asia.compiler.common.model.ClassManager;
 import com.asia.compiler.common.model.IntermediateObject;
+import com.asia.compiler.common.model.IntermediateObjectsData;
 import com.asia.compiler.common.model.LabelStack;
 import com.asia.compiler.common.model.VariableMap;
 import com.asia.compiler.common.utils.ArgType;
@@ -26,9 +27,14 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class VariableListener extends langBaseListener {
 
-    private List<IntermediateObject> intermediateObjectList;
     private VariableMap variableMap;
     private LabelStack labelStack;
+    private IntermediateObjectsData data;
+    private ClassManager classManager;
+
+    private List<IntermediateObject> getIntermediateObjList() {
+        return classManager.getIsInFunction() ? data.getFunctionIntermediateObjectList() : data.getIntermediateObjectList();
+    }
 
     @Override
     public void exitAssign_var(Assign_varContext ctx) {
@@ -42,7 +48,7 @@ public class VariableListener extends langBaseListener {
         if (ctx.for_loop_assign().operation().init_var() != null) {
             assignInitVar(ctx.for_loop_assign());
         } else if (ctx.for_loop_assign().operation().math_module() != null) {
-            MathArgsHelper mathArgsHelper = new MathArgsHelper(variableMap, intermediateObjectList);
+            MathArgsHelper mathArgsHelper = new MathArgsHelper(variableMap, getIntermediateObjList());
             mathArgsHelper.handleAssignMath(ctx.for_loop_assign(), varName, variableMap.getVariableTypesMap().get(varName));
         }
     }
@@ -59,7 +65,7 @@ public class VariableListener extends langBaseListener {
         if (ctx.operation().init_var() != null) {
             assignInitVar(ctx);
         } else if (ctx.operation().math_module() != null) {
-            MathArgsHelper mathArgsHelper = new MathArgsHelper(variableMap, intermediateObjectList);
+            MathArgsHelper mathArgsHelper = new MathArgsHelper(variableMap, getIntermediateObjList());
             mathArgsHelper.handleAssignMath(ctx, varName, variableMap.getVariableTypesMap().get(varName));
         }
 
@@ -67,8 +73,8 @@ public class VariableListener extends langBaseListener {
             For_loopContext parent = (For_loopContext) ctx.parent;
             if(parent.for_loop_assign().indexOf(ctx) == 1){
                 String label = labelStack.getLabelStack().peek();
-                intermediateObjectList.add(new IntermediateObject<>(
-                    FOR_BODY, Type.LOOP, (label + "_cond"), (label + "_body"), 0, ArgType.NULL, new Tuple2<>(null, null)));
+                getIntermediateObjList().add(new IntermediateObject<>(
+                    FOR_BODY, Type.NULL, (label + "_cond"), (label + "_body"), 0, ArgType.NULL, new Tuple2<>(null, null)));
             }
         }
     }
@@ -118,12 +124,14 @@ public class VariableListener extends langBaseListener {
             t = Type.BOOL;
         }
 
-        if (variableMap.getVariableTypesMap().containsKey(ctx.NAME().getText()) || null == t) {
-            CancellationExceptionFactory.throwCancellationException(ctx, "Variable " + ctx.NAME().getText() + "  already defined.");
+        String name = ctx.NAME().getText();
+
+        if (variableMap.getVariableTypesMap().containsKey(name) || null == t) {
+            CancellationExceptionFactory.throwCancellationException(ctx, "Variable " + name + " already defined.");
         }
 
         variableMap.addVariable(ctx.NAME().getText(), t);
-        intermediateObjectList.add(new IntermediateObject<>(DECLARE, t, ctx.NAME().getText(), "", 0, null, null));
+        getIntermediateObjList().add(new IntermediateObject<>(DECLARE, t, ctx.NAME().getText(), "", 0, null, null));
     }
 
     private void handleAssignConstant(For_loop_assignContext ctx, Type t) {
@@ -149,7 +157,7 @@ public class VariableListener extends langBaseListener {
             value = getInitVar_value(ctx).FALSE().getText();
         }
 
-        intermediateObjectList.add(new IntermediateObject<>(
+        getIntermediateObjList().add(new IntermediateObject<>(
             ASSIGN,
             t,
             varName,
@@ -180,7 +188,7 @@ public class VariableListener extends langBaseListener {
             return;
         }
 
-        intermediateObjectList.add(new IntermediateObject<>(
+        getIntermediateObjList().add(new IntermediateObject<>(
             ASSIGN,
             variableMap.getVariableTypesMap().get(leftVar),
             leftVar,

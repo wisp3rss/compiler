@@ -4,7 +4,9 @@ import static com.asia.compiler.common.utils.Instructions.END_IF_ELSE;
 import static com.asia.compiler.common.utils.Instructions.FOR_COND;
 import static com.asia.compiler.common.utils.Instructions.FOR_OP;
 
+import com.asia.compiler.common.model.ClassManager;
 import com.asia.compiler.common.model.IntermediateObject;
+import com.asia.compiler.common.model.IntermediateObjectsData;
 import com.asia.compiler.common.model.LabelStack;
 import com.asia.compiler.common.model.VariableMap;
 import com.asia.compiler.common.utils.ArgType;
@@ -22,9 +24,14 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class ConditionListener extends langBaseListener {
 
-    private List<IntermediateObject> intermediateObjectList;
     private VariableMap variableMap;
     private LabelStack labelStack;
+    private IntermediateObjectsData data;
+    private ClassManager classManager;
+
+    private List<IntermediateObject> getIntermediateObjList() {
+        return classManager.getIsInFunction() ? data.getFunctionIntermediateObjectList() : data.getIntermediateObjectList();
+    }
 
     @Override
     public void enterIf_begin(If_beginContext ctx) {
@@ -38,8 +45,8 @@ public class ConditionListener extends langBaseListener {
     public void enterCondition(ConditionContext ctx) {
         if(ctx.parent instanceof For_loopContext && ((For_loopContext) ctx.parent).FOR() != null){
             String label = labelStack.getLabelStack().peek();
-            intermediateObjectList.add(new IntermediateObject<>(
-            FOR_COND, Type.LOOP, (label + "_cond"), "", 0, ArgType.NULL, new Tuple2<>(null, null)));
+            getIntermediateObjList().add(new IntermediateObject<>(
+            FOR_COND, Type.NULL, (label + "_cond"), "", 0, ArgType.NULL, new Tuple2<>(null, null)));
         }
     }
 
@@ -50,13 +57,13 @@ public class ConditionListener extends langBaseListener {
 
         if(ctx.parent instanceof For_loopContext && ((For_loopContext) ctx.parent).FOR() != null){
             List<IntermediateObject> localIntermediateObjectList = conditionVisitor.visitConditionNode(ctx, (label + "_body"), ("end_" + label));
-            intermediateObjectList.addAll(localIntermediateObjectList);
-            intermediateObjectList.add(new IntermediateObject<>(
-                FOR_OP, Type.LOOP, (label + "_body"), (label + "_operation"), 0, ArgType.NULL, new Tuple2<>(null, null)));
+            getIntermediateObjList().addAll(localIntermediateObjectList);
+            getIntermediateObjList().add(new IntermediateObject<>(
+                FOR_OP, Type.NULL, (label + "_body"), (label + "_operation"), 0, ArgType.NULL, new Tuple2<>(null, null)));
         }
         else {
             List<IntermediateObject> localIntermediateObjectList = conditionVisitor.visitConditionNode(ctx, label, ("end_" + label));
-            intermediateObjectList.addAll(localIntermediateObjectList);
+            getIntermediateObjList().addAll(localIntermediateObjectList);
         }
 
     }
@@ -64,7 +71,7 @@ public class ConditionListener extends langBaseListener {
     @Override
     public void exitIf_begin(If_beginContext ctx) {
         String label = labelStack.getLabelStack().pop();
-        intermediateObjectList.add(new IntermediateObject<>(END_IF_ELSE, Type.LOOP, label, ("end_" + label), 0, ArgType.NULL, new Tuple2<>(null, null)));
+        getIntermediateObjList().add(new IntermediateObject<>(END_IF_ELSE, Type.NULL, label, ("end_" + label), 0, ArgType.NULL, new Tuple2<>(null, null)));
         variableMap.decrementLevel();
         labelStack.getLastClosedIf().add(label);
     }
@@ -83,7 +90,7 @@ public class ConditionListener extends langBaseListener {
     @Override
     public void exitElse_statement(langParser.Else_statementContext ctx) {
         String label = labelStack.getLabelStack().pop();
-        intermediateObjectList.add(new IntermediateObject<>(END_IF_ELSE, Type.LOOP, label, ("end_" + label), 0, ArgType.NULL, new Tuple2<>(null, null)));
+        getIntermediateObjList().add(new IntermediateObject<>(END_IF_ELSE, Type.NULL, label, ("end_" + label), 0, ArgType.NULL, new Tuple2<>(null, null)));
         variableMap.decrementLevel();
     }
 }

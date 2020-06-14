@@ -20,5 +20,7 @@ public enum Instructions {
     FOR_COND,
     FOR_OP,
     FOR_BODY,
-    END_FOR
+    END_FOR,
+    FUNC_BEGIN,
+    FUNC_RETURN
 }

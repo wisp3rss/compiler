@@ -25,9 +25,11 @@ import static com.asia.compiler.generator.utils.LLVMCodeParts.READ_STRING_LNE_2;
 import static com.asia.compiler.generator.utils.LLVMCodeParts.STORE;
 
 import com.asia.compiler.common.model.IntermediateObject;
+import com.asia.compiler.common.model.IntermediateObjectsData;
 import com.asia.compiler.common.model.LabelStack;
 import com.asia.compiler.common.utils.ArgType;
 import com.asia.compiler.common.utils.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,14 +42,15 @@ public class Generator {
     String declarations = "";
     LabelStack labelStack;
 
-    List<IntermediateObject> intermediateObjectList;
+    IntermediateObjectsData data;
+    List<IntermediateObject> intermediateObjectList = new ArrayList<>();
 
     public Generator(LabelStack labelStack) {
         this.labelStack = labelStack;
     }
 
-    public String generate(List<IntermediateObject> list) {
-        intermediateObjectList = list;
+    public String generate(IntermediateObjectsData data) {
+        intermediateObjectList = data.getIntermediateObjectList();
 
         result += "declare i32 @printf(i8*, ...)\n";
         result += "declare i32 @scanf(i8*, ...)\n";

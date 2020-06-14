@@ -11,12 +11,13 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class StructAnalyser extends langBaseListener {
-    private final ClassManager classManager;
+
+    private ClassManager classManager;
 
     @Override
     public void exitStruct(StructContext ctx) {
         String className = ctx.CLASS_NAME().getText();
-        if(classManager.getStructMap().containsKey(className)){
+        if (classManager.getStructMap().containsKey(className)) {
             CancellationExceptionFactory.throwCancellationException(ctx, "Struct \"" + className + "\" already defined.");
             return;
         }
@@ -29,7 +30,7 @@ public class StructAnalyser extends langBaseListener {
                     ""))
             .collect(Collectors.toList());
 
-        if(fields.stream().map(f -> f.getName()).distinct().count() != fields.size()){
+        if (fields.stream().map(f -> f.getName()).distinct().count() != fields.size()) {
             CancellationExceptionFactory.throwCancellationException(ctx, "In struct \"" + className + "\" variable already defined.");
             return;
         }

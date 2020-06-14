@@ -9,7 +9,7 @@ public enum Type {
     FLOAT("double", "FLOAT"),
     STRING("i32", "STRING"),
     BOOL("i32", "BOOL"),
-    LOOP("", ""),
+    NULL("", ""),
     CLASS_STRUCT("", "class/struct");
 
     @Getter

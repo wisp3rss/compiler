@@ -50,7 +50,7 @@ public class MathArgsVisitor {
         } else if (math_var.numeric_value().FLOAT() != null){
             return Type.FLOAT;
         }
-        return Type.LOOP;
+        return Type.NULL;
     }
 
     private ArgType getArgType(Boolean left, Boolean right) {

@@ -23,6 +23,10 @@ class CFoo2{
     func INT getFoo(INT a){
         return a;
     }
+
+    func INT getFoo(){
+        return a;
+    }
 }
 
 CFoo cfoo = new class CFoo();

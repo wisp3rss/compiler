@@ -9,4 +9,15 @@ declare i8* @__strcpy_chk(i8*, i8*, i64) #1
 @.stringScan = private unnamed_addr constant [3 x i8] c"%s\00"
 @.stringPrint = private unnamed_addr constant [4 x i8] c"%s\0A\00"
 define i32 @main() nounwind{
+%x = alloca i32
+store i32 2, i32* %x
+store i32 2, i32* %x
+%a = alloca i32
+%tmp_b = alloca i32
+%b = alloca i32
+store i32 0, i32* %tmp_b
+%a = alloca i32
+%tmp_b = alloca i32
+%b = alloca i32
+store i32 0, i32* %tmp_b
 ret i32 0 }

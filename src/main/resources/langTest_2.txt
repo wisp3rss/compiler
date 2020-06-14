@@ -1,15 +1,24 @@
+func INT getFoo(INT a){
+        INT b;
+        return b;
+    }
 
+func INT getFoo2(INT a){
+        INT b;
+        return b;
+    }
+
+INT x;
+x = 2;
 
 class CFoo{
     INT a;
     BOOL b;
-    FLOAT a;
 }
 
 class Klasa1 {
     INT a;
     BOOL b;
-    INT b;
 
     SFoo sfoo = new struct SFoo();
 
@@ -23,3 +32,4 @@ class Klasa1 {
             return a;
         }
 }
+
