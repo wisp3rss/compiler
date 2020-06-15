@@ -67,9 +67,3 @@ func INT foo(FLOAT b, INT a, BOOL c){
    return ax;
 }
 ```
-
-
-Wynik po uruchomieniu: 
-```
-
-```

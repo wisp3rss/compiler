@@ -78,7 +78,7 @@ public class ConditionListener extends langBaseListener {
     @Override
     public void enterElse_statement(langParser.Else_statementContext ctx) {
         labelStack.incrementNumber("ELSE");
-        labelStack.getLabelStack().push("else_" + labelStack.getIfNumber());
+        labelStack.getLabelStack().push("else_" + labelStack.getElseNumber());
         labelStack.changeElseExist(
             labelStack.getLastClosedIf().get(labelStack.getLastClosedIf().size() - 1),
             true

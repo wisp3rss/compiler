@@ -60,7 +60,7 @@ ret: RETURN value SEMI_COLON;
 // ==== END FUNCTION =====
 
 // ==== FOR LOOP ====
-for_loop: FOR OPEN_PAREN for_loop_assign SEMI_COLON condition SEMI_COLON for_loop_assign CLOSE_PAREN OPEN_BRACE statement* CLOSE_BRACE;
+for_loop: FOR OPEN_PAREN for_loop_assign condition SEMI_COLON for_loop_assign CLOSE_PAREN OPEN_BRACE statement* CLOSE_BRACE;
 // ==== END FOR LOOP ====
 
 // ==== DO WHILE LOOP ====
@@ -170,7 +170,7 @@ DEF_STRING:  'STRING';
 DEF_BOOL:   'BOOL';
 //NAME: NAME_PREFIX [0-9]+;
 //NAME_PREFIX: 'V_';
-CLASS_NAME: [A-Z]+[_a-zA-Z0-9]*;
+CLASS_NAME: [A-Z]+[a-zA-Z0-9]*;
 NAME: [a-zA-Z]+[_a-zA-Z0-9]*;
 BLANK: [ \t]+ -> channel(HIDDEN);
 COMMENT : '#' ~[\r\n\f]* NEXT_LINE -> skip;
