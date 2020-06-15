@@ -22,5 +22,6 @@ public enum Instructions {
     FOR_BODY,
     END_FOR,
     FUNC_BEGIN,
-    FUNC_RETURN
+    FUNC_RETURN,
+    CALL_FUNC
 }

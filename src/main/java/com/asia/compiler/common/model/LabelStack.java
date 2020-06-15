@@ -1,9 +1,11 @@
 package com.asia.compiler.common.model;
 
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Stack;
 import lombok.Data;
-import lombok.Setter;
 
 @Data
 public class LabelStack {
@@ -15,7 +17,7 @@ public class LabelStack {
     int whileNumber;
     int doWhileNumber;
     int mathVarNumber;
-    Map<String,Boolean> elseExistMap;
+    Map<String, Boolean> elseExistMap;
     List<String> lastClosedIf;
 
     public LabelStack() {
@@ -48,8 +50,8 @@ public class LabelStack {
         return value;
     }
 
-    public void changeElseExist(String label, boolean value){
-        elseExistMap.put(label,value);
+    public void changeElseExist(String label, boolean value) {
+        elseExistMap.put(label, value);
     }
 
 }

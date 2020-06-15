@@ -3,7 +3,6 @@ package com.asia.compiler.facade;
 import com.asia.compiler.common.model.LabelStack;
 import com.asia.compiler.generator.Generator;
 import com.asia.compiler.parser.Parser;
-
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -20,10 +19,10 @@ public class Controller {
         LabelStack labelStack = new LabelStack();
 
         Parser.of(labelStack).parse(code)
-                .map(data -> new Generator(labelStack).generate(data))
-                .ifPresent(result ->
-                        whenWriteStringUsingBufferedWritter_thenCorrect("src/main/resources/resultTest_2.ll", result)
-                );
+            .map(data -> new Generator(labelStack).generate(data))
+            .ifPresent(result ->
+                whenWriteStringUsingBufferedWritter_thenCorrect("src/main/resources/resultTest_2.ll", result)
+            );
     }
 
     private static String readFileAsString(String filePath) {

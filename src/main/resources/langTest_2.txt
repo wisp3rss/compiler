@@ -1,36 +1,21 @@
-INT x;
-x = 2;
+INT a;
+a = 2;
 
-func INT getFoo(INT b){
-        INT a;
-        return a;
+INT b;
+b = 4;
+
+WHILE (b >= 0) {
+    IF (a != 2) {             #false
+        PRINT a;              #2
+
     }
-
-func INT getFoo2(INT a){
-        INT b;
-        return b;
+    ELSE {
+        IF(2 != a){           #false
+                PRINT a;      #2
+            }
+            ELSE {
+                PRINT b;      #4,3,2,1,0
+            }
     }
-
-class CFoo{
-    INT a;
-    BOOL b;
+    b = b - 1;
 }
-
-class Klasa1 {
-    INT a;
-    BOOL b;
-
-    SFoo sfoo = new struct SFoo();
-
-    CFoo cfoo = new class CFoo();
-
-    func INT getFoo(INT a){
-        return a;
-    }
-
-    func INT getFoo(){
-            INT a;
-            return a;
-        }
-}
-

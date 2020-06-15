@@ -4,10 +4,13 @@ import static com.asia.compiler.generator.utils.LLVMCodeParts.ASSIGN_STRING_DECL
 import static com.asia.compiler.generator.utils.LLVMCodeParts.ASSIGN_STRING_LINE_1;
 import static com.asia.compiler.generator.utils.LLVMCodeParts.ASSIGN_STRING_LINE_2;
 import static com.asia.compiler.generator.utils.LLVMCodeParts.BOOL_CONDITION;
+import static com.asia.compiler.generator.utils.LLVMCodeParts.CALL_FUNC;
 import static com.asia.compiler.generator.utils.LLVMCodeParts.CONDITION_OPERATION;
 import static com.asia.compiler.generator.utils.LLVMCodeParts.DEFINE_INT_FLOAT;
 import static com.asia.compiler.generator.utils.LLVMCodeParts.DEFINE_STRING;
 import static com.asia.compiler.generator.utils.LLVMCodeParts.EXIT_JUMP;
+import static com.asia.compiler.generator.utils.LLVMCodeParts.FUNC_1;
+import static com.asia.compiler.generator.utils.LLVMCodeParts.FUNC_2;
 import static com.asia.compiler.generator.utils.LLVMCodeParts.IF_JUMP;
 import static com.asia.compiler.generator.utils.LLVMCodeParts.LABEL;
 import static com.asia.compiler.generator.utils.LLVMCodeParts.LOAD;
@@ -22,6 +25,7 @@ import static com.asia.compiler.generator.utils.LLVMCodeParts.READ_FLOAT;
 import static com.asia.compiler.generator.utils.LLVMCodeParts.READ_INT;
 import static com.asia.compiler.generator.utils.LLVMCodeParts.READ_STRING_LNE_1;
 import static com.asia.compiler.generator.utils.LLVMCodeParts.READ_STRING_LNE_2;
+import static com.asia.compiler.generator.utils.LLVMCodeParts.RETURN;
 import static com.asia.compiler.generator.utils.LLVMCodeParts.STORE;
 
 import com.asia.compiler.common.model.IntermediateObject;
@@ -29,21 +33,28 @@ import com.asia.compiler.common.model.IntermediateObjectsData;
 import com.asia.compiler.common.model.LabelStack;
 import com.asia.compiler.common.utils.ArgType;
 import com.asia.compiler.common.utils.Type;
+import io.vavr.Tuple2;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class Generator {
 
     static String header_text = "";
     static int reg = 1;
+    int regFunc = reg;
     String result = "";
     String declarations = "";
     LabelStack labelStack;
 
     IntermediateObjectsData data;
     List<IntermediateObject> intermediateObjectList = new ArrayList<>();
+    List<IntermediateObject> funcIntermediateObjectList = new ArrayList<>();
+//    Map<String, List<Tuple2<Integer, List<Type>>>> rejestryWywolanFunkcji = new HashMap<>();
+
 
     public Generator(LabelStack labelStack) {
         this.labelStack = labelStack;
@@ -51,6 +62,7 @@ public class Generator {
 
     public String generate(IntermediateObjectsData data) {
         intermediateObjectList = data.getIntermediateObjectList();
+        funcIntermediateObjectList = data.getFunctionIntermediateObjectList();
 
         result += "declare i32 @printf(i8*, ...)\n";
         result += "declare i32 @scanf(i8*, ...)\n";
@@ -67,7 +79,10 @@ public class Generator {
 
         intermediateObjectList.forEach(o -> result += generateHandler(o));
 
-        result += "ret i32 0 }\n";
+        result += "\tret i32 0 \n}\n";
+
+        funcIntermediateObjectList.forEach(o -> result += generateHandler(o));
+
         return declarations + result;
     }
 
@@ -107,6 +122,12 @@ public class Generator {
                 return generateForBodyLabel(o);
             case END_FOR:
                 return generateEndForLabel(o);
+            case FUNC_BEGIN:
+                return generateFuncBegin(o);
+            case FUNC_RETURN:
+                return generateFuncReturn(o);
+            case CALL_FUNC:
+                return generateCallFunc(o);
         }
         return "";
     }
@@ -439,13 +460,13 @@ public class Generator {
             if (obj.getArgs().toSeq().toStream()
                 .filter(o -> o.toString().contains("math_var")).size() > 0) {
                 int objIndex = intermediateObjectList.indexOf(obj);
-                main_text += generateHandler(intermediateObjectList.get(objIndex-1));
+                main_text += generateHandler(intermediateObjectList.get(objIndex - 1));
             }
 
             endLabel = obj.getV2();
         }
 
-        if (obj.getV1().contains("for")){
+        if (obj.getV1().contains("for")) {
             endLabel = obj.getV2();
         }
 
@@ -545,9 +566,9 @@ public class Generator {
 
         main_text += String.format(IF_JUMP.getValue(), ("%" + (reg)), ("%" + (label)), ("%" + (endLabel)));
 
-        if (obj.getV1().contains("dowhile")){
+        if (obj.getV1().contains("dowhile")) {
             main_text += String.format(LABEL.getValue(), endLabel);
-        } else if (obj.getV1().contains("for")){
+        } else if (obj.getV1().contains("for")) {
             main_text += String.format(LABEL.getValue(), (label.substring(0, label.lastIndexOf('_')) + "_operation"));
         } else {
             main_text += String.format(LABEL.getValue(), label);
@@ -556,7 +577,7 @@ public class Generator {
         return main_text;
     }
 
-    private String generateDoLabel(IntermediateObject obj){
+    private String generateDoLabel(IntermediateObject obj) {
         String main_text = "";
         String label = obj.getV1();
 
@@ -566,7 +587,7 @@ public class Generator {
         return main_text;
     }
 
-    private String generateForConditionLabel(IntermediateObject obj){
+    private String generateForConditionLabel(IntermediateObject obj) {
         String main_text = "";
         String label = obj.getV1();
 
@@ -576,7 +597,7 @@ public class Generator {
         return main_text;
     }
 
-    private String generateForBodyLabel(IntermediateObject obj){
+    private String generateForBodyLabel(IntermediateObject obj) {
         String main_text = "";
         String label = obj.getV1();
 
@@ -586,7 +607,7 @@ public class Generator {
         return main_text;
     }
 
-    private String generateEndForLabel(IntermediateObject obj){
+    private String generateEndForLabel(IntermediateObject obj) {
 
         String main_text = "";
         String label = obj.getV1();
@@ -597,4 +618,54 @@ public class Generator {
         return main_text;
     }
 
+    private String generateFuncBegin(IntermediateObject<List<Type>> obj) {
+        reg = 3;
+
+        String main_text = "";
+        String name = obj.getV1();
+        String type = obj.getType().getValue();
+        List<Type> types = obj.getVal();
+
+        main_text += String.format(FUNC_1.getValue(), type, ("@" + name));
+
+        main_text += types.stream().map(Type::getValue).collect(Collectors.joining(","));
+
+        main_text += String.format(FUNC_2.getValue());
+
+        return main_text;
+    }
+
+    private String generateFuncReturn(IntermediateObject obj) {
+
+        String main_text = "";
+        String name = obj.getV1();
+        String type = obj.getV2();
+
+        main_text += String.format(LOAD.getValue(), ("%" + reg), type, type, ("%" + name));
+
+        main_text += String.format(RETURN.getValue(), type, ("%" + reg));
+
+        return main_text;
+    }
+
+    private String generateCallFunc(IntermediateObject<List<Tuple2<String, Type>>> obj) {
+
+        final String[] main_text = {""};
+
+        AtomicInteger regCopy = new AtomicInteger(reg);
+        obj.getVal().forEach(
+            t -> {
+                main_text[0] += String.format(LOAD.getValue(), ("%" + reg), t._2().getValue(), t._2().getValue(), ("%" + t._1()));
+                reg++;
+            }
+        );
+
+        main_text[0] += String.format(CALL_FUNC.getValue(), ("%" + reg), obj.getType().getValue(), obj.getV1());
+        main_text[0] += obj.getVal().stream().map(t -> (t._2().getValue() + " %" + (regCopy.getAndIncrement()))).collect(Collectors.joining(","));
+        main_text[0] += ")\n";
+
+        reg++;
+
+        return main_text[0];
+    }
 }

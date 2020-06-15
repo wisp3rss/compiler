@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class StructListener extends langBaseListener {
 
-    private VariableMap variableMap;
+    private final VariableMap variableMap;
 
     @Override
     public void enterStruct(StructContext ctx) {

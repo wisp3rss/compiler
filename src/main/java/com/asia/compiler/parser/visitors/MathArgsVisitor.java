@@ -15,7 +15,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor(staticName = "of")
 public class MathArgsVisitor {
 
-    private VariableMap variableMap;
+    private final VariableMap variableMap;
 
     public Tuple3<String, String, ArgType> visitMathArgs(Math_moduleContext ctx, Type type) {
         Tuple2<String, Boolean> left = visitValueNode(ctx.math_var(0), type);
@@ -30,7 +30,7 @@ public class MathArgsVisitor {
         Type typeL = getType(ctx.math_var(0));
         Type typeR = getType(ctx.math_var(1));
 
-        if(typeL == typeR) {
+        if (typeL == typeR) {
             Tuple2<String, Boolean> left = visitValueNode(ctx.math_var(0), typeL);
             Tuple2<String, Boolean> right = visitValueNode(ctx.math_var(1), typeR);
 
@@ -42,12 +42,12 @@ public class MathArgsVisitor {
         return Tuple.of(null, null, null, null);
     }
 
-    private Type getType(Math_varContext math_var){
-        if(math_var.NAME() != null){
+    private Type getType(Math_varContext math_var) {
+        if (math_var.NAME() != null) {
             return variableMap.getVariableTypesMap().get(math_var.NAME().getText());
-        } else if (math_var.numeric_value().INT() != null){
+        } else if (math_var.numeric_value().INT() != null) {
             return Type.INT;
-        } else if (math_var.numeric_value().FLOAT() != null){
+        } else if (math_var.numeric_value().FLOAT() != null) {
             return Type.FLOAT;
         }
         return Type.NULL;

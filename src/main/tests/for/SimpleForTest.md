@@ -1,44 +1,52 @@
 ##Simple For loop test
 Test: 
 ```
-INT V_0;
+INT a;
 
-FOR (V_0 = 0; V_0 < 3; V_0 = V_0 + 1){
-    PRINT V_0;
+FOR (a = 0;; a < 3; a = a + 1;){
+    PRINT a;
 }
 
-PRINT V_0;
+PRINT a;
 ```
 
 W pliku result.ll:
 ```llvm
 declare i32 @printf(i8*, ...)
+declare i32 @scanf(i8*, ...)
+declare i8* @__strcpy_chk(i8*, i8*, i64) #1
 @strpi = constant [4 x i8] c"%d\0A\00"
+@strpd = constant [4 x i8] c"%f\0A\00"
+@strs = constant [3 x i8] c"%d\00"
+@.strbool = private unnamed_addr constant [4 x i8] c"%u\0A\00"
+@.strdouble = private unnamed_addr constant [4 x i8] c"%lf\00"
+@.stringScan = private unnamed_addr constant [3 x i8] c"%s\00"
+@.stringPrint = private unnamed_addr constant [4 x i8] c"%s\0A\00"
 define i32 @main() nounwind{
-    %V_0 = alloca i32
-    store i32 0, i32* %V_0
-    br label %for_1_cond
+	%a = alloca i32
+	store i32 0, i32* %a
+	br label %for_1_cond
 
 for_1_cond:
-    %1 = load i32, i32* %V_0
-    %2 = icmp slt i32 %1, 3
-    br i1 %2, label %for_1_body, label %end_for_1
+	%1 = load i32, i32* %a
+	%2 = icmp slt i32 %1, 3
+	br i1 %2, label %for_1_body, label %end_for_1
 
 for_1_operation:
-    %3 = load i32, i32* %V_0
-    %4 = add i32 %3, 1
-    store i32 %4, i32* %V_0
-    br label %for_1_cond
+	%3 = load i32, i32* %a
+	%4 = add i32 %3, 1
+	store i32 %4, i32* %a
+	br label %for_1_cond
 
 for_1_body:
-    %5 = load i32, i32* %V_0
-    %6 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @strpi, i32 0, i32 0), i32 %5)
-    br label %for_1_operation
+	%5 = load i32, i32* %a
+	%6 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @strpi, i32 0, i32 0), i32 %5)
+	br label %for_1_operation
 
 end_for_1:
-    %7 = load i32, i32* %V_0
-    %8 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @strpi, i32 0, i32 0), i32 %7)
-    ret i32 0 
+	%7 = load i32, i32* %a
+	%8 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @strpi, i32 0, i32 0), i32 %7)
+	ret i32 0 
 }
 ```
 

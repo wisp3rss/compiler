@@ -12,7 +12,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class StructAnalyser extends langBaseListener {
 
-    private ClassManager classManager;
+    private final ClassManager classManager;
 
     @Override
     public void exitStruct(StructContext ctx) {

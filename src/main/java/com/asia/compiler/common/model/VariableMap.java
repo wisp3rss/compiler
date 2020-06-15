@@ -31,13 +31,13 @@ public class VariableMap {
         if (level > 0) {
             level -= 1;
 
-            HashMap<String, Type> lastLevel = variableMapsList.get(variableMapsList.size()-1);
+            HashMap<String, Type> lastLevel = variableMapsList.get(variableMapsList.size() - 1);
             lastLevel.keySet().forEach(o -> variableTypesMap.remove(o));
-            variableMapsList.remove(variableMapsList.size()-1);
+            variableMapsList.remove(variableMapsList.size() - 1);
         }
     }
 
-    public void addVariable(String name, Type t){
+    public void addVariable(String name, Type t) {
         variableTypesMap.put(name, t);
         variableMapsList.get(level).put(name, t);
     }

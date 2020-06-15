@@ -24,31 +24,30 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor(staticName = "of")
 public class ConditionVisitor {
 
-    private VariableMap variableMap;
-    private LabelStack labelStack;
+    private final VariableMap variableMap;
+    private final LabelStack labelStack;
 
     public List<IntermediateObject> visitConditionNode(ConditionContext ctx, String label, String endLabel) {
         List<IntermediateObject> localIntermediateObjectList = new ArrayList<>();
 
         if (ctx.bool() != null) {
             if (ctx.bool().TRUE() != null) {
-                int trueVal = ctx.NOT() != null ? 0: 1;
+                int trueVal = ctx.NOT() != null ? 0 : 1;
                 localIntermediateObjectList
                     .add(new IntermediateObject<>(CONDITION_SIMPLE, Type.BOOL, label, endLabel, trueVal, ArgType.NULL, new Tuple2<>(null, null)));
             } else if (ctx.bool().FALSE() != null) {
-                int falseVal = ctx.NOT() != null ? 1: 0;
+                int falseVal = ctx.NOT() != null ? 1 : 0;
                 localIntermediateObjectList
                     .add(new IntermediateObject<>(CONDITION_SIMPLE, Type.BOOL, label, endLabel, falseVal, ArgType.NULL, new Tuple2<>(null, null)));
             }
 
         } else {
             int secIndex = 0;
-            if(ctx.math_module().size() > 1 || ctx.value().size() > 1)
+            if (ctx.math_module().size() > 1 || ctx.value().size() > 1) {
                 secIndex = 1;
+            }
 
-//            ctx.children.get(2) instanceof ValueContext
-
-            Tuple3<String, Type, Integer> left = visitNode(ctx, 0,0, localIntermediateObjectList);
+            Tuple3<String, Type, Integer> left = visitNode(ctx, 0, 0, localIntermediateObjectList);
             Tuple3<String, Type, Integer> right = visitNode(ctx, 2, secIndex, localIntermediateObjectList);
 
             if (!left._2.equals(right._2)) {
@@ -78,26 +77,26 @@ public class ConditionVisitor {
     private Tuple3<String, Type, Integer> visitValueNode(ConditionContext ctx, int index) {
 
         if (ctx.value(index).NAME() != null) {
-                return visitVariableNode(ctx, index);
-            } else if (ctx.value(index).STRING() != null) {
-                return visitStringNode(ctx, index);
-            } else if (ctx.value(index).TRUE() != null || ctx.value(index).FALSE() != null) {
-                return visitBoolNode(ctx, index);
-            } else if (ctx.value(index).numeric_value() != null) {
-                return visitNumericValueNode(ctx, index);
+            return visitVariableNode(ctx, index);
+        } else if (ctx.value(index).STRING() != null) {
+            return visitStringNode(ctx, index);
+        } else if (ctx.value(index).TRUE() != null || ctx.value(index).FALSE() != null) {
+            return visitBoolNode(ctx, index);
+        } else if (ctx.value(index).numeric_value() != null) {
+            return visitNumericValueNode(ctx, index);
         }
 
         return Tuple.of(null, null, null);
     }
 
     private Tuple3<String, Type, Integer> visitMathModule(ConditionContext ctx, int index, List<IntermediateObject> intermediateObjectList) {
-        String varName =  "math_var_" + labelStack.getMathVarNumber();
+        String varName = "math_var_" + labelStack.getMathVarNumber();
 
         MathArgsHelper mathArgsHelper = new MathArgsHelper(variableMap, intermediateObjectList);
         Type type = mathArgsHelper.handleAssignMathModule(ctx.math_module(index), varName);
 
         IntermediateObject operationIntermediateObj = intermediateObjectList.get(intermediateObjectList.size() - 1);
-        intermediateObjectList.remove(intermediateObjectList.size()-1);
+        intermediateObjectList.remove(intermediateObjectList.size() - 1);
 
         intermediateObjectList.add(
             new IntermediateObject<>(

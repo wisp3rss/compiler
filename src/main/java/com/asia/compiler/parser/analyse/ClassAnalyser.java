@@ -14,7 +14,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class ClassAnalyser extends langBaseListener {
 
-    private ClassManager classManager;
+    private final ClassManager classManager;
 
     @Override
     public void exitDef_class(Def_classContext ctx) {
@@ -66,7 +66,7 @@ public class ClassAnalyser extends langBaseListener {
             return;
         }
 
-        classManager.getStructMap().put(classStructName, fields);        //structmap zawiera wszystkie nazwy pol w klasach i strukturah
+        classManager.getStructMap().put(classStructName, fields);        //structmap zawierajaca wszystkie nazwy pol w klasach i strukturah
     }
 
 }

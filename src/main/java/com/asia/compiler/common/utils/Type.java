@@ -13,8 +13,9 @@ public enum Type {
     CLASS_STRUCT("", "class/struct");
 
     @Getter
-    private String value;
-    private String stringValue;
+    private final String value;
+    @Getter
+    private final String stringValue;
 
     @Override
     public String toString() {

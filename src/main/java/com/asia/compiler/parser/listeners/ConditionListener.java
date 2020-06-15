@@ -24,10 +24,10 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class ConditionListener extends langBaseListener {
 
-    private VariableMap variableMap;
-    private LabelStack labelStack;
-    private IntermediateObjectsData data;
-    private ClassManager classManager;
+    private final VariableMap variableMap;
+    private final LabelStack labelStack;
+    private final IntermediateObjectsData data;
+    private final ClassManager classManager;
 
     private List<IntermediateObject> getIntermediateObjList() {
         return classManager.getIsInFunction() ? data.getFunctionIntermediateObjectList() : data.getIntermediateObjectList();
@@ -43,10 +43,10 @@ public class ConditionListener extends langBaseListener {
 
     @Override
     public void enterCondition(ConditionContext ctx) {
-        if(ctx.parent instanceof For_loopContext && ((For_loopContext) ctx.parent).FOR() != null){
+        if (ctx.parent instanceof For_loopContext && ((For_loopContext) ctx.parent).FOR() != null) {
             String label = labelStack.getLabelStack().peek();
             getIntermediateObjList().add(new IntermediateObject<>(
-            FOR_COND, Type.NULL, (label + "_cond"), "", 0, ArgType.NULL, new Tuple2<>(null, null)));
+                FOR_COND, Type.NULL, (label + "_cond"), "", 0, ArgType.NULL, new Tuple2<>(null, null)));
         }
     }
 
@@ -55,13 +55,12 @@ public class ConditionListener extends langBaseListener {
         ConditionVisitor conditionVisitor = ConditionVisitor.of(variableMap, labelStack);
         String label = labelStack.getLabelStack().peek();
 
-        if(ctx.parent instanceof For_loopContext && ((For_loopContext) ctx.parent).FOR() != null){
+        if (ctx.parent instanceof For_loopContext && ((For_loopContext) ctx.parent).FOR() != null) {
             List<IntermediateObject> localIntermediateObjectList = conditionVisitor.visitConditionNode(ctx, (label + "_body"), ("end_" + label));
             getIntermediateObjList().addAll(localIntermediateObjectList);
             getIntermediateObjList().add(new IntermediateObject<>(
                 FOR_OP, Type.NULL, (label + "_body"), (label + "_operation"), 0, ArgType.NULL, new Tuple2<>(null, null)));
-        }
-        else {
+        } else {
             List<IntermediateObject> localIntermediateObjectList = conditionVisitor.visitConditionNode(ctx, label, ("end_" + label));
             getIntermediateObjList().addAll(localIntermediateObjectList);
         }
@@ -81,8 +80,8 @@ public class ConditionListener extends langBaseListener {
         labelStack.incrementNumber("ELSE");
         labelStack.getLabelStack().push("else_" + labelStack.getIfNumber());
         labelStack.changeElseExist(
-                labelStack.getLastClosedIf().get(labelStack.getLastClosedIf().size()-1),
-                true
+            labelStack.getLastClosedIf().get(labelStack.getLastClosedIf().size() - 1),
+            true
         );
 
     }

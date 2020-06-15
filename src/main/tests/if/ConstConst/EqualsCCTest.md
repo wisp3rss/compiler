@@ -1,23 +1,23 @@
 ##If, If else with two constance value, operations: ==, !=
 Test: 
 ```
-INT V_0;
-V_0 = 2;
+INT a;
+a = 2;
 
-INT V_1;
-V_1 = 4;
+INT b;
+b = 4;
 
 IF (1==1) {
     IF(2!=5){
-        PRINT V_0;
+        PRINT a;
     }
     ELSE {
-        PRINT V_1;
+        PRINT b;
     }
-    PRINT V_0;
+    PRINT a;
 }
 ELSE {
-    PRINT V_1;
+    PRINT b;
 }
 ```
 
@@ -26,10 +26,10 @@ W pliku result.ll:
 declare i32 @printf(i8*, ...)
 @strpi = constant [4 x i8] c"%d\0A\00"
 define i32 @main() nounwind{
-    %V_0 = alloca i32
-    store i32 2, i32* %V_0
-    %V_1 = alloca i32
-    store i32 4, i32* %V_1
+    %a = alloca i32
+    store i32 2, i32* %a
+    %b = alloca i32
+    store i32 4, i32* %b
     %1 = icmp eq i32 1, 1
     br i1 %1, label %if_1, label %else_1
 
@@ -38,22 +38,22 @@ if_1:
     br i1 %2, label %if_2, label %else_2
 
 if_2:
-    %3 = load i32, i32* %V_0
+    %3 = load i32, i32* %a
     %4 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @strpi, i32 0, i32 0), i32 %3)
     br label %end_else_2
 
 else_2:
-    %5 = load i32, i32* %V_1
+    %5 = load i32, i32* %b
     %6 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @strpi, i32 0, i32 0), i32 %5)
     br label %end_else_2
 
 end_else_2:
-    %7 = load i32, i32* %V_0
+    %7 = load i32, i32* %a
     %8 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @strpi, i32 0, i32 0), i32 %7)
     br label %end_else_1
 
 else_1:
-    %9 = load i32, i32* %V_1
+    %9 = load i32, i32* %b
     %10 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @strpi, i32 0, i32 0), i32 %9)
     br label %end_else_1
 

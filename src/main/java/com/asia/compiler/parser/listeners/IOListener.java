@@ -15,16 +15,15 @@ import com.asia.compiler.parser.gen.langParser.ReadContext;
 import io.vavr.Tuple2;
 import java.util.List;
 import lombok.AllArgsConstructor;
-import lombok.NonNull;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 
 @AllArgsConstructor
 public class IOListener extends langBaseListener {
 
-    private VariableMap variableMap;
-    private IntermediateObjectsData data;
-    private ClassManager classManager;
+    private final VariableMap variableMap;
+    private final IntermediateObjectsData data;
+    private final ClassManager classManager;
 
     private List<IntermediateObject> getIntermediateObjList() {
         return classManager.getIsInFunction() ? data.getFunctionIntermediateObjectList() : data.getIntermediateObjectList();

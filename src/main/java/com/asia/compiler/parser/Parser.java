@@ -39,7 +39,7 @@ public class Parser {
         langLexer analyseLexer = prepareLexer(new ANTLRInputStream(code));
         langLexer lexer = prepareLexer(new ANTLRInputStream(code));
         langParser parser = prepareParser(lexer, intermediateObjectsData, variableMap, labelStack, classManager);
-        langParser analyseParser = prepareAnalyseParser(analyseLexer, classManager, variableMap);
+        langParser analyseParser = prepareAnalyseParser(analyseLexer, classManager);
 
         try {
             analyseParser.program();
@@ -75,13 +75,13 @@ public class Parser {
         parser.addParseListener(conditionListener);
         parser.addParseListener(new LoopListener(variableMap, labelStack, data, classManager));
         parser.addParseListener(new FunctionListener(data, classManager, variableMap));
-        parser.addParseListener(new ClassListener(variableMap));
+        parser.addParseListener(new ClassListener(variableMap, classManager));
         parser.addParseListener(new StructListener(variableMap));
 
         return parser;
     }
 
-    private langParser prepareAnalyseParser(langLexer lexer, ClassManager classManager, VariableMap variableMap){
+    private langParser prepareAnalyseParser(langLexer lexer, ClassManager classManager){
         langParser parser = new langParser(new CommonTokenStream(lexer));
         parser.removeErrorListeners();
         parser.addErrorListener(ThrowingErrorListener.INSTANCE);
@@ -89,7 +89,7 @@ public class Parser {
 
         parser.addParseListener(new ClassAnalyser(classManager));
         parser.addParseListener(new StructAnalyser(classManager));
-        parser.addParseListener(new FunctionAnalyser(classManager, variableMap));
+        parser.addParseListener(new FunctionAnalyser(classManager));
 
         return parser;
     }

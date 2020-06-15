@@ -1,7 +1,7 @@
 package com.asia.compiler.common.model;
 
-import com.asia.compiler.common.utils.Instructions;
 import com.asia.compiler.common.utils.ArgType;
+import com.asia.compiler.common.utils.Instructions;
 import com.asia.compiler.common.utils.Type;
 import io.vavr.Tuple2;
 import lombok.Value;

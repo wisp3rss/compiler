@@ -17,9 +17,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class FunctionAnalyser extends langBaseListener {
 
-    private ClassManager classManager;
-    private VariableMap variableMap;
-
+    private final ClassManager classManager;
 
     @Override
     public void exitDef_func(Def_funcContext ctx) {
@@ -38,9 +36,12 @@ public class FunctionAnalyser extends langBaseListener {
             List<Function> list = new ArrayList<>();
             list.add(function);
             classMap.put(name, list);
+
+            classManager.getAllFunctionMap().put(name, list);
         } else {
             if (classMap.get(name).stream().noneMatch(f -> f.getArgsType().size() == function.getArgsType().size())) {
                 classMap.get(name).add(function);
+                classManager.getAllFunctionMap().get(name).add(function);
             } else {
                 classMap.get(name).stream().filter(func ->
                     (IntStream.iterate(0, i -> i + 1)
@@ -54,6 +55,7 @@ public class FunctionAnalyser extends langBaseListener {
                     return;
                 });
                 classMap.get(name).add(function);
+                classManager.getAllFunctionMap().get(name).add(function);
             }
         }
     }

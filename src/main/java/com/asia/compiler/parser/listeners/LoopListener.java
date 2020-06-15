@@ -1,5 +1,11 @@
 package com.asia.compiler.parser.listeners;
 
+import static com.asia.compiler.common.utils.Instructions.DO_WHILE;
+import static com.asia.compiler.common.utils.Instructions.END_DO_WHILE;
+import static com.asia.compiler.common.utils.Instructions.END_FOR;
+import static com.asia.compiler.common.utils.Instructions.END_WHILE;
+import static com.asia.compiler.common.utils.Instructions.FOR;
+
 import com.asia.compiler.common.model.ClassManager;
 import com.asia.compiler.common.model.IntermediateObject;
 import com.asia.compiler.common.model.IntermediateObjectsData;
@@ -12,23 +18,16 @@ import com.asia.compiler.parser.gen.langParser;
 import com.asia.compiler.parser.gen.langParser.Do_while_loopContext;
 import com.asia.compiler.parser.gen.langParser.For_loopContext;
 import io.vavr.Tuple2;
-import lombok.AllArgsConstructor;
-
 import java.util.List;
-
-import static com.asia.compiler.common.utils.Instructions.DO_WHILE;
-import static com.asia.compiler.common.utils.Instructions.END_DO_WHILE;
-import static com.asia.compiler.common.utils.Instructions.END_FOR;
-import static com.asia.compiler.common.utils.Instructions.END_WHILE;
-import static com.asia.compiler.common.utils.Instructions.FOR;
+import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class LoopListener extends langBaseListener {
 
-    private VariableMap variableMap;
-    private LabelStack labelStack;
-    private IntermediateObjectsData data;
-    private ClassManager classManager;
+    private final VariableMap variableMap;
+    private final LabelStack labelStack;
+    private final IntermediateObjectsData data;
+    private final ClassManager classManager;
 
     private List<IntermediateObject> getIntermediateObjList() {
         return classManager.getIsInFunction() ? data.getFunctionIntermediateObjectList() : data.getIntermediateObjectList();

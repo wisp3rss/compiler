@@ -11,4 +11,9 @@ public class Field {
     String name;
     Type type;
     String classStructName;
+
+    @Override
+    public String toString() {
+        return type.getStringValue();
+    }
 }

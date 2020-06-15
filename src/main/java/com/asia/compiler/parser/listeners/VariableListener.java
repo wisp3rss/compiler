@@ -12,7 +12,6 @@ import com.asia.compiler.common.model.VariableMap;
 import com.asia.compiler.common.utils.ArgType;
 import com.asia.compiler.common.utils.Type;
 import com.asia.compiler.parser.gen.langBaseListener;
-import com.asia.compiler.parser.gen.langParser.Assign_varContext;
 import com.asia.compiler.parser.gen.langParser.Def_varContext;
 import com.asia.compiler.parser.gen.langParser.For_loopContext;
 import com.asia.compiler.parser.gen.langParser.For_loop_assignContext;
@@ -27,30 +26,13 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class VariableListener extends langBaseListener {
 
-    private VariableMap variableMap;
-    private LabelStack labelStack;
-    private IntermediateObjectsData data;
-    private ClassManager classManager;
+    private final VariableMap variableMap;
+    private final LabelStack labelStack;
+    private final IntermediateObjectsData data;
+    private final ClassManager classManager;
 
     private List<IntermediateObject> getIntermediateObjList() {
         return classManager.getIsInFunction() ? data.getFunctionIntermediateObjectList() : data.getIntermediateObjectList();
-    }
-
-    @Override
-    public void exitAssign_var(Assign_varContext ctx) {
-        String varName = ctx.for_loop_assign().NAME().getText();
-
-        if (!variableMap.getVariableTypesMap().containsKey(varName)) {
-            CancellationExceptionFactory.throwCancellationException(ctx, "Variable " + varName + " undefined.");
-            return;
-        }
-
-        if (ctx.for_loop_assign().operation().init_var() != null) {
-            assignInitVar(ctx.for_loop_assign());
-        } else if (ctx.for_loop_assign().operation().math_module() != null) {
-            MathArgsHelper mathArgsHelper = new MathArgsHelper(variableMap, getIntermediateObjList());
-            mathArgsHelper.handleAssignMath(ctx.for_loop_assign(), varName, variableMap.getVariableTypesMap().get(varName));
-        }
     }
 
     @Override
@@ -69,9 +51,9 @@ public class VariableListener extends langBaseListener {
             mathArgsHelper.handleAssignMath(ctx, varName, variableMap.getVariableTypesMap().get(varName));
         }
 
-        if(ctx.parent instanceof For_loopContext && ((For_loopContext) ctx.parent).FOR() != null){
+        if (ctx.parent instanceof For_loopContext && ((For_loopContext) ctx.parent).FOR() != null) {
             For_loopContext parent = (For_loopContext) ctx.parent;
-            if(parent.for_loop_assign().indexOf(ctx) == 1){
+            if (parent.for_loop_assign().indexOf(ctx) == 1) {
                 String label = labelStack.getLabelStack().peek();
                 getIntermediateObjList().add(new IntermediateObject<>(
                     FOR_BODY, Type.NULL, (label + "_cond"), (label + "_body"), 0, ArgType.NULL, new Tuple2<>(null, null)));

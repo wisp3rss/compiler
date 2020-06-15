@@ -8,13 +8,11 @@ import static com.asia.compiler.common.utils.Instructions.SUB;
 
 import com.asia.compiler.common.model.IntermediateObject;
 import com.asia.compiler.common.model.VariableMap;
-import com.asia.compiler.common.utils.Instructions;
 import com.asia.compiler.common.utils.ArgType;
+import com.asia.compiler.common.utils.Instructions;
 import com.asia.compiler.common.utils.Type;
-import com.asia.compiler.parser.gen.langParser.Assign_varContext;
 import com.asia.compiler.parser.gen.langParser.For_loop_assignContext;
 import com.asia.compiler.parser.gen.langParser.Math_moduleContext;
-import com.asia.compiler.parser.gen.langParser.OperationContext;
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
 import io.vavr.Tuple3;
@@ -25,8 +23,8 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class MathArgsHelper {
 
-    private VariableMap variableMap;
-    private List<IntermediateObject> intermediateObjectList;
+    private final VariableMap variableMap;
+    private final List<IntermediateObject> intermediateObjectList;
 
     private void createMathIntermediateObject(Tuple3<String, String, ArgType> arguments, Instructions instruction, String varName, Type type) {
         intermediateObjectList.add(new IntermediateObject<>(
@@ -54,7 +52,7 @@ public class MathArgsHelper {
         return arguments._4;
     }
 
-    public void handleAssignMathModule(Math_moduleContext math_module, String varName, Type type){
+    public void handleAssignMathModule(Math_moduleContext math_module, String varName, Type type) {
         MathArgsVisitor mathArgsVisitor = MathArgsVisitor.of(variableMap);
         Tuple3<String, String, ArgType> arguments = mathArgsVisitor.visitMathArgs(math_module, type);
 

@@ -39,7 +39,7 @@ init_var: value;
 def_class: CLASS CLASS_NAME;
 class_: def_class OPEN_BRACE (def_var|def_func|create_struct|create_class)* CLOSE_BRACE;
 create_class: CLASS_NAME NAME ASSIGN NEW CLASS CLASS_NAME OPEN_PAREN CLOSE_PAREN SEMI_COLON;
-call_class_field: NAME ('.' NAME)+;
+call_class_field: NAME '.' NAME;
 call_class_func: NAME '.' call_func;
 // ==== END CLASS ===
 
@@ -54,8 +54,8 @@ def_func: FUNCTION define NAME '(' def_args ')' OPEN_BRACE statement* ret CLOSE_
 def_args: (def_arg?|((def_arg ',')+ def_arg));
 def_arg: define NAME;
 //def_args: define NAME (|(',' def_args));
-args: value (|(',' args));
-call_func: NAME '(' args* ')';
+args: (value?|((value ',')+ value));
+call_func: NAME '(' args ')';
 ret: RETURN value SEMI_COLON;
 // ==== END FUNCTION =====
 

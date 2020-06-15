@@ -15,6 +15,7 @@ public class ClassManager {
     String currentDefClass;
     Map<String, List<Field>> structMap;                     //mapa nazwaStruktury -> liste argumentow
     Boolean isInFunction;
+    Map<String, List<Function>> allFunctionMap;
 
     public ClassManager() {
         classMap = new HashMap<>();
@@ -23,6 +24,7 @@ public class ClassManager {
         structMap = new HashMap<>();
         structMap.put("Main", new ArrayList<>());
         isInFunction = false;
+        allFunctionMap = new HashMap<>();
     }
 
     public Type getType(DefineContext ctx) {

@@ -39,3 +39,37 @@ Wynik po uruchomieniu:
 ```
 Error: Function "foo2" with parameters: [FLOAT, INT] in class "Main" already defined.
 ```
+
+##Correct redeclaration
+Test: 
+```
+func INT foo(){
+   INT ax;
+   ax = 2;
+   return ax;
+}
+
+func INT foo(INT a, FLOAT b){
+   INT ax;
+   ax = 2;
+   return ax;
+}
+
+func INT foo(FLOAT b,INT a){
+   INT ax;
+   ax = 2;
+   return ax;
+}
+
+func INT foo(FLOAT b, INT a, BOOL c){
+   INT ax;
+   ax = 2;
+   return ax;
+}
+```
+
+
+Wynik po uruchomieniu: 
+```
+
+```

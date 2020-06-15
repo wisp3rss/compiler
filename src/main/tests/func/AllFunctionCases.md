@@ -2,22 +2,41 @@
 Test: 
 ```
 INT a;
+a = 2;
+
 func INT foo(){
     PRINT a;
     return 1;
 }
 
-func INT foo(INT a){
-    return a;
+func INT foo(INT x){
+    FLOAT b;
+    b = 4.273;
+    PRINT b;
+    return b;
 }
 
-func INT foo(INT a, BOOL b){
+a = 10;
+
+func INT foo(INT x, BOOL y){
+    FLOAT b;
+    b = 4.273;
+    
+    IF(b >= 4.2){
+        PRINT b;
+    }
+    ELSE {
+        PRINT 
+    }
+    
     return a;
 }
 
 foo();
 foo(a);
 foo(a,true);
+
+=====
 
 a = foo();
 a = foo(2);

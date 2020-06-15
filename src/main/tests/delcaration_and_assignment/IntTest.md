@@ -3,22 +3,33 @@
 Test:
 ```
 #declaration
-INT V_0;
-INT V_1;
+INT a;
+INT b;
 
 #assigning
-V_0 = 5;
-V_1 = 3;
+a = 5;
+b = 3;
 ```
 
 W pliku result.ll:
 
 ```llvm
+ declare i32 @printf(i8*, ...)
+ declare i32 @scanf(i8*, ...)
+ declare i8* @__strcpy_chk(i8*, i8*, i64) #1
+ @strpi = constant [4 x i8] c"%d\0A\00"
+ @strpd = constant [4 x i8] c"%f\0A\00"
+ @strs = constant [3 x i8] c"%d\00"
+ @.strbool = private unnamed_addr constant [4 x i8] c"%u\0A\00"
+ @.strdouble = private unnamed_addr constant [4 x i8] c"%lf\00"
+ @.stringScan = private unnamed_addr constant [3 x i8] c"%s\00"
+ @.stringPrint = private unnamed_addr constant [4 x i8] c"%s\0A\00"
  define i32 @main() nounwind{
-     %V_0 = alloca i32
-     %V_1 = alloca i32
-     store i32 5, i32* %V_0
-     store i32 3, i32* %V_1
-     ret i32 0 
-    }
+ 	%a = alloca i32
+ 	%b = alloca i32
+ 	store i32 5, i32* %a
+ 	store i32 3, i32* %b
+ 	ret i32 0 
+ }
+
  ```
